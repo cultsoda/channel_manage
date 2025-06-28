@@ -1,115 +1,160 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { User, Palette, Shield, Bell } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export default function ChannelSettingsPage() {
+  const [ageRestrictionDialog, setAgeRestrictionDialog] = useState(false)
+  const [identityVerificationDialog, setIdentityVerificationDialog] = useState(false)
+
+  const handleAgeRestrictionChange = (value: string) => {
+    if (value === "19") {
+      setAgeRestrictionDialog(true)
+    }
+  }
+
+  const handleIdentityVerification = () => {
+    setAgeRestrictionDialog(false)
+    setIdentityVerificationDialog(true)
+    // 본인 인증 로직 구현
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">채널 설정</h1>
-        <p className="text-muted-foreground">채널의 기본 정보와 설정을 관리하세요.</p>
+        <p className="text-muted-foreground">채널 기본 정보와 정책을 설정하세요.</p>
       </div>
 
       <Tabs defaultValue="basic" className="space-y-4">
         <TabsList>
           <TabsTrigger value="basic">기본 정보</TabsTrigger>
           <TabsTrigger value="design">디자인</TabsTrigger>
-          <TabsTrigger value="privacy">개인정보</TabsTrigger>
-          <TabsTrigger value="notifications">알림</TabsTrigger>
+          <TabsTrigger value="policy">정책 설정</TabsTrigger>
         </TabsList>
 
         <TabsContent value="basic" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                기본 정보
-              </CardTitle>
-              <CardDescription>채널의 기본 정보를 설정하세요</CardDescription>
+              <CardTitle>채널 정보</CardTitle>
+              <CardDescription>채널의 기본 정보를 설정하세요.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="channel-name">채널명</Label>
-                <Input id="channel-name" placeholder="채널명을 입력하세요" />
+                <Label htmlFor="channelName">채널명</Label>
+                <Input id="channelName" defaultValue="채널의 채널" />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="channel-description">채널 설명</Label>
-                <Textarea
-                  id="channel-description"
-                  placeholder="채널에 대한 설명을 입력하세요"
-                  className="min-h-[100px]"
+                <Label htmlFor="channelDescription">채널 설명</Label>
+                <textarea
+                  id="channelDescription"
+                  placeholder="채널에 대한 설명을 입력하세요..."
+                  className="w-full p-2 border rounded-md h-24"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="channel-category">카테고리</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="카테고리를 선택하세요" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="entertainment">엔터테인먼트</SelectItem>
-                    <SelectItem value="music">음악</SelectItem>
-                    <SelectItem value="gaming">게임</SelectItem>
-                    <SelectItem value="education">교육</SelectItem>
-                    <SelectItem value="lifestyle">라이프스타일</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="category">카테고리</Label>
+                <select id="category" className="w-full p-2 border rounded-md">
+                  <option>엔터테인먼트</option>
+                  <option>교육</option>
+                  <option>게임</option>
+                  <option>음악</option>
+                  <option>기타</option>
+                </select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="contact-email">연락처 이메일</Label>
-                <Input id="contact-email" type="email" placeholder="contact@example.com" />
+                <Label htmlFor="tags">태그</Label>
+                <Input id="tags" placeholder="태그를 쉼표로 구분하여 입력하세요" />
               </div>
-
-              <Button>저장</Button>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>비주얼 브랜딩</CardTitle>
-              <CardDescription>채널의 시각적 요소를 설정하세요</CardDescription>
+              <CardDescription>채널의 시각적 요소를 설정하세요.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Label>프로필 이미지</Label>
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                    <User className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                  <Button variant="outline">이미지 업로드</Button>
+                  <Avatar className="h-20 w-20">
+                    <AvatarImage src="/placeholder.svg?height=80&width=80" />
+                    <AvatarFallback>채널</AvatarFallback>
+                  </Avatar>
+                  <Button variant="outline">이미지 변경</Button>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label>커버 이미지</Label>
+              <div className="space-y-4">
+                <Label>배너 이미지</Label>
                 <div className="w-full h-32 bg-muted rounded-lg flex items-center justify-center">
-                  <span className="text-muted-foreground">커버 이미지</span>
+                  <p className="text-muted-foreground">배너 이미지 (1920x480)</p>
                 </div>
-                <Button variant="outline" className="w-full bg-transparent">
-                  커버 이미지 업로드
-                </Button>
+                <Button variant="outline">배너 변경</Button>
+              </div>
+
+              <div className="space-y-4">
+                <Label>모바일 배너 이미지</Label>
+                <div className="w-full h-24 bg-muted rounded-lg flex items-center justify-center">
+                  <p className="text-muted-foreground">모바일 배너 (750x300)</p>
+                </div>
+                <Button variant="outline">모바일 배너 변경</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>연결 정보</CardTitle>
+              <CardDescription>외부 링크와 연락처 정보를 설정하세요.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="website">공식 웹사이트</Label>
+                <Input id="website" placeholder="https://example.com" />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="brand-color">브랜드 컬러</Label>
-                <div className="flex items-center gap-2">
-                  <Input id="brand-color" type="color" className="w-16 h-10" />
-                  <Input placeholder="#FF5733" />
-                </div>
+                <Label htmlFor="instagram">인스타그램</Label>
+                <Input id="instagram" placeholder="@username" />
               </div>
 
-              <Button>저장</Button>
+              <div className="space-y-2">
+                <Label htmlFor="youtube">유튜브</Label>
+                <Input id="youtube" placeholder="채널 URL" />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contact">비즈니스 연락처</Label>
+                <Input id="contact" placeholder="business@example.com" />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -117,163 +162,206 @@ export default function ChannelSettingsPage() {
         <TabsContent value="design" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Palette className="h-4 w-4" />
-                디자인 설정
-              </CardTitle>
-              <CardDescription>채널 페이지의 디자인을 커스터마이징하세요</CardDescription>
+              <CardTitle>레이아웃 설정</CardTitle>
+              <CardDescription>채널 홈 페이지의 레이아웃을 설정하세요.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>테마</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="테마를 선택하세요" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">라이트</SelectItem>
-                    <SelectItem value="dark">다크</SelectItem>
-                    <SelectItem value="auto">자동</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="pageTemplate">페이지 템플릿 선택</Label>
+                <select id="pageTemplate" className="w-full p-2 border rounded-md">
+                  <option>기본 템플릿</option>
+                  <option>미니멀 템플릿</option>
+                  <option>매거진 템플릿</option>
+                  <option>포트폴리오 템플릿</option>
+                </select>
+                <p className="text-sm text-muted-foreground">채널 홈 페이지 레이아웃 템플릿</p>
               </div>
 
               <div className="space-y-2">
-                <Label>레이아웃</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="레이아웃을 선택하세요" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="grid">그리드</SelectItem>
-                    <SelectItem value="list">리스트</SelectItem>
-                    <SelectItem value="card">카드</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>애니메이션 효과</Label>
-                  <p className="text-sm text-muted-foreground">페이지 전환 시 애니메이션 사용</p>
+                <Label htmlFor="sectionOrder">섹션 배치 설정</Label>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded-md bg-muted/50">
+                    <p className="text-sm">홈 페이지 섹션 순서 및 배치</p>
+                    <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+                      <div>1. 헤더 배너</div>
+                      <div>2. 최신 콘텐츠</div>
+                      <div>3. 인기 콘텐츠</div>
+                      <div>4. 커뮤니티</div>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    섹션 순서 변경
+                  </Button>
                 </div>
-                <Switch />
               </div>
 
-              <Button>저장</Button>
+              <div className="space-y-2">
+                <Label htmlFor="gridLayout">그리드 레이아웃 조정</Label>
+                <select id="gridLayout" className="w-full p-2 border rounded-md">
+                  <option>2열 그리드</option>
+                  <option>3열 그리드</option>
+                  <option>4열 그리드</option>
+                  <option>리스트 형태</option>
+                </select>
+                <p className="text-sm text-muted-foreground">콘텐츠 그리드 레이아웃 설정</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>디자인 설정</CardTitle>
+              <CardDescription>채널의 시각적 디자인을 설정하세요.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="brandColor">브랜드 컬러 설정</Label>
+                <div className="flex items-center gap-4">
+                  <Input id="brandColor" type="color" defaultValue="#3b82f6" className="w-16 h-10" />
+                  <Input placeholder="#3b82f6" className="flex-1" />
+                </div>
+                <p className="text-sm text-muted-foreground">채널 테마 색상 설정</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="channelTheme">채널 테마 선택</Label>
+                <select id="channelTheme" className="w-full p-2 border rounded-md">
+                  <option>라이트 테마</option>
+                  <option>다크 테마</option>
+                  <option>오토 (시스템 설정)</option>
+                  <option>커스텀 테마</option>
+                </select>
+                <p className="text-sm text-muted-foreground">미리 정의된 디자인 테마 선택</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="fontFamily">폰트 선택</Label>
+                <select id="fontFamily" className="w-full p-2 border rounded-md">
+                  <option>Pretendard (기본)</option>
+                  <option>Noto Sans KR</option>
+                  <option>Malgun Gothic</option>
+                  <option>Apple SD Gothic Neo</option>
+                </select>
+                <p className="text-sm text-muted-foreground">채널에서 사용할 폰트 설정</p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="privacy" className="space-y-4">
+        <TabsContent value="policy" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                개인정보 설정
-              </CardTitle>
-              <CardDescription>개인정보 보호 및 접근 권한을 설정하세요</CardDescription>
+              <CardTitle>공개 설정</CardTitle>
+              <CardDescription>채널과 콘텐츠의 공개 범위를 설정하세요.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>채널 공개</Label>
-                  <p className="text-sm text-muted-foreground">다른 사용자가 채널을 검색할 수 있습니다</p>
+                  <p className="text-sm text-muted-foreground">검색 결과에 채널이 노출됩니다</p>
                 </div>
-                <Switch defaultChecked />
+                <input type="checkbox" className="rounded" defaultChecked />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>검색 엔진 노출</Label>
+                  <p className="text-sm text-muted-foreground">구글 등 검색 엔진에서 찾을 수 있습니다</p>
+                </div>
+                <input type="checkbox" className="rounded" defaultChecked />
+              </div>
+
+              <div className="space-y-2">
+                <Label>연령 제한</Label>
+                <select
+                  className="w-full p-2 border rounded-md"
+                  onChange={(e) => handleAgeRestrictionChange(e.target.value)}
+                >
+                  <option value="all">전체 이용가</option>
+                  <option value="15">15세 이상</option>
+                  <option value="19">19세 이상</option>
+                </select>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>커뮤니티 정책</CardTitle>
+              <CardDescription>댓글과 커뮤니티 이용 정책을 설정하세요.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>팬 가입 승인</Label>
+                <select className="w-full p-2 border rounded-md">
+                  <option>자동 승인</option>
+                  <option>수동 승인</option>
+                </select>
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>댓글 허용</Label>
-                  <p className="text-sm text-muted-foreground">콘텐츠에 댓글을 달 수 있습니다</p>
+                  <p className="text-sm text-muted-foreground">새 콘텐츠에 기본적으로 댓글을 허용합니다</p>
                 </div>
-                <Switch defaultChecked />
+                <input type="checkbox" className="rounded" defaultChecked />
               </div>
 
               <div className="space-y-2">
-                <Label>연령 제한</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="연령 제한을 선택하세요" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">전체 이용가</SelectItem>
-                    <SelectItem value="12">12세 이상</SelectItem>
-                    <SelectItem value="15">15세 이상</SelectItem>
-                    <SelectItem value="19">19세 이상</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label>커뮤니티 가이드라인</Label>
+                <textarea
+                  placeholder="커뮤니티 이용 규칙을 입력하세요..."
+                  className="w-full p-2 border rounded-md h-24"
+                />
               </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>데이터 수집 동의</Label>
-                  <p className="text-sm text-muted-foreground">분석을 위한 사용자 데이터 수집</p>
-                </div>
-                <Switch />
-              </div>
-
-              <Button>저장</Button>
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="notifications" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-4 w-4" />
-                알림 설정
-              </CardTitle>
-              <CardDescription>다양한 알림 설정을 관리하세요</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>새 구독자 알림</Label>
-                  <p className="text-sm text-muted-foreground">새로운 구독자가 생겼을 때 알림</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>댓글 알림</Label>
-                  <p className="text-sm text-muted-foreground">새로운 댓글이 달렸을 때 알림</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>멤버십 가입 알림</Label>
-                  <p className="text-sm text-muted-foreground">새로운 멤버십 가입자 알림</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>후원 알림</Label>
-                  <p className="text-sm text-muted-foreground">새로운 후원이 들어왔을 때 알림</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>이메일 알림</Label>
-                  <p className="text-sm text-muted-foreground">중요한 알림을 이메일로 받기</p>
-                </div>
-                <Switch />
-              </div>
-
-              <Button>저장</Button>
-            </CardContent>
-          </Card>
+          <div className="flex justify-end">
+            <Button>설정 저장</Button>
+          </div>
         </TabsContent>
       </Tabs>
+
+      {/* 19세 이상 선택 시 확인 다이얼로그 */}
+      <AlertDialog open={ageRestrictionDialog} onOpenChange={setAgeRestrictionDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>본인 인증이 필요합니다</AlertDialogTitle>
+            <AlertDialogDescription>
+              19세 이상 콘텐츠로 설정하려면 본인 인증을 완료해야 합니다. 본인 인증을 진행하시겠습니까?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>취소</AlertDialogCancel>
+            <AlertDialogAction onClick={handleIdentityVerification}>본인 인증</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* 본인 인증 완료 다이얼로그 */}
+      <Dialog open={identityVerificationDialog} onOpenChange={setIdentityVerificationDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>본인 인증</DialogTitle>
+            <DialogDescription>본인 인증을 위해 휴대폰 번호를 입력해주세요.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">휴대폰 번호</Label>
+              <Input id="phone" placeholder="010-0000-0000" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setIdentityVerificationDialog(false)}>
+              취소
+            </Button>
+            <Button type="submit" onClick={() => setIdentityVerificationDialog(false)}>
+              인증 요청
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

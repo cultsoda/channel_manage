@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -7,8 +8,62 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Progress } from "@/components/ui/progress"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Plus } from "lucide-react"
 
 export default function BusinessPage() {
+  const [membershipModalOpen, setMembershipModalOpen] = useState(false)
+  const [editingMembership, setEditingMembership] = useState<any>(null)
+  const [isNewMembership, setIsNewMembership] = useState(false)
+
+  const memberships = [
+    {
+      id: 1,
+      name: "베이직",
+      description: "기본 멤버십",
+      price: 9900,
+      features: ["기본 콘텐츠 접근", "커뮤니티 참여", "월 2회 라이브 참여"],
+    },
+    {
+      id: 2,
+      name: "스탠다드",
+      description: "인기 멤버십",
+      price: 19900,
+      features: ["모든 콘텐츠 접근", "독점 콘텐츠", "무제한 라이브 참여", "월 1회 VR 팬미팅"],
+    },
+    {
+      id: 3,
+      name: "프리미엄",
+      description: "최고급 멤버십",
+      price: 39900,
+      features: ["모든 혜택 포함", "1:1 VR 미팅", "굿즈 할인", "우선 예약"],
+    },
+  ]
+
+  const handleEditMembership = (membership: any) => {
+    setEditingMembership(membership)
+    setIsNewMembership(false)
+    setMembershipModalOpen(true)
+  }
+
+  const handleNewMembership = () => {
+    setEditingMembership({
+      name: "",
+      description: "",
+      price: "",
+      features: [],
+    })
+    setIsNewMembership(true)
+    setMembershipModalOpen(true)
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -25,63 +80,115 @@ export default function BusinessPage() {
         </TabsList>
 
         <TabsContent value="membership" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>멤버십 등급 설정</CardTitle>
-              <CardDescription>다양한 멤버십 등급을 설정하고 관리하세요.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">무료 위원</h4>
-                    <p className="text-sm text-muted-foreground">기본 콘텐츠 이용 가능</p>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    편집
-                  </Button>
-                </div>
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-medium">멤버십 등급 설정</h3>
+              <p className="text-sm text-muted-foreground">다양한 멤버십 등급을 설정하고 관리하세요.</p>
+            </div>
+            <Button onClick={handleNewMembership} className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />새 멤버십 등급 추가
+            </Button>
+          </div>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">
-                      베이직 <span className="text-sm">₩ 9,900/월</span>
-                    </h4>
-                    <p className="text-sm text-muted-foreground">프리미엄 콘텐츠 일부 이용</p>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    편집
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {memberships.map((membership) => (
+              <Card key={membership.id} className="relative">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">{membership.name}</CardTitle>
+                  <CardDescription>{membership.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="text-2xl font-bold">₩ {membership.price.toLocaleString()}/월</div>
+                  <ul className="space-y-1 text-sm">
+                    {membership.features.map((feature, index) => (
+                      <li key={index}>• {feature}</li>
+                    ))}
+                  </ul>
+                  <Button
+                    variant="outline"
+                    className="w-full bg-transparent"
+                    onClick={() => handleEditMembership(membership)}
+                  >
+                    설정 수정
                   </Button>
-                </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">
-                      프리미엄 <span className="text-sm">₩ 19,900/월</span>
-                    </h4>
-                    <p className="text-sm text-muted-foreground">모든 콘텐츠 무제한 이용</p>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    편집
-                  </Button>
+          <Dialog open={membershipModalOpen} onOpenChange={setMembershipModalOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>{isNewMembership ? "새 멤버십 등급" : "멤버십 설정 수정"}</DialogTitle>
+                <DialogDescription>멤버십 정보를 입력하고 권한을 설정하세요.</DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="membership-name">멤버십 명</Label>
+                  <Input
+                    id="membership-name"
+                    defaultValue={editingMembership?.name || ""}
+                    placeholder="멤버십 이름을 입력하세요"
+                  />
                 </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">
-                      VIP <span className="text-sm">₩ 49,900/월</span>
-                    </h4>
-                    <p className="text-sm text-muted-foreground">최고 등급 멤버십</p>
+                <div className="space-y-2">
+                  <Label htmlFor="membership-image">멤버십 이미지</Label>
+                  <Input id="membership-image" type="file" accept="image/*" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="membership-price">멤버십 금액</Label>
+                  <Input
+                    id="membership-price"
+                    type="number"
+                    defaultValue={editingMembership?.price || ""}
+                    placeholder="월 구독료를 입력하세요"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>멤버십 권한 설정</Label>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="basic-content" />
+                      <Label htmlFor="basic-content">기본 콘텐츠 접근</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="premium-content" />
+                      <Label htmlFor="premium-content">프리미엄 콘텐츠 접근</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="community-access" />
+                      <Label htmlFor="community-access">커뮤니티 참여</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="live-access" />
+                      <Label htmlFor="live-access">라이브 참여</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="vr-fanmeeting" />
+                      <Label htmlFor="vr-fanmeeting">VR 팬미팅 참여</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="exclusive-content" />
+                      <Label htmlFor="exclusive-content">독점 콘텐츠</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="goods-discount" />
+                      <Label htmlFor="goods-discount">굿즈 할인</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="priority-booking" />
+                      <Label htmlFor="priority-booking">우선 예약</Label>
+                    </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    편집
-                  </Button>
                 </div>
               </div>
-
-              <Button className="w-full">새 멤버십 등급 추가</Button>
-            </CardContent>
-          </Card>
+              <DialogFooter>
+                <Button type="submit" onClick={() => setMembershipModalOpen(false)}>
+                  저장
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         <TabsContent value="products" className="space-y-4">
