@@ -78,7 +78,7 @@ export function Header() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder={displayText || "AI에게 무엇이든 물어보세요..."}
+              placeholder={displayText}
               className="w-full pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
             />
           </div>
