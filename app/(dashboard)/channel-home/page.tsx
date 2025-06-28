@@ -103,11 +103,8 @@ export default function ChannelHomePage() {
               <PackageTab />
             </TabsContent>
 
-            <TabsContent value="vrook" className="p-4">
-              <div className="text-center py-20">
-                <h2 className="text-2xl font-bold mb-4">VROOK 탭</h2>
-                <p className="text-gray-600">VROOK 콘텐츠가 여기에 표시됩니다.</p>
-              </div>
+            <TabsContent value="vrook" className="mt-0 h-full">
+              <VrookTab />
             </TabsContent>
 
             <TabsContent value="xr-fanmeeting" className="p-4">
