@@ -21,10 +21,10 @@ export default function ContentCard({ content, isCompact = false, showMembership
             className="w-full h-full object-cover"
           />
           <div className="absolute top-1 left-1">
-            <Badge variant="secondary" className="text-xs">{content.type}</Badge>
+            <Badge variant="secondary" className="text-[10px] px-1 py-0">{content.type}</Badge>
           </div>
           {showMembershipBadge && content.membershipLevel && (
-            <div className={`absolute top-1 right-1 px-1 py-0.5 rounded text-xs font-bold ${
+            <div className={`absolute top-1 right-1 px-1 py-0.5 rounded text-[10px] font-bold ${
               content.membershipLevel === 'bronze' 
                 ? 'bg-orange-500 text-white' 
                 : content.membershipLevel === 'silver'
@@ -36,27 +36,27 @@ export default function ContentCard({ content, isCompact = false, showMembership
             </div>
           )}
           {content.duration && (
-            <div className="absolute bottom-1 right-1 bg-black/70 text-white px-1 py-0.5 rounded text-xs">
+            <div className="absolute bottom-1 right-1 bg-black/70 text-white px-1 py-0.5 rounded text-[10px]">
               {content.duration}
             </div>
           )}
           {content.type.includes("영상") && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center">
-                <Play className="h-4 w-4 text-white ml-0.5" fill="white" />
+              <div className="w-6 h-6 bg-black/50 rounded-full flex items-center justify-center">
+                <Play className="h-3 w-3 text-white ml-0.5" fill="white" />
               </div>
             </div>
           )}
         </div>
         <div className="p-2">
-          <h4 className="font-medium text-sm mb-1 line-clamp-2">{content.title}</h4>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <span className="flex items-center gap-1">
-              <Eye className="h-3 w-3" />
+          <h4 className="font-medium text-xs mb-1 line-clamp-2 leading-tight">{content.title}</h4>
+          <div className="flex items-center gap-1 text-[10px] text-gray-500">
+            <span className="flex items-center gap-0.5">
+              <Eye className="h-2.5 w-2.5" />
               {content.views}
             </span>
-            <span className="flex items-center gap-1">
-              <Heart className="h-3 w-3" />
+            <span className="flex items-center gap-0.5">
+              <Heart className="h-2.5 w-2.5" />
               {content.likes}
             </span>
           </div>

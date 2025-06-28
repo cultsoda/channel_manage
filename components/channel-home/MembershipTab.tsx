@@ -124,7 +124,7 @@ export default function MembershipTab() {
         {/* 멤버십 콘텐츠 그리드 */}
         <div className={
           membershipViewMode === "compact" && showAllMembership
-            ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
+            ? "grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2"
             : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         }>
           {displayedMembershipContent.map((content) => (
