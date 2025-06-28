@@ -86,24 +86,21 @@ export default function MembershipTab() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">멤버십 전용 콘텐츠</h2>
           <div className="flex items-center gap-2">
-            {showAllMembership && (
-              <div className="flex items-center gap-1 mr-2">
-                <Button
-                  variant={membershipViewMode === "normal" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setMembershipViewMode("normal")}
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={membershipViewMode === "compact" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setMembershipViewMode("compact")}
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">모아보기</span>
+              <button
+                onClick={() => setMembershipViewMode(membershipViewMode === "normal" ? "compact" : "normal")}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  membershipViewMode === "compact" ? "bg-purple-600" : "bg-gray-200"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    membershipViewMode === "compact" ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
             {filteredMembershipContent.length > 8 && (
               <Button 
                 variant="ghost" 
@@ -123,7 +120,7 @@ export default function MembershipTab() {
 
         {/* 멤버십 콘텐츠 그리드 */}
         <div className={
-          membershipViewMode === "compact" && showAllMembership
+          membershipViewMode === "compact"
             ? "grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2"
             : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         }>
@@ -131,7 +128,7 @@ export default function MembershipTab() {
             <ContentCard 
               key={content.id} 
               content={content} 
-              isCompact={membershipViewMode === "compact" && showAllMembership}
+              isCompact={membershipViewMode === "compact"}
               showMembershipBadge={true}
             />
           ))}
