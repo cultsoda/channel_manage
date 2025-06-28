@@ -2,8 +2,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Bell, Users, MessageCircle, DollarSign } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { useState } from "react"
 
 export default function NotificationsPage() {
+  const [newFanNotification, setNewFanNotification] = useState(true)
+  const [commentNotification, setCommentNotification] = useState(true)
+  const [revenueNotification, setRevenueNotification] = useState(true)
+  const [systemNotification, setSystemNotification] = useState(true)
+  const [emailNotification, setEmailNotification] = useState(false)
+  const [pushNotification, setPushNotification] = useState(true)
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -55,7 +63,7 @@ export default function NotificationsPage() {
                   <Label>새 팬 가입 알림</Label>
                   <p className="text-sm text-muted-foreground">신규 팬 가입 시 알림을 받습니다</p>
                 </div>
-                <input type="checkbox" className="rounded" defaultChecked />
+                <Switch checked={newFanNotification} onCheckedChange={setNewFanNotification} />
               </div>
 
               <div className="flex items-center justify-between">
@@ -63,7 +71,7 @@ export default function NotificationsPage() {
                   <Label>댓글/반응 알림</Label>
                   <p className="text-sm text-muted-foreground">새로운 댓글과 좋아요 알림</p>
                 </div>
-                <input type="checkbox" className="rounded" defaultChecked />
+                <Switch checked={commentNotification} onCheckedChange={setCommentNotification} />
               </div>
 
               <div className="flex items-center justify-between">
@@ -71,7 +79,7 @@ export default function NotificationsPage() {
                   <Label>수익 발생 알림</Label>
                   <p className="text-sm text-muted-foreground">구매, 후원 발생 시 알림</p>
                 </div>
-                <input type="checkbox" className="rounded" defaultChecked />
+                <Switch checked={revenueNotification} onCheckedChange={setRevenueNotification} />
               </div>
 
               <div className="flex items-center justify-between">
@@ -79,7 +87,7 @@ export default function NotificationsPage() {
                   <Label>시스템 공지사항</Label>
                   <p className="text-sm text-muted-foreground">플랫폼 관련 중요 공지</p>
                 </div>
-                <input type="checkbox" className="rounded" defaultChecked />
+                <Switch checked={systemNotification} onCheckedChange={setSystemNotification} />
               </div>
             </div>
 
@@ -93,7 +101,7 @@ export default function NotificationsPage() {
                   <Label>이메일 알림</Label>
                   <p className="text-sm text-muted-foreground">이메일로 알림을 받습니다</p>
                 </div>
-                <input type="checkbox" className="rounded" />
+                <Switch checked={emailNotification} onCheckedChange={setEmailNotification} />
               </div>
 
               <div className="flex items-center justify-between">
@@ -101,7 +109,7 @@ export default function NotificationsPage() {
                   <Label>모바일 푸시 알림</Label>
                   <p className="text-sm text-muted-foreground">모바일 앱 푸시 알림</p>
                 </div>
-                <input type="checkbox" className="rounded" defaultChecked />
+                <Switch checked={pushNotification} onCheckedChange={setPushNotification} />
               </div>
 
               <div className="space-y-2">

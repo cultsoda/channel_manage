@@ -25,10 +25,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Switch } from "@/components/ui/switch"
+
 
 export default function ChannelSettingsPage() {
   const [ageRestrictionDialog, setAgeRestrictionDialog] = useState(false)
   const [identityVerificationDialog, setIdentityVerificationDialog] = useState(false)
+
+  // 👇 여기에 추가하세요!
+  const [isChannelPublic, setIsChannelPublic] = useState(true)
+  const [isSearchVisible, setIsSearchVisible] = useState(true) 
+  const [isCommentsAllowed, setIsCommentsAllowed] = useState(true)
 
   const handleAgeRestrictionChange = (value: string) => {
     if (value === "19") {
@@ -260,7 +267,7 @@ export default function ChannelSettingsPage() {
                   <Label>채널 공개</Label>
                   <p className="text-sm text-muted-foreground">검색 결과에 채널이 노출됩니다</p>
                 </div>
-                <input type="checkbox" className="rounded" defaultChecked />
+                <Switch checked={isChannelPublic} onCheckedChange={setIsChannelPublic} />
               </div>
 
               <div className="flex items-center justify-between">
@@ -268,7 +275,7 @@ export default function ChannelSettingsPage() {
                   <Label>검색 엔진 노출</Label>
                   <p className="text-sm text-muted-foreground">구글 등 검색 엔진에서 찾을 수 있습니다</p>
                 </div>
-                <input type="checkbox" className="rounded" defaultChecked />
+                <Switch checked={isSearchVisible} onCheckedChange={setIsSearchVisible} />
               </div>
 
               <div className="space-y-2">
@@ -278,7 +285,6 @@ export default function ChannelSettingsPage() {
                   onChange={(e) => handleAgeRestrictionChange(e.target.value)}
                 >
                   <option value="all">전체 이용가</option>
-                  <option value="15">15세 이상</option>
                   <option value="19">19세 이상</option>
                 </select>
               </div>
@@ -304,7 +310,7 @@ export default function ChannelSettingsPage() {
                   <Label>댓글 허용</Label>
                   <p className="text-sm text-muted-foreground">새 콘텐츠에 기본적으로 댓글을 허용합니다</p>
                 </div>
-                <input type="checkbox" className="rounded" defaultChecked />
+                <Switch checked={isCommentsAllowed} onCheckedChange={setIsCommentsAllowed} />
               </div>
 
               <div className="space-y-2">
