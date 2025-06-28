@@ -95,6 +95,54 @@ export const allContent = [
       comments: 23,
       thumbnail: "/api/placeholder/300/200",
       uploadDate: "2025.04.08"
+    },
+    {
+      id: "9",
+      title: "신곡 뮤직비디오 티저",
+      type: "일반 영상",
+      category: "무료",
+      membership: "무료",
+      views: 892,
+      likes: 156,
+      comments: 45,
+      thumbnail: "/api/placeholder/300/200",
+      uploadDate: "2025.04.07"
+    },
+    {
+      id: "10",
+      title: "VR 콘서트 하이라이트",
+      type: "VR 영상",
+      category: "멤버십",
+      membership: "골드",
+      views: 445,
+      likes: 78,
+      comments: 29,
+      thumbnail: "/api/placeholder/300/200",
+      uploadDate: "2025.04.06"
+    },
+    {
+      id: "11",
+      title: "팬들과의 Q&A 세션",
+      type: "일반 영상",
+      category: "무료",
+      membership: "무료",
+      views: 623,
+      likes: 134,
+      comments: 67,
+      thumbnail: "/api/placeholder/300/200",
+      uploadDate: "2025.04.05"
+    },
+    {
+      id: "12",
+      title: "스튜디오 투어 360°",
+      type: "VR 영상",
+      category: "멤버십",
+      membership: "실버",
+      views: 298,
+      likes: 56,
+      comments: 18,
+      thumbnail: "/api/placeholder/300/200",
+      uploadDate: "2025.04.04"
     }
   ]
   

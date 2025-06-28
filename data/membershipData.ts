@@ -95,6 +95,30 @@ export const membershipContents = [
       views: 11234,
       comments: 234,
       thumbnail: "/api/placeholder/300/200"
+    },
+    {
+      id: "m9",
+      title: "[BRONZE] 오늘의 감정 일기",
+      type: "일반 이미지",
+      membershipLevel: "bronze",
+      duration: "5장",
+      uploadDate: "2024.06.17",
+      likes: 2345,
+      views: 9876,
+      comments: 123,
+      thumbnail: "/api/placeholder/300/200"
+    },
+    {
+      id: "m10",
+      title: "[GOLD 독점] 새 앨범 컨셉 미팅",
+      type: "일반 영상",
+      membershipLevel: "gold",
+      duration: "18:42",
+      uploadDate: "2024.06.16",
+      likes: 4321,
+      views: 13579,
+      comments: 289,
+      thumbnail: "/api/placeholder/300/200"
     }
   ]
   
