@@ -87,7 +87,7 @@ export default function VrookTab() {
           </div>
           
           {/* 패키지 구성품 */}
-          <div className="mb-4">
+          <div className="mb-6">
             <h4 className="text-sm font-medium text-gray-800 mb-2">패키지 구성</h4>
             <div className="space-y-1">
               {packageData.benefits.map((benefit: string, index: number) => (
@@ -228,51 +228,30 @@ export default function VrookTab() {
 
       {/* VROOK 패키지 섹션 */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold">패키지 안내</h2>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">모아보기</span>
-              <button
-                onClick={() => setViewMode(viewMode === "grid" ? "compact" : "grid")}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  viewMode === "compact" ? "bg-purple-600" : "bg-gray-200"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    viewMode === "compact" ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
-            </div>
-            {vrookPackages.length > 3 && (
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => setShowAllPackages(!showAllPackages)}
-                className="flex items-center gap-1"
-              >
-                {showAllPackages ? (
-                  <>접기 <ChevronUp className="h-4 w-4" /></>
-                ) : (
-                  <>더보기 <ChevronDown className="h-4 w-4" /></>
-                )}
-              </Button>
-            )}
-          </div>
+          {vrookPackages.length > 3 && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowAllPackages(!showAllPackages)}
+              className="flex items-center gap-1"
+            >
+              {showAllPackages ? (
+                <>접기 <ChevronUp className="h-4 w-4" /></>
+              ) : (
+                <>더보기 <ChevronDown className="h-4 w-4" /></>
+              )}
+            </Button>
+          )}
         </div>
 
-        <div className={
-          viewMode === "compact"
-            ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
-            : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        }>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedPackages.map((packageData) => (
             <PackageCard 
               key={packageData.id} 
               packageData={packageData}
-              isCompact={viewMode === "compact"}
+              isCompact={false}
             />
           ))}
         </div>
