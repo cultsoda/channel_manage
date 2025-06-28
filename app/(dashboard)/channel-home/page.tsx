@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, Gift, Info, Activity } from "lucide-react"
 import HomeTab from "@/components/channel-home/HomeTab"
 import MembershipTab from "@/components/channel-home/MembershipTab"
+import PurchasedContentTab from "@/components/channel-home/PurchasedContentTab"
 import PurchaseTab from "@/components/channel-home/PurchaseTab"
 import PackageTab from "@/components/channel-home/PackageTab"
 import ChannelFooter from "@/components/channel-home/ChannelFooter"
@@ -46,6 +47,9 @@ export default function ChannelHomePage() {
               <TabsTrigger value="membership" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
                 멤버십
               </TabsTrigger>
+              <TabsTrigger value="purchased-content" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
+                구매 콘텐츠
+              </TabsTrigger>
               <TabsTrigger value="purchase" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
                 단건구매
               </TabsTrigger>
@@ -85,6 +89,10 @@ export default function ChannelHomePage() {
 
             <TabsContent value="membership" className="mt-0 h-full">
               <MembershipTab />
+            </TabsContent>
+
+            <TabsContent value="purchased-content" className="mt-0 h-full">
+              <PurchasedContentTab />
             </TabsContent>
 
             <TabsContent value="purchase" className="mt-0 h-full">
