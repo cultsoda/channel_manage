@@ -6,6 +6,7 @@ import { Users, Gift, Info, Activity } from "lucide-react"
 import HomeTab from "@/components/channel-home/HomeTab"
 import MembershipTab from "@/components/channel-home/MembershipTab"
 import PurchaseTab from "@/components/channel-home/PurchaseTab"
+import PackageTab from "@/components/channel-home/PackageTab"
 import ChannelFooter from "@/components/channel-home/ChannelFooter"
 
 export default function ChannelHomePage() {
@@ -90,11 +91,8 @@ export default function ChannelHomePage() {
               <PurchaseTab />
             </TabsContent>
 
-            <TabsContent value="package" className="p-4">
-              <div className="text-center py-20">
-                <h2 className="text-2xl font-bold mb-4">패키지 탭</h2>
-                <p className="text-gray-600">패키지 상품이 여기에 표시됩니다.</p>
-              </div>
+            <TabsContent value="package" className="mt-0 h-full">
+              <PackageTab />
             </TabsContent>
 
             <TabsContent value="vrook" className="p-4">
