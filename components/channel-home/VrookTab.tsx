@@ -328,7 +328,7 @@ export default function VrookTab() {
             : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         }>
           {displayedContent.map((item) => (
-            item.benefits ? (
+            'benefits' in item ? (
               <VrookPackageCard 
                 key={item.id} 
                 packageData={item}

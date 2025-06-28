@@ -8,6 +8,7 @@ import MembershipTab from "@/components/channel-home/MembershipTab"
 import PurchasedContentTab from "@/components/channel-home/PurchasedContentTab"
 import PurchaseTab from "@/components/channel-home/PurchaseTab"
 import PackageTab from "@/components/channel-home/PackageTab"
+import VrookTab from "@/components/channel-home/VrookTab"
 import ChannelFooter from "@/components/channel-home/ChannelFooter"
 
 export default function ChannelHomePage() {

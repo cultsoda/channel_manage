@@ -5,10 +5,17 @@ import { Badge } from "@/components/ui/badge"
 import { Play, Eye, Heart, MessageCircle } from "lucide-react"
 
 interface ContentCardProps {
-  content: any
-  isCompact?: boolean
-  showMembershipBadge?: boolean
-}
+    content: any
+    isCompact?: boolean
+    showMembershipBadge?: boolean
+    packageInfo?: {
+      packageName: string
+      purchaseDate: string
+      packagePrice: number
+      discount: number
+      source: 'package' | 'vrook' | 'xr-fanmeeting-package' | 'xr-fanmeeting-single'
+    }
+  }
 
 export default function ContentCard({ content, isCompact = false, showMembershipBadge = false }: ContentCardProps) {
   if (isCompact) {
