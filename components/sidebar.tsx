@@ -62,10 +62,12 @@ export function Sidebar() {
               <p className="text-xs text-muted-foreground">chiam(관리자)</p>
             </div>
           </div>
-          <Button className="w-full mt-3 bg-orange-500 hover:bg-orange-600" size="sm">
-            <Upload className="h-4 w-4 mr-2" />
-            업로드
-          </Button>
+          <Link href="/upload">
+            <Button className="w-full mt-3 bg-orange-500 hover:bg-orange-600" size="sm">
+              <Upload className="h-4 w-4 mr-2" />
+              업로드
+            </Button>
+          </Link>
         </div>
 
         <div className="flex flex-col h-[calc(100vh-8rem)]">

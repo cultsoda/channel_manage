@@ -7,6 +7,7 @@ import { Upload } from "lucide-react"
 import { ContentListTab } from "@/components/content/content-list-tab"
 import { CategoryManagementTab } from "@/components/content/category-management-tab"
 import { PlaylistManagementTab } from "@/components/content/playlist-management-tab"
+import Link from "next/link"
 
 export default function ContentPage() {
   const [activeTab, setActiveTab] = useState("content")
@@ -86,10 +87,12 @@ export default function ContentPage() {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">콘텐츠 관리</h1>
           <p className="text-muted-foreground">업로드된 콘텐츠를 관리하고 편집하세요.</p>
         </div>
-        <Button className="bg-orange-500 hover:bg-orange-600">
-          <Upload className="mr-2 h-4 w-4" />
-          업로드
-        </Button>
+        <Link href="/upload">
+          <Button className="bg-orange-500 hover:bg-orange-600">
+            <Upload className="mr-2 h-4 w-4" />
+            업로드
+          </Button>
+        </Link>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">

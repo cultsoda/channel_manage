@@ -264,7 +264,7 @@ export default function DashboardPage() {
             <h2 className="text-lg font-semibold mb-4">빠른 실행</h2>
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               {/* 새 콘텐츠 업로드 */}
-              <Link href="/content">
+              <Link href="/upload">
                 <Card className="cursor-pointer hover:bg-accent transition-colors">
                   <CardContent className="flex flex-col items-center justify-center p-6">
                     <UploadIcon className="h-8 w-8 mb-2 text-orange-500" />
