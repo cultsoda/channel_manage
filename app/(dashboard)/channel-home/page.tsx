@@ -40,47 +40,34 @@ export default function ChannelHomePage() {
       <div className="bg-white flex-1 flex flex-col">
         {/* 탭 네비게이션 */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex-1 flex flex-col">
-          <div className="border-b bg-white sticky top-0 z-10">
-            <TabsList className="w-full justify-start h-12 bg-transparent p-0">
-              <TabsTrigger value="home" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                홈
-              </TabsTrigger>
-              <TabsTrigger value="membership" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                멤버십
-              </TabsTrigger>
-              <TabsTrigger value="purchased-content" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                구매 콘텐츠
-              </TabsTrigger>
-              <TabsTrigger value="purchase" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                단건구매
-              </TabsTrigger>
-              <TabsTrigger value="package" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                패키지
-              </TabsTrigger>
-              <TabsTrigger value="vrook" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                VROOK
-              </TabsTrigger>
-              <TabsTrigger value="xr-fanmeeting" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                XR팬미팅
-              </TabsTrigger>
-              <TabsTrigger value="community" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                <Users className="h-4 w-4 mr-1" />
-                커뮤니티
-              </TabsTrigger>
-              <TabsTrigger value="support" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                <Gift className="h-4 w-4 mr-1" />
-                후원
-              </TabsTrigger>
-              <TabsTrigger value="about" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                <Info className="h-4 w-4 mr-1" />
-                소개
-              </TabsTrigger>
-              <TabsTrigger value="activity" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-transparent">
-                <Activity className="h-4 w-4 mr-1" />
-                내 활동
-              </TabsTrigger>
-            </TabsList>
+          <div className="border-b border-gray-200 bg-white sticky top-0 z-10">
+          <div className="flex overflow-x-auto scrollbar-hide px-4">
+            {[
+              { id: "home", name: "홈" },
+              { id: "membership", name: "멤버십" },
+              { id: "purchase", name: "단건구매" },
+              { id: "vrook", name: "VROOK" },
+              { id: "xr-fanmeeting", name: "XR팬미팅" },
+              { id: "community", name: "커뮤니티" },
+              { id: "support", name: "후원" },
+              { id: "about", name: "소개" },
+              { id: "activity", name: "내 활동" }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-shrink-0 px-3 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === tab.id
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
           </div>
+        </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col"></Tabs>
 
           {/* 탭 콘텐츠 */}
           <div className="flex-1">

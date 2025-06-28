@@ -242,26 +242,26 @@ export default function VrookTab() {
         <div className="flex items-center mb-4">
           <div className="text-4xl mr-3">📖</div>
           <div>
-            <h2 className="text-2xl font-bold">VROOK</h2>
-            <p className="text-sm opacity-90">가상현실로 만나는 새로운 독서 경험</p>
+            <h2 className="text-2xl font-bold">VR 셀럽 화보</h2>
+            <p className="text-sm opacity-90">VROOK</p>
           </div>
         </div>
         <p className="text-sm leading-relaxed mb-4">
-          VROOK은 기존의 평면적인 독서를 넘어서, 3D 가상공간에서 몰입감 있는 스토리텔링을 경험할 수 있는 혁신적인 콘텐츠입니다.
+            VROOK은 VR 영상과 AI 화보를 통해 팬들에게 새로운 몰입 경험을 전달합니다.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-          <div className="bg-white/20 backdrop-blur rounded-lg p-3">
-            <h3 className="font-bold mb-1">📖 몰입형 독서</h3>
-            <p className="text-xs">VR로 경험하는 새로운 차원의 스토리</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur rounded-lg p-3">
-            <h3 className="font-bold mb-1">🎨 아트워크</h3>
-            <p className="text-xs">고품질 비주얼과 사운드 경험</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur rounded-lg p-3">
-            <h3 className="font-bold mb-1">🎁 특별 굿즈</h3>
-            <p className="text-xs">VR HMD, AI 포토카드 등 한정판</p>
-          </div>
+            <div className="bg-white/20 backdrop-blur rounded-lg p-3">
+                <h3 className="font-bold mb-1">📹 VR 영상</h3>
+                <p className="text-xs">몰입할 수 있는 VR 기술로 제작된 독점 영상 콘텐츠</p>
+            </div>
+            <div className="bg-white/20 backdrop-blur rounded-lg p-3">
+                <h3 className="font-bold mb-1">📸 디지털 사진</h3>
+                <p className="text-xs">고품질 2D 사진으로 구성된 포토 프리미엄 화보 콘텐츠</p>
+            </div>
+            <div className="bg-white/20 backdrop-blur rounded-lg p-3">
+                <h3 className="font-bold mb-1">🤖 AI 화보</h3>
+                <p className="text-xs">AI 기술로 생성된 창의적이고 독특한 합성 화보</p>
+            </div>
         </div>
       </div>
 
@@ -285,7 +285,7 @@ export default function VrookTab() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">
             {categoryFilter === 'packages' ? 'VROOK 패키지' :
-             categoryFilter === 'free' ? '무료 미끼 콘텐츠' :
+             categoryFilter === 'free' ? '미리보기' :
              'VROOK 전체 콘텐츠'}
           </h2>
           <div className="flex items-center gap-2">
