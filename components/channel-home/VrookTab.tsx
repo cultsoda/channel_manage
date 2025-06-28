@@ -4,62 +4,141 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ChevronDown, ChevronUp, Eye, Heart, MessageCircle, Play, BookOpen, Star, Sparkles, Gift } from "lucide-react"
-import { vrookPackages, vrookFreeContent, vrookCategories } from "@/data/vrookData"
+import { ChevronDown, ChevronUp, Eye, Heart, MessageCircle, Play, BookOpen, Star, Sparkles, Gift, ShoppingCart } from "lucide-react"
+
+// 임시 데이터 - 실제로는 API에서 가져올 데이터
+const vrookInfluencers = [
+  {
+    id: 1,
+    name: "브이툭 패키지",
+    price: 39000,
+    priceUSD: 29.7,
+    thumbnail: "https://via.placeholder.com/300x200/8B5CF6/ffffff?text=브이툭+패키지",
+    views: "45623",
+    likes: "8934",
+    uploadDate: "2024.06.18",
+    isPopular: true,
+    isNew: false,
+    benefits: [
+      "메인 화보 20장",
+      "메이킹 영상 1개", 
+      "VR 영상 1개"
+    ]
+  },
+  {
+    id: 2,
+    name: "브이툭 스페셜 패키지",
+    price: 59000,
+    priceUSD: 49.5,
+    thumbnail: "https://via.placeholder.com/300x200/EC4899/ffffff?text=브이툭+스페셜",
+    views: "67890",
+    likes: "12456",
+    uploadDate: "2024.06.17",
+    isPopular: false,
+    isNew: true,
+    benefits: [
+      "메인 화보 20장",
+      "메이킹 영상 1개",
+      "✨ VR 영상(올바른) 1개",
+      "✨ 올바른 VR HMD 특별 출장(국내 배송만 가능)"
+    ]
+  },
+  {
+    id: 3,
+    name: "브이툭 ALL 패키지",
+    price: 79000,
+    priceUSD: 69.3,
+    thumbnail: "https://via.placeholder.com/300x200/06B6D4/ffffff?text=브이툭+ALL",
+    views: "89012",
+    likes: "15678",
+    uploadDate: "2024.06.16",
+    isPopular: false,
+    isNew: true,
+    benefits: [
+      "메인 화보 20장",
+      "✨ B컷 화보 시리 20장",
+      "메이킹 영상 1개",
+      "VR 영상(올바른) 1개",
+      "올바른 VR HMD 특별 출장(국내 배송만 가능)",
+      "✨ AI 포토카드 3장(디지털, 실물→국내 배송만 가능)"
+    ]
+  }
+]
+
+const freePreviewContent = [
+  {
+    id: 101,
+    title: "오늘의 거우디 메인 화보",
+    description: "고품질 메인 화보를 미리 만나보세요.",
+    thumbnail: "https://via.placeholder.com/300x200/10B981/ffffff?text=메인+화보+미리보기",
+    duration: "20장",
+    views: "34567",
+    likes: "6789",
+    uploadDate: "2024.06.13",
+    type: "이미지"
+  },
+  {
+    id: 102,
+    title: "그녀의 여운을 B컷으로",
+    description: "카메라가 담은 순간 포착된 거우디의 고급진 표정과 몸짓, 팬만을 위한 은밀한 돌져서 모습",
+    thumbnail: "https://via.placeholder.com/300x200/F59E0B/ffffff?text=B컷+미리보기",
+    duration: "B컷 20장",
+    views: "23456",
+    likes: "4321",
+    uploadDate: "2024.06.14",
+    type: "이미지"
+  },
+  {
+    id: 103,
+    title: "거우디를 화보 영상으로 만나요",
+    description: "코스를 디렉팅부터 현장의 눈빛까지, 거우디의 몸짓이 모두 담겨 있는 감각적인 촬영 현장이에요.",
+    thumbnail: "https://via.placeholder.com/300x200/EF4444/ffffff?text=메이킹+영상",
+    duration: "메이킹 영상",
+    views: "45678",
+    likes: "8901",
+    uploadDate: "2024.06.15",
+    type: "영상"
+  }
+]
 
 export default function VrookTab() {
-  const [categoryFilter, setCategoryFilter] = useState("all")
-  const [showAllVrook, setShowAllVrook] = useState(false)
-  const [vrookViewMode, setVrookViewMode] = useState("normal")
+  const [viewMode, setViewMode] = useState("grid") // grid, compact
+  const [showAllPackages, setShowAllPackages] = useState(false)
+  const [showAllPreview, setShowAllPreview] = useState(false)
 
-  // 카테고리 필터링
-  const filterByCategory = () => {
-    switch (categoryFilter) {
-      case 'packages':
-        return vrookPackages
-      case 'free':
-        return vrookFreeContent
-      case 'all':
-      default:
-        return [...vrookPackages, ...vrookFreeContent]
-    }
-  }
+  const displayedPackages = showAllPackages ? vrookInfluencers : vrookInfluencers.slice(0, 3)
+  const displayedPreview = showAllPreview ? freePreviewContent : freePreviewContent.slice(0, 3)
 
-  const filteredContent = filterByCategory()
-  const displayedContent = showAllVrook ? filteredContent : filteredContent.slice(0, 6)
-
-  const VrookPackageCard = ({ packageData, isCompact = false }: { packageData: any, isCompact?: boolean }) => {
+  const PackageCard = ({ packageData, isCompact = false }: { packageData: any, isCompact?: boolean }) => {
     if (isCompact) {
       return (
         <Card className="cursor-pointer hover:shadow-md transition-shadow">
-          <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden relative">
+          <div className="aspect-[4/3] bg-gray-200 rounded-lg overflow-hidden relative">
             <img 
               src={packageData.thumbnail} 
               alt={packageData.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-1 left-1">
-              <Badge variant="secondary" className="text-[10px] px-1 py-0 bg-cyan-600 text-white">
-                📖 VROOK
+            <div className="absolute top-2 left-2">
+              <Badge className="bg-purple-600 text-white text-xs px-2 py-1">
+                VROOK
               </Badge>
             </div>
             {packageData.isPopular && (
-              <div className="absolute top-1 right-1 bg-yellow-500 text-black px-1 py-0.5 rounded text-[10px] font-bold">
-                <Star className="h-2 w-2 inline mr-0.5" />
+              <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold">
                 인기
               </div>
             )}
             {packageData.isNew && (
-              <div className="absolute top-1 right-1 bg-red-500 text-white px-1 py-0.5 rounded text-[10px] font-bold">
-                <Sparkles className="h-2 w-2 inline mr-0.5" />
+              <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">
                 NEW
               </div>
             )}
           </div>
-          <div className="p-2">
-            <h4 className="font-medium text-xs mb-1 line-clamp-2 leading-tight">{packageData.title}</h4>
-            <div className="text-[10px] text-cyan-600 font-bold">
-              ₩{packageData.price.toLocaleString()} / ${packageData.priceUSD}
+          <div className="p-3">
+            <h4 className="font-medium text-sm mb-1">{packageData.name}</h4>
+            <div className="text-purple-600 font-bold text-sm">
+              ₩{packageData.price.toLocaleString()}
             </div>
           </div>
         </Card>
@@ -69,41 +148,46 @@ export default function VrookTab() {
     return (
       <Card className="cursor-pointer hover:shadow-lg transition-shadow">
         <div className="relative">
-          <div className="aspect-video bg-gray-200 rounded-t-lg overflow-hidden">
+          <div className="aspect-[4/3] bg-gray-200 rounded-t-lg overflow-hidden">
             <img 
               src={packageData.thumbnail} 
-              alt={packageData.title}
+              alt={packageData.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-2 left-2 bg-cyan-600 text-white px-2 py-1 rounded text-xs font-bold">
-              <BookOpen className="h-3 w-3 inline mr-1" />
-              VROOK
+            <div className="absolute top-3 left-3">
+              <Badge className="bg-purple-600 text-white text-sm px-3 py-1 font-bold">
+                VROOK PACKAGE
+              </Badge>
             </div>
             {packageData.isPopular && (
-              <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold">
+              <div className="absolute top-3 right-3 bg-yellow-500 text-black px-2 py-1 rounded text-sm font-bold">
                 <Star className="h-3 w-3 inline mr-1" />
                 인기
               </div>
             )}
             {packageData.isNew && (
-              <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">
+              <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded text-sm font-bold">
                 <Sparkles className="h-3 w-3 inline mr-1" />
                 NEW
               </div>
             )}
           </div>
         </div>
-        <CardContent className="p-4">
-          <h3 className="font-bold text-lg mb-2">{packageData.title}</h3>
+        <CardContent className="p-5">
+          <h3 className="font-bold text-xl mb-1">{packageData.name}</h3>
+          <div className="text-purple-600 font-bold text-2xl mb-4">
+            ₩{packageData.price.toLocaleString()}
+            <span className="text-gray-500 text-base ml-2">${packageData.priceUSD}</span>
+          </div>
           
           {/* 패키지 구성품 */}
           <div className="mb-4">
             <h4 className="text-sm font-medium text-gray-800 mb-2">패키지 구성</h4>
             <div className="space-y-1">
               {packageData.benefits.map((benefit: string, index: number) => (
-                <div key={index} className="flex items-start gap-2 text-xs">
-                  <div className="w-1 h-1 bg-cyan-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <span className={benefit.includes('✨') ? 'text-cyan-600 font-medium' : 'text-gray-600'}>
+                <div key={index} className="flex items-start gap-2 text-sm">
+                  <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span className={benefit.includes('✨') ? 'text-purple-600 font-medium' : 'text-gray-600'}>
                     {benefit}
                   </span>
                 </div>
@@ -111,71 +195,62 @@ export default function VrookTab() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3 text-xs text-gray-500">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4 text-sm text-gray-500">
               <div className="flex items-center space-x-1">
-                <Eye className="w-3 h-3" />
+                <Eye className="w-4 h-4" />
                 <span>{packageData.views}</span>
               </div>
               <div className="flex items-center space-x-1">
-                <Heart className="w-3 h-3" />
+                <Heart className="w-4 h-4" />
                 <span>{packageData.likes}</span>
               </div>
               <span>{packageData.uploadDate}</span>
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-cyan-600 font-bold text-xl">
-                ₩{packageData.price.toLocaleString()}
-              </div>
-              <div className="text-gray-500 text-sm">
-                ${packageData.priceUSD}
-              </div>
-            </div>
-            <button className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-cyan-700 transition-colors">
-              XROMEDA에서 구매
-            </button>
-          </div>
+          <button className="w-full bg-purple-600 text-white py-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2">
+            <ShoppingCart className="h-4 w-4" />
+            XROMEDA에서 구매
+          </button>
         </CardContent>
       </Card>
     )
   }
 
-  const FreeContentCard = ({ content, isCompact = false }: { content: any, isCompact?: boolean }) => {
+  const PreviewCard = ({ content, isCompact = false }: { content: any, isCompact?: boolean }) => {
     if (isCompact) {
       return (
         <Card className="cursor-pointer hover:shadow-md transition-shadow">
-          <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden relative">
+          <div className="aspect-[4/3] bg-gray-200 rounded-lg overflow-hidden relative">
             <img 
               src={content.thumbnail} 
               alt={content.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-1 left-1 bg-green-500 text-white px-1 py-0.5 rounded text-[10px] font-bold">
+            <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
               무료
             </div>
-            <div className="absolute bottom-1 right-1 bg-black/70 text-white px-1 py-0.5 rounded text-[10px]">
+            <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
               {content.duration}
             </div>
-            {content.type.includes("영상") && (
+            {content.type === "영상" && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-6 h-6 bg-black/50 rounded-full flex items-center justify-center">
-                  <Play className="h-3 w-3 text-white ml-0.5" fill="white" />
+                <div className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center">
+                  <Play className="h-4 w-4 text-white ml-0.5" fill="white" />
                 </div>
               </div>
             )}
           </div>
-          <div className="p-2">
-            <h4 className="font-medium text-xs mb-1 line-clamp-2 leading-tight">{content.title}</h4>
-            <div className="flex items-center gap-1 text-[10px] text-gray-500">
-              <span className="flex items-center gap-0.5">
-                <Eye className="h-2.5 w-2.5" />
+          <div className="p-3">
+            <h4 className="font-medium text-sm mb-1 line-clamp-2">{content.title}</h4>
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <span className="flex items-center gap-1">
+                <Eye className="h-3 w-3" />
                 {content.views}
               </span>
-              <span className="flex items-center gap-0.5">
-                <Heart className="h-2.5 w-2.5" />
+              <span className="flex items-center gap-1">
+                <Heart className="h-3 w-3" />
                 {content.likes}
               </span>
             </div>
@@ -187,48 +262,48 @@ export default function VrookTab() {
     return (
       <Card className="cursor-pointer hover:shadow-lg transition-shadow">
         <div className="relative">
-          <div className="aspect-video bg-gray-200 rounded-t-lg overflow-hidden">
+          <div className="aspect-[4/3] bg-gray-200 rounded-t-lg overflow-hidden">
             <img 
               src={content.thumbnail} 
               alt={content.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
-              <Gift className="h-3 w-3 inline mr-1" />
+            <div className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 rounded text-sm font-bold">
+              <Gift className="h-4 w-4 inline mr-1" />
               무료
             </div>
-            <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+            <div className="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-sm">
               {content.duration}
             </div>
-            {content.type.includes("영상") && (
+            {content.type === "영상" && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
-                  <Play className="h-6 w-6 text-white ml-1" fill="white" />
+                <div className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center">
+                  <Play className="h-8 w-8 text-white ml-1" fill="white" />
                 </div>
               </div>
             )}
           </div>
         </div>
-        <CardContent className="p-4">
+        <CardContent className="p-5">
           <h3 className="font-bold text-lg mb-2">{content.title}</h3>
-          <p className="text-gray-600 text-sm mb-3">{content.description}</p>
+          <p className="text-gray-600 text-sm mb-4 leading-relaxed">{content.description}</p>
           
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3 text-xs text-gray-500">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4 text-sm text-gray-500">
               <div className="flex items-center space-x-1">
-                <Eye className="w-3 h-3" />
+                <Eye className="w-4 h-4" />
                 <span>{content.views}</span>
               </div>
               <div className="flex items-center space-x-1">
-                <Heart className="w-3 h-3" />
+                <Heart className="w-4 h-4" />
                 <span>{content.likes}</span>
               </div>
               <span>{content.uploadDate}</span>
             </div>
           </div>
 
-          <button className="w-full bg-green-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors">
-            무료로 시청하기
+          <button className="w-full bg-green-500 text-white py-3 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors">
+            무료로 체험하기
           </button>
         </CardContent>
       </Card>
@@ -238,80 +313,61 @@ export default function VrookTab() {
   return (
     <div className="p-4">
       {/* VROOK 소개 헤더 */}
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white p-6 rounded-xl mb-6">
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 rounded-xl mb-6">
         <div className="flex items-center mb-4">
-          <div className="text-4xl mr-3">📖</div>
+          <div className="text-4xl mr-4">📖</div>
           <div>
             <h2 className="text-2xl font-bold">VR 셀럽 화보</h2>
             <p className="text-sm opacity-90">VROOK</p>
           </div>
         </div>
         <p className="text-sm leading-relaxed mb-4">
-            VROOK은 VR 영상과 AI 화보를 통해 팬들에게 새로운 몰입 경험을 전달합니다.
+          VROOK은 VR 영상과 AI 화보를 통해 팬들에게 새로운 몰입 경험을 전달합니다.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div className="bg-white/20 backdrop-blur rounded-lg p-3">
-                <h3 className="font-bold mb-1">📹 VR 영상</h3>
-                <p className="text-xs">몰입할 수 있는 VR 기술로 제작된 독점 영상 콘텐츠</p>
-            </div>
-            <div className="bg-white/20 backdrop-blur rounded-lg p-3">
-                <h3 className="font-bold mb-1">📸 디지털 사진</h3>
-                <p className="text-xs">고품질 2D 사진으로 구성된 포토 프리미엄 화보 콘텐츠</p>
-            </div>
-            <div className="bg-white/20 backdrop-blur rounded-lg p-3">
-                <h3 className="font-bold mb-1">🤖 AI 화보</h3>
-                <p className="text-xs">AI 기술로 생성된 창의적이고 독특한 합성 화보</p>
-            </div>
+          <div className="bg-white/20 backdrop-blur rounded-lg p-3">
+            <h3 className="font-bold mb-1">📹 VR 영상</h3>
+            <p className="text-xs">몰입할 수 있는 VR 기술로 제작된 독점 영상 콘텐츠</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur rounded-lg p-3">
+            <h3 className="font-bold mb-1">📸 디지털 사진</h3>
+            <p className="text-xs">고품질 2D 사진으로 구성된 포토 프리미엄 화보 콘텐츠</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur rounded-lg p-3">
+            <h3 className="font-bold mb-1">🤖 AI 화보</h3>
+            <p className="text-xs">AI 기술로 생성된 창의적이고 독특한 합성 화보</p>
+          </div>
         </div>
       </div>
 
-      {/* 카테고리 필터 */}
-      <div className="flex space-x-2 overflow-x-auto pb-2 mb-6">
-        {vrookCategories.map((category) => (
-          <Button
-            key={category.id}
-            variant={categoryFilter === category.id ? "default" : "outline"}
-            size="sm"
-            onClick={() => setCategoryFilter(category.id)}
-            className="whitespace-nowrap"
-          >
-            {category.label} ({category.count})
-          </Button>
-        ))}
-      </div>
-
-      {/* VROOK 콘텐츠 섹션 */}
+      {/* VROOK 패키지 섹션 */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">
-            {categoryFilter === 'packages' ? 'VROOK 패키지' :
-             categoryFilter === 'free' ? '미리보기' :
-             'VROOK 전체 콘텐츠'}
-          </h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold">패키지 안내</h2>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">모아보기</span>
               <button
-                onClick={() => setVrookViewMode(vrookViewMode === "normal" ? "compact" : "normal")}
+                onClick={() => setViewMode(viewMode === "grid" ? "compact" : "grid")}
                 className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  vrookViewMode === "compact" ? "bg-cyan-600" : "bg-gray-200"
+                  viewMode === "compact" ? "bg-purple-600" : "bg-gray-200"
                 }`}
               >
                 <span
                   className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    vrookViewMode === "compact" ? "translate-x-5" : "translate-x-0"
+                    viewMode === "compact" ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
               </button>
             </div>
-            {filteredContent.length > 6 && (
+            {vrookInfluencers.length > 3 && (
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => setShowAllVrook(!showAllVrook)}
+                onClick={() => setShowAllPackages(!showAllPackages)}
                 className="flex items-center gap-1"
               >
-                {showAllVrook ? (
+                {showAllPackages ? (
                   <>접기 <ChevronUp className="h-4 w-4" /></>
                 ) : (
                   <>더보기 <ChevronDown className="h-4 w-4" /></>
@@ -321,43 +377,56 @@ export default function VrookTab() {
           </div>
         </div>
 
-        {/* VROOK 콘텐츠 그리드 */}
         <div className={
-          vrookViewMode === "compact"
-            ? "grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2"
+          viewMode === "compact"
+            ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
             : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         }>
-          {displayedContent.map((item) => (
-            'benefits' in item ? (
-              <VrookPackageCard 
-                key={item.id} 
-                packageData={item}
-                isCompact={vrookViewMode === "compact"}
-              />
-            ) : (
-              <FreeContentCard 
-                key={item.id} 
-                content={item}
-                isCompact={vrookViewMode === "compact"}
-              />
-            )
+          {displayedPackages.map((packageData) => (
+            <PackageCard 
+              key={packageData.id} 
+              packageData={packageData}
+              isCompact={viewMode === "compact"}
+            />
           ))}
         </div>
       </div>
 
-      {/* VR 디바이스 호환성 안내 */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-bold text-blue-800 mb-2 flex items-center">
-          <span className="mr-2">ℹ️</span>
-          VR 디바이스 호환성
-        </h3>
-        <div className="text-sm text-blue-700 space-y-1">
-          <p>• <strong>VR HMD</strong>: Oculus Quest, HTC Vive, PlayStation VR 등</p>
-          <p>• <strong>모바일</strong>: iOS/Android 앱으로도 체험 가능</p>
-          <p>• <strong>PC</strong>: Windows/Mac 브라우저 지원</p>
-          <p className="text-xs text-blue-600 mt-2">
-            * VR 디바이스가 없어도 모바일/PC에서 360도 영상으로 감상할 수 있습니다.
-          </p>
+      {/* 무료 미리보기 섹션 */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-xl font-bold text-green-800">콘텐츠 안내</h2>
+            <p className="text-sm text-green-700">패키지에 포함된 콘텐츠들을 확인해보세요. 어떤 특별한 경험이 기다리고 있는지 살펴보세요.</p>
+          </div>
+          {freePreviewContent.length > 3 && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowAllPreview(!showAllPreview)}
+              className="flex items-center gap-1"
+            >
+              {showAllPreview ? (
+                <>접기 <ChevronUp className="h-4 w-4" /></>
+              ) : (
+                <>더보기 <ChevronDown className="h-4 w-4" /></>
+              )}
+            </Button>
+          )}
+        </div>
+
+        <div className={
+          viewMode === "compact"
+            ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+            : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        }>
+          {displayedPreview.map((content) => (
+            <PreviewCard 
+              key={content.id} 
+              content={content}
+              isCompact={viewMode === "compact"}
+            />
+          ))}
         </div>
       </div>
     </div>
