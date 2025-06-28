@@ -19,13 +19,276 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MessageCircle, Calendar, Send, Shield, Archive, UserX } from "lucide-react"
+import { MessageCircle, Calendar, Send, Shield, Archive, UserX, Plus, Edit, Trash2 } from "lucide-react"
+
+// 타입 정의
+interface Event {
+  id: number
+  title: string
+  description: string
+  startDate: string
+  startTime: string
+  endDate: string
+  endTime: string
+  participants: number
+  maxParticipants: number
+  hasParticipantLimit: boolean
+  status: string
+}
+
+interface NewEvent {
+  title: string
+  description: string
+  startDate: string
+  startTime: string
+  endDate: string
+  endTime: string
+  hasParticipantLimit: boolean
+  maxParticipants: string
+}
+
+interface EventDialogProps {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  onSubmit: () => void
+  title: string
+  description: string
+}
 
 export default function CommunityPage() {
   const [eventOpen, setEventOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [spamWords, setSpamWords] = useState("")
   const [autoBlock, setAutoBlock] = useState(false)
   const [saveChat, setSaveChat] = useState(true)
+
+  const [events, setEvents] = useState<Event[]>([
+    {
+      id: 1,
+      title: "VR 팬미팅",
+      description: "특별한 VR 공간에서 만나요",
+      startDate: "2024-12-30",
+      startTime: "20:00",
+      endDate: "2024-12-30", 
+      endTime: "22:00",
+      participants: 45,
+      maxParticipants: 100,
+      hasParticipantLimit: true,
+      status: "예정"
+    },
+    {
+      id: 2,
+      title: "라이브 Q&A",
+      description: "팬들의 질문에 답해드려요",
+      startDate: "2024-12-28",
+      startTime: "19:00",
+      endDate: "2024-12-28",
+      endTime: "21:00", 
+      participants: 234,
+      maxParticipants: 300,
+      hasParticipantLimit: true,
+      status: "진행중"
+    },
+    {
+      id: 3,
+      title: "신년 이벤트",
+      description: "2024년을 마무리하는 특별한 시간",
+      startDate: "2024-12-25",
+      startTime: "18:00",
+      endDate: "2024-12-25",
+      endTime: "20:00",
+      participants: 150,
+      maxParticipants: 150,
+      hasParticipantLimit: true,
+      status: "완료"
+    }
+  ])
+
+  const [newEvent, setNewEvent] = useState<NewEvent>({
+    title: "",
+    description: "",
+    startDate: "",
+    startTime: "",
+    endDate: "",
+    endTime: "",
+    hasParticipantLimit: false,
+    maxParticipants: "",
+  })
+
+  const handleCreateEvent = () => {
+    const eventData: Event = {
+      id: events.length + 1,
+      ...newEvent,
+      maxParticipants: parseInt(newEvent.maxParticipants) || 0,
+      participants: 0,
+      status: "예정"
+    }
+    setEvents([...events, eventData])
+    setEventOpen(false)
+    setNewEvent({
+      title: "",
+      description: "",
+      startDate: "",
+      startTime: "",
+      endDate: "",
+      endTime: "",
+      hasParticipantLimit: false,
+      maxParticipants: "",
+    })
+  }
+
+  const handleEditEvent = (event: Event) => {
+    setSelectedEvent(event)
+    setNewEvent({
+      title: event.title,
+      description: event.description,
+      startDate: event.startDate,
+      startTime: event.startTime,
+      endDate: event.endDate,
+      endTime: event.endTime,
+      hasParticipantLimit: event.hasParticipantLimit,
+      maxParticipants: event.maxParticipants.toString(),
+    })
+    setIsEditDialogOpen(true)
+  }
+
+  const handleUpdateEvent = () => {
+    if (!selectedEvent) return
+    
+    const updatedEvents = events.map(event => 
+      event.id === selectedEvent.id 
+        ? { ...event, ...newEvent, maxParticipants: parseInt(newEvent.maxParticipants) || 0 }
+        : event
+    )
+    setEvents(updatedEvents)
+    setIsEditDialogOpen(false)
+    setSelectedEvent(null)
+    setNewEvent({
+      title: "",
+      description: "",
+      startDate: "",
+      startTime: "",
+      endDate: "",
+      endTime: "",
+      hasParticipantLimit: false,
+      maxParticipants: "",
+    })
+  }
+
+  const handleDeleteEvent = (eventId: number) => {
+    setEvents(events.filter(event => event.id !== eventId))
+  }
+
+  const getBadgeVariant = (status: string) => {
+    switch (status) {
+      case "예정": return "default"
+      case "진행중": return "secondary" 
+      case "완료": return "outline"
+      default: return "default"
+    }
+  }
+
+  const EventDialog = ({ isOpen, onOpenChange, onSubmit, title, description }: EventDialogProps) => (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[525px]">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="event-title">이벤트 제목</Label>
+            <Input
+              id="event-title"
+              value={newEvent.title}
+              onChange={(e) => setNewEvent((prev) => ({ ...prev, title: e.target.value }))}
+              placeholder="이벤트 제목을 입력하세요"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="event-description">이벤트 설명</Label>
+            <Textarea
+              id="event-description"
+              value={newEvent.description}
+              onChange={(e) => setNewEvent((prev) => ({ ...prev, description: e.target.value }))}
+              placeholder="이벤트에 대한 자세한 설명을 입력하세요"
+              className="min-h-[100px]"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="start-date">시작일시</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  id="start-date"
+                  type="date"
+                  value={newEvent.startDate}
+                  onChange={(e) => setNewEvent((prev) => ({ ...prev, startDate: e.target.value }))}
+                />
+                <Input
+                  type="time"
+                  value={newEvent.startTime}
+                  onChange={(e) => setNewEvent((prev) => ({ ...prev, startTime: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="end-date">종료일시</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  id="end-date"
+                  type="date"
+                  value={newEvent.endDate}
+                  onChange={(e) => setNewEvent((prev) => ({ ...prev, endDate: e.target.value }))}
+                />
+                <Input
+                  type="time"
+                  value={newEvent.endTime}
+                  onChange={(e) => setNewEvent((prev) => ({ ...prev, endTime: e.target.value }))}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="participant-limit"
+                checked={newEvent.hasParticipantLimit}
+                onCheckedChange={(checked) => setNewEvent((prev) => ({ ...prev, hasParticipantLimit: Boolean(checked) }))}
+              />
+              <Label htmlFor="participant-limit">참여자 제한 설정</Label>
+            </div>
+            
+            {newEvent.hasParticipantLimit && (
+              <div className="space-y-2">
+                <Label htmlFor="max-participants">최대 참여자 수</Label>
+                <Input
+                  id="max-participants"
+                  type="number"
+                  value={newEvent.maxParticipants}
+                  onChange={(e) => setNewEvent((prev) => ({ ...prev, maxParticipants: e.target.value }))}
+                  placeholder="최대 참여자 수를 입력하세요"
+                  min="1"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            취소
+          </Button>
+          <Button type="submit" onClick={onSubmit}>
+            {title === "이벤트 수정" ? "수정 완료" : "저장"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 
   return (
     <div className="flex flex-col gap-4">
@@ -101,7 +364,7 @@ export default function CommunityPage() {
                       등록된 스팸 키워드가 포함된 메시지를 자동으로 차단합니다
                     </p>
                   </div>
-                  <Checkbox checked={autoBlock} onCheckedChange={setAutoBlock} />
+                  <Checkbox checked={autoBlock} onCheckedChange={(checked) => setAutoBlock(Boolean(checked))} />
                 </div>
 
                 {autoBlock && (
@@ -145,7 +408,7 @@ export default function CommunityPage() {
                       채팅 기록을 서버에 저장하여 관리 목적으로 활용합니다
                     </p>
                   </div>
-                  <Checkbox checked={saveChat} onCheckedChange={setSaveChat} />
+                  <Checkbox checked={saveChat} onCheckedChange={(checked) => setSaveChat(Boolean(checked))} />
                 </div>
               </div>
             </CardContent>
@@ -236,94 +499,78 @@ export default function CommunityPage() {
         </TabsContent>
 
         <TabsContent value="events" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>이벤트 관리</CardTitle>
-              <CardDescription>팬 이벤트를 생성하고 관리하세요.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-center py-8 text-muted-foreground">
-                <Calendar className="h-8 w-8 mx-auto mb-2" />
-                <p>진행 중인 이벤트가 없습니다.</p>
-                <Dialog open={eventOpen} onOpenChange={setEventOpen}>
-                  <DialogTrigger asChild>
-                    <Button className="mt-4">새 이벤트 생성</Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[525px]">
-                    <DialogHeader>
-                      <DialogTitle>이벤트 생성</DialogTitle>
-                      <DialogDescription>새로운 팬 이벤트를 생성하세요.</DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="event-type">이벤트 유형 선택</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="이벤트 유형을 선택하세요" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="giveaway">경품 이벤트</SelectItem>
-                            <SelectItem value="contest">콘테스트</SelectItem>
-                            <SelectItem value="live">라이브 이벤트</SelectItem>
-                            <SelectItem value="meetup">팬미팅</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="event-title">이벤트 제목</Label>
-                        <Input id="event-title" placeholder="이벤트 제목을 입력하세요" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="event-start">시작일</Label>
-                          <Input id="event-start" type="date" />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="event-end">종료일</Label>
-                          <Input id="event-end" type="date" />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="event-description">이벤트 설명</Label>
-                        <div className="border rounded-md">
-                          <div className="border-b p-2 flex gap-2">
-                            <Button type="button" variant="ghost" size="sm">
-                              B
-                            </Button>
-                            <Button type="button" variant="ghost" size="sm">
-                              I
-                            </Button>
-                            <Button type="button" variant="ghost" size="sm">
-                              U
-                            </Button>
-                            <Button type="button" variant="ghost" size="sm">
-                              링크
-                            </Button>
-                            <Button type="button" variant="ghost" size="sm">
-                              이미지
-                            </Button>
-                          </div>
-                          <Textarea
-                            id="event-description"
-                            placeholder="이벤트 설명을 입력하세요"
-                            className="min-h-[150px] border-0 focus-visible:ring-0"
-                          />
-                        </div>
-                      </div>
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-semibold">이벤트 관리</h2>
+              <p className="text-muted-foreground">팬들과의 특별한 이벤트를 계획하고 관리하세요.</p>
+            </div>
+            <Dialog open={eventOpen} onOpenChange={setEventOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />새 이벤트 생성
+                </Button>
+              </DialogTrigger>
+            </Dialog>
+          </div>
+
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {events.map((event) => (
+              <Card key={event.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <Badge variant={getBadgeVariant(event.status)}>{event.status}</Badge>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" onClick={() => handleEditEvent(event)}>
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleDeleteEvent(event.id)}>
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
                     </div>
-                    <DialogFooter>
-                      <Button type="button" variant="outline" onClick={() => setEventOpen(false)}>
-                        취소
-                      </Button>
-                      <Button type="submit" onClick={() => setEventOpen(false)}>
-                        저장
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardContent>
-          </Card>
+                  </div>
+                  <CardTitle>{event.title}</CardTitle>
+                  <CardDescription>{event.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>시작일</span>
+                      <span>{event.startDate} {event.startTime}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>종료일</span>
+                      <span>{event.endDate} {event.endTime}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>참여자</span>
+                      <span>
+                        {event.participants}
+                        {event.hasParticipantLimit ? `/${event.maxParticipants}` : ''}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* 새 이벤트 생성 모달 */}
+          <EventDialog 
+            isOpen={eventOpen}
+            onOpenChange={setEventOpen}
+            onSubmit={handleCreateEvent}
+            title="새 이벤트 생성"
+            description="팬들과 함께할 새로운 이벤트를 만들어보세요."
+          />
+
+          {/* 이벤트 수정 모달 */}
+          <EventDialog 
+            isOpen={isEditDialogOpen}
+            onOpenChange={setIsEditDialogOpen}
+            onSubmit={handleUpdateEvent}
+            title="이벤트 수정"
+            description="이벤트 정보를 수정하세요."
+          />
         </TabsContent>
       </Tabs>
     </div>
