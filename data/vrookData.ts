@@ -90,7 +90,7 @@ export const vrookPackages = [
     // 무료 미리보기 콘텐츠
     {
       id: "vrook-free-1",
-      title: "오늘의 거우디 메인 화보",
+      title: "오늘의 겨우디 메인 화보",
       description: "고품질 메인 화보를 미리 만나보세요.",
       thumbnail: "/api/placeholder/400/300",
       type: "일반 이미지",
@@ -104,7 +104,7 @@ export const vrookPackages = [
     {
       id: "vrook-free-2", 
       title: "그녀의 여운을 B컷으로",
-      description: "카메라가 담은 순간 포착된 거우디의 고급진 표정과 몸짓, 팬만을 위한 은밀한 돌져서 모습",
+      description: "카메라가 담은 순간 포착된 겨우디의 고급진 표정과 몸짓, 팬만을 위한 은밀한 돌져서 모습",
       thumbnail: "/api/placeholder/400/300",
       type: "일반 이미지",
       duration: "B컷 20장",
@@ -116,8 +116,8 @@ export const vrookPackages = [
     },
     {
       id: "vrook-free-3",
-      title: "거우디를 화보 영상으로 만나요",
-      description: "코스를 디렉팅부터 현장의 눈빛까지, 거우디의 몸짓이 모두 담겨 있는 감각적인 촬영 현장이에요.",
+      title: "겨우디를 화보 영상으로 만나요",
+      description: "코스를 디렉팅부터 현장의 눈빛까지, 겨우디의 몸짓이 모두 담겨 있는 감각적인 촬영 현장이에요.",
       thumbnail: "/api/placeholder/400/300", 
       type: "일반 영상",
       duration: "메이킹 영상",
@@ -130,8 +130,8 @@ export const vrookPackages = [
     // 유료 VROOK 콘텐츠
     {
       id: "vrook-paid-1",
-      title: "눈 앞에 거우디 VR",
-      description: "시선이 마주친 순간, 1인칭 시점으로 만나는 거우디 하이라이트 VR 영상만 모았어요.",
+      title: "눈 앞에 겨우디 VR",
+      description: "시선이 마주친 순간, 1인칭 시점으로 만나는 겨우디 하이라이트 VR 영상만 모았어요.",
       thumbnail: "/api/placeholder/400/300",
       type: "VR 영상",
       duration: "VR 영상",
@@ -143,8 +143,8 @@ export const vrookPackages = [
     },
     {
       id: "vrook-paid-2",
-      title: "눈 앞에 거우디 VR 풀 버전",
-      description: "빛 안에서 단 둘이 있는 듯한 몰입감, 시작부터 끝까지 거우디를 눈앞에서 지켜보세요.",
+      title: "눈 앞에 겨우디 VR 풀 버전",
+      description: "빛 안에서 단 둘이 있는 듯한 몰입감, 시작부터 끝까지 겨우디를 눈앞에서 지켜보세요.",
       thumbnail: "/api/placeholder/400/300",
       type: "VR 영상",
       duration: "VR 영상 풀버전",
@@ -156,8 +156,8 @@ export const vrookPackages = [
     },
     {
       id: "vrook-paid-3",
-      title: "거우디 AI 포토카드",
-      description: "AI가 만들어낸 상상 속 거우디에요. 현실과 환상의 경계에서 태어난 거우디의 또 다른 모습들이에요.",
+      title: "겨우디 AI 포토카드",
+      description: "AI가 만들어낸 상상 속 겨우디에요. 현실과 환상의 경계에서 태어난 겨우디의 또 다른 모습들이에요.",
       thumbnail: "/api/placeholder/400/300",
       type: "AI 이미지",
       duration: "AI 창작",
@@ -169,8 +169,8 @@ export const vrookPackages = [
     },
     {
         id: "vrook-paid-4",
-        title: "거우디 프라이빗 VR",
-        description: "1:1 개인적인 공간에서 만나는 거우디의 특별한 순간들을 VR로 체험하세요.",
+        title: "겨우디 프라이빗 VR",
+        description: "1:1 개인적인 공간에서 만나는 겨우디의 특별한 순간들을 VR로 체험하세요.",
         thumbnail: "/api/placeholder/400/300",
         type: "VR 영상",
         duration: "VR 프라이빗",
@@ -182,7 +182,7 @@ export const vrookPackages = [
       },
       {
         id: "vrook-paid-5",
-        title: "거우디 B컷 스페셜",
+        title: "겨우디 B컷 스페셜",
         description: "공개되지 않았던 비하인드 B컷 화보들을 모은 특별 컬렉션입니다.",
         thumbnail: "/api/placeholder/400/300",
         type: "일반 이미지",
@@ -195,8 +195,8 @@ export const vrookPackages = [
       },
       {
         id: "vrook-free-4",
-        title: "거우디 VR 체험 티저",
-        description: "VR로 만나는 거우디의 매력을 짧게 미리 체험해볼 수 있습니다.",
+        title: "겨우디 VR 체험 티저",
+        description: "VR로 만나는 겨우디의 매력을 짧게 미리 체험해볼 수 있습니다.",
         thumbnail: "/api/placeholder/400/300",
         type: "VR 영상",
         duration: "VR 티저",
@@ -208,8 +208,8 @@ export const vrookPackages = [
       },
       {
         id: "vrook-paid-6",
-        title: "거우디 AI 아트 컬렉션",
-        description: "AI가 창조한 거우디의 환상적인 모습들을 담은 아트 컬렉션입니다.",
+        title: "겨우디 AI 아트 컬렉션",
+        description: "AI가 창조한 겨우디의 환상적인 모습들을 담은 아트 컬렉션입니다.",
         thumbnail: "/api/placeholder/400/300",
         type: "AI 이미지",
         duration: "AI 아트",
@@ -221,7 +221,7 @@ export const vrookPackages = [
       },
       {
         id: "vrook-free-5",
-        title: "거우디 메이킹 하이라이트",
+        title: "겨우디 메이킹 하이라이트",
         description: "화보 촬영 현장의 하이라이트 순간들을 담은 짧은 영상입니다.",
         thumbnail: "/api/placeholder/400/300",
         type: "일반 영상",
