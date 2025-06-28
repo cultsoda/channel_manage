@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { List, Grid3X3, ChevronDown, ChevronUp } from "lucide-react"
+import { ChevronDown, ChevronUp } from "lucide-react"
 import { membershipContents, membershipTiers } from "@/data/membershipData"
 import ContentCard from "./ContentCard"
 

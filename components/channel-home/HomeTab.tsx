@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, Filter, List, Grid3X3, ChevronDown, ChevronUp } from "lucide-react"
+import { Search, Filter, ChevronDown, ChevronUp } from "lucide-react"
 import { allContent, contentTypes } from "@/data/contentData"
 import ContentCard from "./ContentCard"
 
