@@ -53,7 +53,7 @@ export function Sidebar() {
 
         {/* Channel Info Section */}
         <div className="border-b p-4">
-          <div className="flex items-center gap-3">
+          <Link href="/channel-home" className="flex items-center gap-3 hover:bg-accent rounded-md p-2 -m-2 transition-colors">
             <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center">
               <span className="text-sm font-medium">채널</span>
             </div>
@@ -61,7 +61,7 @@ export function Sidebar() {
               <p className="text-sm font-medium truncate">채널의 채널</p>
               <p className="text-xs text-muted-foreground">chiam(관리자)</p>
             </div>
-          </div>
+          </Link>
           <Link href="/upload">
             <Button className="w-full mt-3 bg-orange-500 hover:bg-orange-600" size="sm">
               <Upload className="h-4 w-4 mr-2" />
