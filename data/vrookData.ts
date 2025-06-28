@@ -166,7 +166,72 @@ export const vrookPackages = [
       views: 54321,
       comments: 432,
       isFree: false
-    }
+    },
+    {
+        id: "vrook-paid-4",
+        title: "거우디 프라이빗 VR",
+        description: "1:1 개인적인 공간에서 만나는 거우디의 특별한 순간들을 VR로 체험하세요.",
+        thumbnail: "/api/placeholder/400/300",
+        type: "VR 영상",
+        duration: "VR 프라이빗",
+        uploadDate: "2024.06.09",
+        likes: 7654,
+        views: 43210,
+        comments: 321,
+        isFree: false
+      },
+      {
+        id: "vrook-paid-5",
+        title: "거우디 B컷 스페셜",
+        description: "공개되지 않았던 비하인드 B컷 화보들을 모은 특별 컬렉션입니다.",
+        thumbnail: "/api/placeholder/400/300",
+        type: "일반 이미지",
+        duration: "B컷 스페셜",
+        uploadDate: "2024.06.08",
+        likes: 5432,
+        views: 32109,
+        comments: 210,
+        isFree: false
+      },
+      {
+        id: "vrook-free-4",
+        title: "거우디 VR 체험 티저",
+        description: "VR로 만나는 거우디의 매력을 짧게 미리 체험해볼 수 있습니다.",
+        thumbnail: "/api/placeholder/400/300",
+        type: "VR 영상",
+        duration: "VR 티저",
+        uploadDate: "2024.06.07",
+        likes: 4321,
+        views: 21098,
+        comments: 123,
+        isFree: true
+      },
+      {
+        id: "vrook-paid-6",
+        title: "거우디 AI 아트 컬렉션",
+        description: "AI가 창조한 거우디의 환상적인 모습들을 담은 아트 컬렉션입니다.",
+        thumbnail: "/api/placeholder/400/300",
+        type: "AI 이미지",
+        duration: "AI 아트",
+        uploadDate: "2024.06.06",
+        likes: 6543,
+        views: 38765,
+        comments: 287,
+        isFree: false
+      },
+      {
+        id: "vrook-free-5",
+        title: "거우디 메이킹 하이라이트",
+        description: "화보 촬영 현장의 하이라이트 순간들을 담은 짧은 영상입니다.",
+        thumbnail: "/api/placeholder/400/300",
+        type: "일반 영상",
+        duration: "하이라이트",
+        uploadDate: "2024.06.05",
+        likes: 3210,
+        views: 19876,
+        comments: 98,
+        isFree: true
+      }
   ]
   
   // 기존 무료 콘텐츠만 (하위 호환성을 위해 유지)
