@@ -39,16 +39,33 @@ export default function ContentUploadPage() {
     title: "",
     description: "",
     thumbnail: null as File | null,
+    tags: "",
     category: "",
-    membership: "free",
+    playlist: "",
+    publicScope: "all", // all, membership
+    scheduledPublish: false,
+    publishDate: "",
+    publishTime: "",
     isPublic: true,
     allowComments: true,
-    allowDownload: false,
     // VR 전용 설정
     vrFormat: "360",
     // 일반 영상 전용 설정
     videoQuality: "auto",
   })
+
+  // 카테고리와 플레이리스트 데이터 (실제로는 props나 API에서 가져와야 함)
+  const categories = [
+    { id: "1", name: "VR 콘텐츠" },
+    { id: "2", name: "일반 영상" },
+    { id: "3", name: "오디오" },
+  ]
+
+  const playlists = [
+    { id: "1", name: "인기 콘텐츠" },
+    { id: "2", name: "신작 모음" },
+    { id: "3", name: "VR 체험관" },
+  ]
 
   const contentTypes = [
     {
@@ -373,7 +390,52 @@ export default function ContentUploadPage() {
                 </div>
               </div>
 
-              {/* 썸네일 설정 */}
+              <div className="space-y-2">
+                <Label htmlFor="tags">태그</Label>
+                <Input
+                  id="tags"
+                  placeholder="태그를 입력하세요 (쉼표로 구분)"
+                  value={formData.tags}
+                  onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                />
+                <p className="text-xs text-muted-foreground">
+                  검색 및 분류를 위한 태그를 입력해주세요 (예: VR, 게임, 체험)
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="category">카테고리</Label>
+                  <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="카테고리를 선택하세요" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="playlist">플레이리스트</Label>
+                  <Select value={formData.playlist} onValueChange={(value) => setFormData({...formData, playlist: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="플레이리스트를 선택하세요" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {playlists.map((playlist) => (
+                        <SelectItem key={playlist.id} value={playlist.id}>
+                          {playlist.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
               <div className="space-y-2">
                 <Label>
                   썸네일 <span className="text-red-500">*</span>
@@ -408,10 +470,10 @@ export default function ContentUploadPage() {
             </CardContent>
           </Card>
 
-          {/* 공개 설정 */}
+          {/* 고급 설정 */}
           <Card>
             <CardHeader>
-              <CardTitle>공개 설정</CardTitle>
+              <CardTitle>고급 설정</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
@@ -482,18 +544,55 @@ export default function ContentUploadPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>압축 설정</Label>
-                    <p className="text-sm text-muted-foreground">
-                      압축으로 설정하시면 전체 업체어 위에게<br/>
-                      셔드로 관련즈기 공개했 하 원칙을 1차 웰입니다.
-                    </p>
+                <div className="space-y-2">
+                  <Label>공개 범위 설정</Label>
+                  <Select value={formData.publicScope} onValueChange={(value) => setFormData({...formData, publicScope: value})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">전체 공개</SelectItem>
+                      <SelectItem value="membership">멤버십 전용</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>예약 발행</Label>
+                      <p className="text-sm text-muted-foreground">
+                        특정 시간에 자동으로 콘텐츠 공개
+                      </p>
+                    </div>
+                    <Switch
+                      checked={formData.scheduledPublish}
+                      onCheckedChange={(checked) => setFormData({...formData, scheduledPublish: checked})}
+                    />
                   </div>
-                  <Switch
-                    checked={formData.allowDownload}
-                    onCheckedChange={(checked) => setFormData({...formData, allowDownload: checked})}
-                  />
+
+                  {formData.scheduledPublish && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="publish-date">발행 날짜</Label>
+                        <Input
+                          id="publish-date"
+                          type="date"
+                          value={formData.publishDate}
+                          onChange={(e) => setFormData({...formData, publishDate: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="publish-time">발행 시간</Label>
+                        <Input
+                          id="publish-time"
+                          type="time"
+                          value={formData.publishTime}
+                          onChange={(e) => setFormData({...formData, publishTime: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
