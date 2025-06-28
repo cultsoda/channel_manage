@@ -196,35 +196,7 @@ export default function PurchasedContentTab() {
             </div>
           </div>
         )}
-      </div>
-
-      {/* 구매 통계 카드 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-        <div className="bg-blue-50 p-4 rounded-lg text-center">
-          <div className="text-2xl font-bold text-blue-600">
-            {purchasedContents.filter(c => c.purchaseSource === 'single').length}
-          </div>
-          <div className="text-sm text-blue-700">단건구매</div>
         </div>
-        <div className="bg-green-50 p-4 rounded-lg text-center">
-          <div className="text-2xl font-bold text-green-600">
-            {purchasedContents.filter(c => c.purchaseSource === 'package').length}
-          </div>
-          <div className="text-sm text-green-700">패키지</div>
-        </div>
-        <div className="bg-cyan-50 p-4 rounded-lg text-center">
-          <div className="text-2xl font-bold text-cyan-600">
-            {purchasedContents.filter(c => c.purchaseSource === 'vrook').length}
-          </div>
-          <div className="text-sm text-cyan-700">VROOK</div>
-        </div>
-        <div className="bg-purple-50 p-4 rounded-lg text-center">
-          <div className="text-2xl font-bold text-purple-600">
-            {purchasedContents.filter(c => c.purchaseSource === 'xr-fanmeeting').length}
-          </div>
-          <div className="text-sm text-purple-700">XR 팬미팅</div>
-        </div>
-      </div>
     </div>
   )
 }
