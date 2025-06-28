@@ -18,6 +18,13 @@ import {
   Upload,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -53,15 +60,25 @@ export function Sidebar() {
 
         {/* Channel Info Section */}
         <div className="border-b p-4">
-          <Link href="/channel-home" className="flex items-center gap-3 hover:bg-accent rounded-md p-2 -m-2 transition-colors">
-            <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center">
-              <span className="text-sm font-medium">채널</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">채널의 채널</p>
-              <p className="text-xs text-muted-foreground">chiam(관리자)</p>
-            </div>
-          </Link>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href="/channel-home" className="flex items-center gap-3 hover:bg-accent rounded-md p-2 -m-2 transition-colors">
+                  <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center">
+                    <span className="text-sm font-medium">채널</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">채널의 채널</p>
+                    <p className="text-xs text-muted-foreground">chiam(관리자)</p>
+                  </div>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>채널 홈으로 이동</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
           <Link href="/upload">
             <Button className="w-full mt-3 bg-orange-500 hover:bg-orange-600" size="sm">
               <Upload className="h-4 w-4 mr-2" />
