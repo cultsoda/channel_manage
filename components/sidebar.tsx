@@ -30,21 +30,26 @@ export function Sidebar() {
   const pathname = usePathname()
   const { isOpen, toggle } = useSidebar()
 
+  const handleMobileMenuClick = () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      toggle()
+    }
+  }
   return (
     <>
       <div
-        className={cn("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden", isOpen ? "block" : "hidden")}
+        className={cn("fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden", isOpen ? "block" : "hidden")}
         onClick={toggle}
       />
       <div
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 bg-background",
-          "transition-transform duration-300 ease-in-out",
-          "border-r",
-          isOpen ? "translate-x-0" : "-translate-x-full",
-          "lg:translate-x-0",
-        )}
-      >
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 w-72 bg-background",
+            "transition-transform duration-300 ease-in-out",
+            "border-r shadow-xl",          // ← "shadow-xl" 추가
+            isOpen ? "translate-x-0" : "-translate-x-full",
+            "lg:translate-x-0",
+          )}
+        >
         <div className="flex h-14 items-center border-b px-4">
           <Link
             href="https://xromeda.com"
@@ -63,7 +68,7 @@ export function Sidebar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href="/channel-home" className="flex items-center gap-3 hover:bg-accent rounded-md p-2 -m-2 transition-colors">
+                <Link href="/channel-home" className="flex items-center gap-3 hover:bg-accent rounded-md p-2 -m-2 transition-colors" onClick={handleMobileMenuClick} >
                   <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center">
                     <span className="text-sm font-medium">채널</span>
                   </div>
@@ -79,7 +84,7 @@ export function Sidebar() {
             </Tooltip>
           </TooltipProvider>
           
-          <Link href="/upload">
+          <Link href="/upload" onClick={handleMobileMenuClick} >
             <Button className="w-full mt-3 bg-orange-500 hover:bg-orange-600" size="sm">
               <Upload className="h-4 w-4 mr-2" />
               업로드
@@ -94,6 +99,7 @@ export function Sidebar() {
                 <Link
                   key={index}
                   href={item.href}
+                  onClick={handleMobileMenuClick} 
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
                     pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
