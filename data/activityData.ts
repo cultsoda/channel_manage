@@ -1,13 +1,31 @@
 // 내 활동 탭 데이터
+import { MEMBERSHIP_TIERS, FanSystemUtils } from "@/constants/fanSystem"
+
+// 사용자의 현재 포인트로 레벨 정보 계산
+const currentPoints = 8450
+const levelInfo = FanSystemUtils.getLevelProgress(currentPoints)
+const membershipTier = FanSystemUtils.getMembershipTierByAmount(127000) // 총 후원 금액
+
 export const activityData = {
     // 사용자 정보
     userInfo: {
       name: "VR매니아123",
       joinDate: "2023.08.15",
-      membershipTier: "VIP",
-      level: 47,
-      totalPoints: 8450,
-      nextLevelPoints: 1550,
+      
+      // 팬 레벨 시스템 (활동 기반)
+      level: levelInfo.currentLevel,
+      levelTitle: levelInfo.levelTitle,
+      totalPoints: currentPoints,
+      progressPoints: levelInfo.progressPoints,
+      nextLevelPoints: levelInfo.nextLevelPoints,
+      progressPercentage: levelInfo.progressPercentage,
+      
+      // 멤버십 등급 시스템 (결제 기반)
+      membershipTier: membershipTier.name,
+      membershipLevel: membershipTier.level,
+      membershipEmoji: membershipTier.emoji,
+      totalSpentAmount: 127000, // 총 후원/구매 금액
+      
       avatar: "/api/placeholder/80/80",
       bio: "VR 게임을 사랑하는 케인님의 열렬한 팬입니다! 🥽✨"
     },
@@ -19,7 +37,8 @@ export const activityData = {
         likesGiven: 156,
         watchTime: "47시간 32분",
         supportAmount: 15000,
-        attendedEvents: 3
+        attendedEvents: 3,
+        earnedPoints: 450 // 이번 달 획득한 포인트
       },
       allTime: {
         totalComments: 342,
@@ -27,7 +46,9 @@ export const activityData = {
         totalWatchTime: "486시간 15분",
         totalSupport: 127000,
         totalEvents: 18,
-        firstVideoWatched: "2023.08.20"
+        totalPurchases: 8, // 콘텐츠 구매 횟수
+        firstVideoWatched: "2023.08.20",
+        totalEarnedPoints: currentPoints
       }
     },
   
@@ -42,12 +63,12 @@ export const activityData = {
         earnedDate: "2023.08.15"
       },
       {
-        id: "vip-member",
-        name: "VIP 멤버",
-        description: "VIP 멤버십 가입자",
-        icon: "⭐",
+        id: "membership-tier-4",
+        name: `${membershipTier.emoji} ${membershipTier.name} 멤버`,
+        description: `${membershipTier.description}`,
+        icon: membershipTier.emoji,
         rarity: "epic",
-        earnedDate: "2023.12.01"
+        earnedDate: "2024.04.20"
       },
       {
         id: "comment-master",
@@ -80,6 +101,14 @@ export const activityData = {
         icon: "📺",
         rarity: "epic",
         earnedDate: "2024.06.01"
+      },
+      {
+        id: `level-${Math.floor(levelInfo.currentLevel / 10) * 10}`,
+        name: `레벨 ${levelInfo.currentLevel} ${levelInfo.levelTitle}`,
+        description: `팬 레벨 ${levelInfo.currentLevel} 달성`,
+        icon: "⭐",
+        rarity: levelInfo.currentLevel >= 40 ? "epic" : "rare",
+        earnedDate: "2024.06.15"
       }
     ],
   
@@ -91,7 +120,8 @@ export const activityData = {
         comment: "와 정말 우주에 있는 것 같아요! 다음엔 화성 탐험도 해주세요 🚀",
         likes: 12,
         date: "2024.06.27",
-        isLiked: true
+        isLiked: true,
+        earnedPoints: 10 // 댓글 작성으로 획득한 포인트
       },
       {
         id: "comment-2", 
@@ -99,7 +129,8 @@ export const activityData = {
         comment: "이 모드 진짜 재밌더라구요! 케인님 덕분에 알게 됐어요 감사합니다 ㅎㅎ",
         likes: 8,
         date: "2024.06.25",
-        isLiked: false
+        isLiked: false,
+        earnedPoints: 10
       },
       {
         id: "comment-3",
@@ -107,7 +138,8 @@ export const activityData = {
         comment: "VROOK 기술 정말 놀라워요... 미래가 온 것 같아요",
         likes: 15,
         date: "2024.06.22",
-        isLiked: true
+        isLiked: true,
+        earnedPoints: 10
       },
       {
         id: "comment-4",
@@ -115,55 +147,48 @@ export const activityData = {
         comment: "덕분에 PICO 4로 결정했어요! 리뷰 너무 상세해서 도움 많이 됐습니다 👍",
         likes: 6,
         date: "2024.06.20",
-        isLiked: false
+        isLiked: false,
+        earnedPoints: 10
       },
       {
         id: "comment-5",
         videoTitle: "VR 채팅으로 전 세계 친구들과 만나기",
-        comment: "저도 VR 채팅 해봤는데 정말 신기했어요! 언어의 벽도 없고",
-        likes: 4,
+        comment: "저도 VR 채팅 해봤는데 정말 신기했어요! 다음에 함께 해봐요~",
+        likes: 9,
         date: "2024.06.18",
-        isLiked: true
+        isLiked: true,
+        earnedPoints: 10
       }
     ],
   
-    // 관심 콘텐츠 (좋아요/북마크)
+    // 관심 콘텐츠 (찜한 콘텐츠)
     favoriteContent: [
       {
         id: "fav-1",
         title: "VR로 체험하는 우주여행! 진짜 같은 신기한 경험",
-        thumbnail: "/api/placeholder/160/90",
-        duration: "12:45",
-        views: 890000,
+        type: "VR 영상",
+        thumbnail: "/api/placeholder/300/200",
         addedDate: "2024.06.27",
-        type: "video"
+        views: 45200,
+        isWatched: true
       },
       {
         id: "fav-2",
         title: "VROOK으로 만든 AI 화보 공개! 이런 게 가능하다고?",
-        thumbnail: "/api/placeholder/160/90", 
-        duration: "8:32",
-        views: 456000,
+        type: "VROOK",
+        thumbnail: "/api/placeholder/300/200", 
         addedDate: "2024.06.22",
-        type: "video"
+        views: 38900,
+        isWatched: true
       },
       {
         id: "fav-3",
-        title: "Meta Quest 3 완벽 가이드",
-        thumbnail: "/api/placeholder/160/90",
-        duration: "15:20",
-        views: 234000,
+        title: "Meta Quest 3 언박싱 & 첫 인상 리뷰",
+        type: "일반 영상",
+        thumbnail: "/api/placeholder/300/200",
         addedDate: "2024.06.15",
-        type: "playlist"
-      },
-      {
-        id: "fav-4",
-        title: "VR 게임 추천 베스트 10",
-        thumbnail: "/api/placeholder/160/90",
-        duration: "22:18",
-        views: 567000,
-        addedDate: "2024.06.10",
-        type: "video"
+        views: 62100,
+        isWatched: false
       }
     ],
   
@@ -171,40 +196,30 @@ export const activityData = {
     purchaseHistory: [
       {
         id: "purchase-1",
-        type: "membership",
-        title: "VIP 멤버십 (월간)",
-        amount: 9900,
-        date: "2024.06.01",
-        status: "active",
-        description: "VIP 전용 콘텐츠 및 혜택 이용",
-        validUntil: "2024.07.01"
+        type: "VROOK",
+        title: "AI 화보 컬렉션 Vol.3",
+        amount: 25000,
+        date: "2024.06.20",
+        status: "완료",
+        earnedPoints: 80
       },
       {
         id: "purchase-2", 
-        type: "content",
-        title: "VR 게임 개발 비하인드 스토리",
-        amount: 3000,
-        date: "2024.05.15",
-        status: "completed",
-        description: "단건 구매 콘텐츠"
+        type: "VR 영상",
+        title: "프리미엄 VR 콘서트 체험",
+        amount: 15000,
+        date: "2024.06.10",
+        status: "완료",
+        earnedPoints: 50
       },
       {
         id: "purchase-3",
-        type: "vrook",
-        title: "VROOK 프리미엄 화보 제작권",
-        amount: 15000,
-        date: "2024.04.28",
-        status: "completed",
-        description: "AI 화보 5회 제작 가능"
-      },
-      {
-        id: "purchase-4",
-        type: "fanmeeting",
-        title: "XR 팬미팅 티켓 (4월)",
-        amount: 25000,
-        date: "2024.04.10",
-        status: "completed",
-        description: "VR 환경에서 진행된 팬미팅 참여"
+        type: "멤버십",
+        title: "플래티넘 멤버십 (월간)",
+        amount: 39900,
+        date: "2024.06.01",
+        status: "완료",
+        earnedPoints: 100
       }
     ],
   
@@ -212,77 +227,75 @@ export const activityData = {
     supportHistory: [
       {
         id: "support-1",
-        amount: 5000,
-        message: "새로운 스튜디오 응원해요! 화이팅!",
+        amount: 10000,
+        message: "항상 좋은 콘텐츠 감사해요! 응원합니다 💪",
         date: "2024.06.25",
-        isAnonymous: false
+        isPublic: true,
+        earnedPoints: 50
       },
       {
         id: "support-2",
-        amount: 10000,
-        message: "항상 좋은 콘텐츠 감사해요 ^^",
-        date: "2024.05.30",
-        isAnonymous: false
+        amount: 5000,
+        message: "VROOK 정말 신기해요!",
+        date: "2024.06.15",
+        isPublic: true,
+        earnedPoints: 25
       },
       {
         id: "support-3",
-        amount: 3000,
-        message: "",
-        date: "2024.05.15",
-        isAnonymous: true
-      },
-      {
-        id: "support-4",
-        amount: 7000,
-        message: "VR 게임 리뷰 최고예요!",
-        date: "2024.04.20",
-        isAnonymous: false
+        amount: 20000,
+        message: "", // 익명 후원
+        date: "2024.06.01",
+        isPublic: false,
+        earnedPoints: 100
       }
     ],
   
-    // 이벤트 참여 기록
+    // 이벤트 참여 내역
     eventHistory: [
       {
         id: "event-1",
-        title: "VR 게임 추천 이벤트",
-        type: "댓글 이벤트",
+        title: "VR 팬미팅 이벤트",
+        type: "팬미팅",
         participationDate: "2024.06.20",
         status: "참여 완료",
-        reward: "VR 게임 쿠폰",
-        isWinner: false
+        reward: "한정판 굿즈",
+        isWinner: true,
+        earnedPoints: 150
       },
       {
         id: "event-2",
-        title: "VROOK 베타 테스터 모집",
-        type: "신청 이벤트",
-        participationDate: "2024.05.25",
-        status: "당선",
-        reward: "VROOK 프리미엄 이용권",
-        isWinner: true
+        title: "VROOK 베타 체험단",
+        type: "베타 테스트",
+        participationDate: "2024.06.10",
+        status: "참여 완료", 
+        reward: "베타 테스터 배지",
+        isWinner: false,
+        earnedPoints: 30
       },
       {
         id: "event-3",
-        title: "구독자 15만명 기념 이벤트",
+        title: "댓글 이벤트 - 최고의 VR 게임은?",
         type: "댓글 이벤트",
-        participationDate: "2024.06.01",
+        participationDate: "2024.05.25",
         status: "참여 완료",
-        reward: "특별 배지",
-        isWinner: true
+        reward: "포인트 +100",
+        isWinner: true,
+        earnedPoints: 130 // 이벤트 참여 30 + 당첨 보너스 100
       }
     ],
   
-    // 팬 랭킹 정보
+    // 랭킹 정보
     ranking: {
       currentRank: 23,
-      totalFans: 1024,
-      thisMonthRank: 15,
-      bestRank: 12,
-      bestRankDate: "2024.03.15",
+      totalFans: 1247,
+      thisMonthRank: 18,
+      bestRank: 15,
       rankingCategories: [
-        { category: "댓글 활동", rank: 18, total: 1024 },
-        { category: "후원 금액", rank: 31, total: 1024 },
-        { category: "시청 시간", rank: 25, total: 1024 },
-        { category: "이벤트 참여", rank: 12, total: 1024 }
+        { category: "활동 포인트", rank: 23, total: 1247 },
+        { category: "댓글 활동", rank: 15, total: 1247 },
+        { category: "후원 금액", rank: 45, total: 1247 },
+        { category: "시청 시간", rank: 12, total: 1247 }
       ]
     }
-  }
+}
