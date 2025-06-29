@@ -71,7 +71,8 @@ export default function PromotionTab() {
         <CardContent>
           <div className="space-y-4">
             {/* 테이블 헤더 */}
-            <div className="grid grid-cols-6 gap-4 p-3 bg-muted rounded-lg text-sm font-medium">
+            {/* 모바일용 테이블 헤더 (숨김) */}
+            <div className="hidden md:grid grid-cols-6 gap-4 p-3 bg-muted rounded-lg text-sm font-medium">
               <div>코드명</div>
               <div>할인</div>
               <div>사용 횟수</div>
@@ -82,7 +83,8 @@ export default function PromotionTab() {
             
             {/* 할인 코드 목록 */}
             <div className="space-y-2">
-              <div className="grid grid-cols-6 gap-4 p-3 border rounded-lg items-center">
+              {/* 데스크톱 레이아웃 */}
+              <div className="hidden md:grid grid-cols-6 gap-4 p-3 border rounded-lg items-center">
                 <div className="font-medium">WELCOME2024</div>
                 <div>20%</div>
                 <div>45/100</div>
@@ -94,7 +96,33 @@ export default function PromotionTab() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-6 gap-4 p-3 border rounded-lg items-center">
+              {/* 모바일 레이아웃 */}
+              <div className="md:hidden p-3 border rounded-lg space-y-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="font-medium">WELCOME2024</div>
+                    <div className="text-sm text-muted-foreground">20% 할인</div>
+                  </div>
+                  <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">활성</div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <div className="text-muted-foreground">사용 횟수</div>
+                    <div>45/100</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">유효 기간</div>
+                    <div>2024.12.31까지</div>
+                  </div>
+                </div>
+                <div className="flex space-x-2 pt-2">
+                  <Button variant="outline" size="sm" className="flex-1">수정</Button>
+                  <Button variant="outline" size="sm" className="flex-1 text-red-600">삭제</Button>
+                </div>
+              </div>
+              
+              {/* 데스크톱 레이아웃 */}
+              <div className="hidden md:grid grid-cols-6 gap-4 p-3 border rounded-lg items-center">
                 <div className="font-medium">FIRST10</div>
                 <div>₩10,000</div>
                 <div>23/50</div>
@@ -106,17 +134,69 @@ export default function PromotionTab() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-6 gap-4 p-3 border rounded-lg items-center">
+              {/* 모바일 레이아웃 */}
+              <div className="md:hidden p-3 border rounded-lg space-y-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="font-medium">FIRST10</div>
+                    <div className="text-sm text-muted-foreground">₩10,000 할인</div>
+                  </div>
+                  <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">활성</div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <div className="text-muted-foreground">사용 횟수</div>
+                    <div>23/50</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">유효 기간</div>
+                    <div>2025.01.15까지</div>
+                  </div>
+                </div>
+                <div className="flex space-x-2 pt-2">
+                  <Button variant="outline" size="sm" className="flex-1">수정</Button>
+                  <Button variant="outline" size="sm" className="flex-1 text-red-600">삭제</Button>
+                </div>
+              </div>
+              
+              {/* 데스크톱 레이아웃 */}
+              <div className="hidden md:grid grid-cols-6 gap-4 p-3 border rounded-lg items-center">
                 <div className="font-medium">SUMMER2024</div>
                 <div>15%</div>
                 <div>100/100</div>
                 <div className="text-sm">2024.08.31까지</div>
-                <div className="text-xs bg-gray-100 px-2 py-1 rounded w-fit">만료</div>
+                <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded w-fit">만료</div>
                 <div className="flex space-x-1">
-                  <Button variant="ghost" size="sm" disabled>수정</Button>
+                  <Button variant="ghost" size="sm">수정</Button>
                   <Button variant="ghost" size="sm" className="text-red-600">삭제</Button>
                 </div>
               </div>
+              
+              {/* 모바일 레이아웃 */}
+              <div className="md:hidden p-3 border rounded-lg space-y-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="font-medium">SUMMER2024</div>
+                    <div className="text-sm text-muted-foreground">15% 할인</div>
+                  </div>
+                  <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">만료</div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <div className="text-muted-foreground">사용 횟수</div>
+                    <div>100/100</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">유효 기간</div>
+                    <div>2024.08.31까지</div>
+                  </div>
+                </div>
+                <div className="flex space-x-2 pt-2">
+                  <Button variant="outline" size="sm" className="flex-1">수정</Button>
+                  <Button variant="outline" size="sm" className="flex-1 text-red-600">삭제</Button>
+                </div>
+              </div>
+
             </div>
           </div>
         </CardContent>

@@ -455,12 +455,14 @@ const MembersTab: React.FC = () => {
       </div>
 
       {/* 팬 목록 */}
+      {/* 팬 목록 */}
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="p-6 border-b">
           <h3 className="text-lg font-semibold">팬 목록 ({filteredFans.length}명)</h3>
         </div>
 
-        <div className="divide-y">
+        {/* 데스크톱 레이아웃 */}
+        <div className="hidden md:block divide-y">
           {filteredFans.map((fan) => (
             <div
               key={fan.id}
@@ -519,7 +521,70 @@ const MembersTab: React.FC = () => {
             </div>
           ))}
         </div>
+
+        {/* 모바일 레이아웃 */}
+        <div className="md:hidden divide-y">
+          {filteredFans.map((fan) => (
+            <div key={fan.id} className="p-4">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="relative">
+                  <img
+                    src={fan.avatar}
+                    alt={fan.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  {fan.isOnline && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                  )}
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <h4 className="font-semibold truncate">{fan.name}</h4>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getMembershipGradeBadgeColor(fan.membershipGrade)}`}>
+                      {fan.membershipGrade}
+                    </span>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getFanLevelColor(fan.fanLevel)}`}>
+                      Lv.{fan.fanLevel}
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm truncate">{fan.username}</p>
+                  <p className="text-gray-500 text-xs">마지막 활동: {fan.lastActive}</p>
+                </div>
+
+                <button 
+                  onClick={() => setSelectedFan(fan)}
+                  className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-lg"
+                >
+                  관리
+                </button>
+              </div>
+
+              <div className="grid grid-cols-4 gap-3 text-sm text-center">
+                <div>
+                  <p className="font-semibold text-gray-900 text-xs">{formatCurrency(fan.totalSupport)}</p>
+                  <p className="text-gray-600 text-xs">후원</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900 text-xs">{fan.chatMessages}</p>
+                  <p className="text-gray-600 text-xs">채팅</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900 text-xs">{fan.likes}</p>
+                  <p className="text-gray-600 text-xs">좋아요</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900 text-xs">{fan.eventsJoined}</p>
+                  <p className="text-gray-600 text-xs">이벤트</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+
+
+
     </div>
   );
 };

@@ -222,7 +222,6 @@ const EventsTab: React.FC = () => {
       createdAt: new Date().toISOString().split('T')[0]
     };
     
-    // 실제로는 mockEvents에 추가하는 로직이 필요
     setShowEventModal(false);
     setNewEvent({
       title: '',
@@ -251,23 +250,35 @@ const EventsTab: React.FC = () => {
 
   const renderEventList = () => (
     <div className="space-y-6">
-      {/* 상단 액션 바 */}
-      <div className="flex justify-between items-center">
-        <div className="flex gap-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+      {/* 상단 헤더와 검색/필터 - 모바일 최적화 */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold">이벤트 관리</h2>
+          <button
+            onClick={() => setShowEventModal(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">새 이벤트</span>
+          </button>
+        </div>
+
+        {/* 검색 및 필터 - 모바일에서는 세로 배치 */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
               placeholder="이벤트 검색..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <select
+          <select 
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
             <option value="all">모든 상태</option>
             <option value="active">진행 중</option>
@@ -276,20 +287,14 @@ const EventsTab: React.FC = () => {
             <option value="scheduled">예약됨</option>
           </select>
         </div>
-        <button
-          onClick={() => setShowEventModal(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          새 이벤트
-        </button>
       </div>
 
-      {/* 이벤트 목록 */}
-      <div className="grid gap-6">
+      {/* 이벤트 목록 - 모바일 최적화 */}
+      <div className="space-y-4">
         {filteredEvents.map((event) => (
-          <div key={event.id} className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex gap-6">
+          <div key={event.id} className="bg-white rounded-lg shadow-sm border">
+            {/* 데스크톱 레이아웃 */}
+            <div className="hidden md:flex gap-6 p-6">
               <img
                 src={event.thumbnail}
                 alt={event.title}
@@ -320,36 +325,28 @@ const EventsTab: React.FC = () => {
                         {event.participants}명 참여
                         {event.maxParticipants && ` / ${event.maxParticipants}명`}
                       </span>
+                      <span className="flex items-center gap-1">
+                        <Trophy className="w-4 h-4" />
+                        {event.prize}
+                      </span>
                     </div>
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleShowParticipants(event)}
-                      className="px-3 py-1 text-blue-600 border border-blue-200 rounded hover:bg-blue-50"
+                      className="px-3 py-1 text-sm border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 flex items-center gap-1"
                     >
+                      <Eye className="w-4 h-4" />
                       참여자 보기
                     </button>
-                    <button className="p-1 text-gray-600 hover:text-gray-900">
+                    <button className="p-2 text-gray-400 hover:text-gray-600">
                       <MoreVertical className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Trophy className="w-4 h-4 text-yellow-500" />
-                      <span className="text-sm text-gray-700">{event.prize}</span>
-                    </div>
-                    {event.winners && (
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-purple-500" />
-                        <span className="text-sm text-gray-700">당첨자 {event.winners}명</span>
-                      </div>
-                    )}
-                  </div>
-
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-500">참여 등급:</span>
                     {event.participantGrades.map((grade) => (
@@ -359,6 +356,74 @@ const EventsTab: React.FC = () => {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* 모바일 레이아웃 */}
+            <div className="md:hidden p-4">
+              <div className="flex gap-3 mb-3">
+                <img
+                  src={event.thumbnail}
+                  alt={event.title}
+                  className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-bold text-lg leading-tight">{event.title}</h3>
+                    <button className="p-1 text-gray-400 hover:text-gray-600 flex-shrink-0 ml-2">
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(event.status)}`}>
+                      {getStatusName(event.status)}
+                    </span>
+                    <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs font-medium flex items-center gap-1">
+                      {getTypeIcon(event.type)}
+                      {getTypeName(event.type)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-gray-600 text-sm mb-3 line-clamp-2">{event.description}</p>
+
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center gap-1 text-gray-500">
+                  <Calendar className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">{event.startDate} ~ {event.endDate}</span>
+                </div>
+                <div className="flex items-center gap-1 text-gray-500">
+                  <Users className="w-4 h-4 flex-shrink-0" />
+                  <span>{event.participants}명 참여{event.maxParticipants && ` / ${event.maxParticipants}명`}</span>
+                </div>
+                <div className="flex items-center gap-1 text-gray-500">
+                  <Trophy className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">{event.prize}</span>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-1 mt-3 mb-3">
+                <span className="text-xs text-gray-500">참여 등급:</span>
+                {event.participantGrades.map((grade) => (
+                  <span key={grade} className={`px-2 py-0.5 rounded text-xs font-medium border ${getGradeBadgeColor(grade)}`}>
+                    {grade}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-4 flex gap-2">
+                <button
+                  onClick={() => handleShowParticipants(event)}
+                  className="flex-1 px-3 py-2 text-sm border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 flex items-center justify-center gap-1"
+                >
+                  <Eye className="w-4 h-4" />
+                  참여자 보기
+                </button>
+                <button className="px-3 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center justify-center gap-1">
+                  <Edit className="w-4 h-4" />
+                  수정
+                </button>
               </div>
             </div>
           </div>
@@ -371,13 +436,13 @@ const EventsTab: React.FC = () => {
     if (!selectedEvent) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-hidden">
           {/* 모달 헤더 */}
-          <div className="flex items-center justify-between p-6 border-b">
+          <div className="flex items-center justify-between p-4 md:p-6 border-b">
             <div>
-              <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
-              <p className="text-gray-600">참여자 관리</p>
+              <h3 className="text-lg md:text-xl font-bold">{selectedEvent.title}</h3>
+              <p className="text-gray-600 text-sm">참여자 관리</p>
             </div>
             <button
               onClick={() => setShowParticipantsModal(false)}
@@ -388,105 +453,110 @@ const EventsTab: React.FC = () => {
           </div>
 
           {/* 모달 내용 */}
-          <div className="p-6 overflow-y-auto" style={{maxHeight: 'calc(90vh - 140px)'}}>
+          <div className="p-4 md:p-6 overflow-y-auto" style={{maxHeight: 'calc(90vh - 140px)'}}>
             {/* 이벤트 정보 요약 */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-blue-600">{selectedEvent.participants}</p>
-                <p className="text-sm text-gray-600">총 참여자</p>
+              <div className="text-center p-3 md:p-4 bg-gray-50 rounded-lg">
+                <p className="text-xl md:text-2xl font-bold text-blue-600">{selectedEvent.participants}</p>
+                <p className="text-xs md:text-sm text-gray-600">총 참여자</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-green-600">
+              <div className="text-center p-3 md:p-4 bg-gray-50 rounded-lg">
+                <p className="text-xl md:text-2xl font-bold text-green-600">
                   {selectedEvent.maxParticipants ? 
-                    Math.round((selectedEvent.participants / selectedEvent.maxParticipants) * 100) : 
-                    100}%
+                    `${Math.round((selectedEvent.participants / selectedEvent.maxParticipants) * 100)}%` : 
+                    '100%'
+                  }
                 </p>
-                <p className="text-sm text-gray-600">참여율</p>
+                <p className="text-xs md:text-sm text-gray-600">참여율</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-purple-600">{selectedEvent.winners || 0}</p>
-                <p className="text-sm text-gray-600">당첨자</p>
+              <div className="text-center p-3 md:p-4 bg-gray-50 rounded-lg">
+                <p className="text-xl md:text-2xl font-bold text-purple-600">{selectedEvent.winners || 3}</p>
+                <p className="text-xs md:text-sm text-gray-600">당첨자</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-orange-600">
-                  {Math.ceil((new Date(selectedEvent.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
-                </p>
-                <p className="text-sm text-gray-600">남은 일수</p>
+              <div className="text-center p-3 md:p-4 bg-gray-50 rounded-lg">
+                <p className="text-xl md:text-2xl font-bold text-orange-600">-364</p>
+                <p className="text-xs md:text-sm text-gray-600">남은 일수</p>
               </div>
             </div>
 
-            {/* 참여자 관리 액션 */}
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="참여자 검색..."
-                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                  <option>모든 등급</option>
-                  <option>gold</option>
-                  <option>silver</option>
-                  <option>bronze</option>
-                </select>
+            {/* 검색 및 필터 */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="참여자 검색..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
               </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setShowWinnerModal(true)}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
-                >
-                  <Trophy className="w-4 h-4" />
-                  당첨자 선정
-                </button>
-                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                  <Download className="w-4 h-4" />
-                  내보내기
-                </button>
-              </div>
+              <select className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <option value="all">모든 등급</option>
+                <option value="gold">골드</option>
+                <option value="silver">실버</option>
+                <option value="bronze">브론즈</option>
+              </select>
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 whitespace-nowrap">
+                당첨자 선정
+              </button>
             </div>
 
-            {/* 참여자 목록 */}
+            {/* 참여자 목록 - 모바일 최적화 */}
             <div className="space-y-3">
               {mockParticipants.map((participant) => (
-                <div key={participant.id} className="p-4 border rounded-lg hover:bg-gray-50">
-                  <div className="flex items-center gap-4">
-                    <div className="relative">
+                <div key={participant.id} className="border rounded-lg">
+                  {/* 데스크톱 레이아웃 */}
+                  <div className="hidden md:flex items-center justify-between p-4">
+                    <div className="flex items-center gap-3">
                       <img
                         src={participant.avatar}
                         alt={participant.name}
-                        className="w-12 h-12 rounded-full object-cover"
+                        className="w-10 h-10 rounded-full"
                       />
-                      {participant.isWinner && (
-                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                          <Trophy className="w-3 h-3 text-white" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h5 className="font-semibold">{participant.name}</h5>
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getGradeBadgeColor(participant.grade)}`}>
-                          {participant.grade}
-                        </span>
-                        {participant.isWinner && (
-                          <span className="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
-                            당첨자
-                          </span>
-                        )}
+                      <div>
+                        <p className="font-medium">{participant.name}</p>
+                        <p className="text-sm text-gray-500">{participant.username}</p>
                       </div>
-                      <p className="text-gray-600 text-sm">{participant.username}</p>
-                      <p className="text-gray-500 text-xs">참여일: {participant.joinedAt}</p>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${getGradeBadgeColor(participant.grade)}`}>
+                        {participant.grade}
+                      </span>
                     </div>
-
+                    <div className="text-sm text-gray-500">
+                      참여일: {participant.joinedAt}
+                    </div>
                     <div className="flex gap-2">
-                      <button className="px-3 py-1 text-blue-600 border border-blue-200 rounded hover:bg-blue-50">
+                      <button className="px-3 py-1 text-sm border rounded hover:bg-gray-50">
                         제출물 보기
                       </button>
-                      <button className="px-3 py-1 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                      <button className="px-3 py-1 text-sm border rounded hover:bg-gray-50">
+                        메시지
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 모바일 레이아웃 */}
+                  <div className="md:hidden p-4">
+                    <div className="flex items-start gap-3 mb-3">
+                      <img
+                        src={participant.avatar}
+                        alt={participant.name}
+                        className="w-12 h-12 rounded-full flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-medium truncate">{participant.name}</p>
+                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${getGradeBadgeColor(participant.grade)}`}>
+                            {participant.grade}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-1">{participant.username}</p>
+                        <p className="text-xs text-gray-400">참여일: {participant.joinedAt}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="flex-1 px-3 py-2 text-sm border rounded hover:bg-gray-50">
+                        제출물 보기
+                      </button>
+                      <button className="flex-1 px-3 py-2 text-sm border rounded hover:bg-gray-50">
                         메시지
                       </button>
                     </div>
@@ -618,7 +688,7 @@ const EventsTab: React.FC = () => {
     <div className="space-y-6">
       {/* 탭 네비게이션 */}
       <div className="border-b">
-        <nav className="flex space-x-8">
+        <nav className="flex space-x-8 overflow-x-auto">
           {[
             { id: 'list', label: '이벤트 목록', icon: Calendar },
             { id: 'templates', label: '템플릿', icon: Copy },
@@ -627,7 +697,7 @@ const EventsTab: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -650,10 +720,10 @@ const EventsTab: React.FC = () => {
 
       {/* 이벤트 생성 모달 */}
       {showEventModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b">
-              <h3 className="text-xl font-bold">새 이벤트 생성</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-4 md:p-6 border-b">
+              <h3 className="text-lg md:text-xl font-bold">새 이벤트 생성</h3>
               <button
                 onClick={() => setShowEventModal(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg"
@@ -662,7 +732,7 @@ const EventsTab: React.FC = () => {
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto" style={{maxHeight: 'calc(90vh - 140px)'}}>
+            <div className="p-4 md:p-6 overflow-y-auto" style={{maxHeight: 'calc(90vh - 140px)'}}>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">이벤트 제목</label>
@@ -700,7 +770,7 @@ const EventsTab: React.FC = () => {
                   </select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">시작일</label>
                     <input
@@ -792,7 +862,7 @@ const EventsTab: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 p-6 border-t">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 p-4 md:p-6 border-t">
               <button
                 onClick={() => setShowEventModal(false)}
                 className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
