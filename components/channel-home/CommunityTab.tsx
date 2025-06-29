@@ -17,7 +17,8 @@ import {
   Award,
   CheckCircle,
   Star,
-  Crown
+  Crown,
+  TrendingUp
 } from "lucide-react"
 import { 
   chatRooms, 
@@ -27,9 +28,12 @@ import {
   fanmeetings, 
   fanEvents 
 } from "@/data/communityData"
+import ChatModal from "@/components/community/ChatModal"
 
 export default function CommunityTab() {
   const [activeSection, setActiveSection] = useState("chat")
+  const [selectedChatRoom, setSelectedChatRoom] = useState<any>(null)
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false)
 
   const sectionButtons = [
     { id: "chat", label: "팬톡", icon: MessageCircle },
@@ -39,6 +43,11 @@ export default function CommunityTab() {
     { id: "fanmeetings", label: "팬미팅", icon: Calendar },
     { id: "events", label: "이벤트", icon: Gift }
   ]
+
+  const handleChatRoomEnter = (room: any) => {
+    setSelectedChatRoom(room)
+    setIsChatModalOpen(true)
+  }
 
   const renderChatSection = () => (
     <div className="space-y-4">
@@ -75,7 +84,7 @@ export default function CommunityTab() {
               <p className="text-sm mt-1">{room.latestMessage.message}</p>
             </div>
             
-            <Button className="w-full mt-3">
+            <Button className="w-full mt-3" onClick={() => handleChatRoomEnter(room)}>
               채팅방 입장
             </Button>
           </CardContent>
@@ -115,84 +124,140 @@ export default function CommunityTab() {
     </div>
   )
 
-  const renderLevelSection = () => (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Trophy className="h-5 w-5 text-yellow-600" />
-        <h3 className="text-lg font-bold">팬 레벨</h3>
-      </div>
-      
-      {/* 현재 레벨 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Crown className="h-5 w-5 text-yellow-500" />
-            현재 레벨
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center mb-4">
-            <div className="text-3xl font-bold text-blue-600 mb-1">
-              Lv.{fanLevelSystem.currentLevel.level}
-            </div>
-            <div className="text-lg text-gray-700">
-              {fanLevelSystem.currentLevel.name}
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>경험치</span>
-              <span>{fanLevelSystem.currentLevel.currentExp} / {fanLevelSystem.currentLevel.requiredExp}</span>
-            </div>
-            <Progress value={fanLevelSystem.currentLevel.percentage} className="h-3" />
-            <p className="text-xs text-gray-500 text-center">
-              다음 레벨까지 {fanLevelSystem.currentLevel.requiredExp - fanLevelSystem.currentLevel.currentExp}exp 남음
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+  const renderLevelSection = () => {
+    // 전체 팬 통계 데이터 (임시)
+    const fanStats = {
+      totalFans: 1247,
+      levelDistribution: [
+        { level: 1, name: "새내기 팬", count: 423, percentage: 33.9 },
+        { level: 2, name: "주니어 팬", count: 298, percentage: 23.9 },
+        { level: 3, name: "시니어 팬", count: 187, percentage: 15.0 },
+        { level: 4, name: "브론즈 팬", count: 145, percentage: 11.6 },
+        { level: 5, name: "실버 팬", count: 89, percentage: 7.1 },
+        { level: 6, name: "골드 팬", count: 67, percentage: 5.4 },
+        { level: 7, name: "플래티넘 팬", count: 23, percentage: 1.8 },
+        { level: 8, name: "다이아 팬", count: 12, percentage: 1.0 },
+        { level: 9, name: "마스터 팬", count: 3, percentage: 0.2 },
+        { level: 10, name: "레전드 팬", count: 0, percentage: 0.1 }
+      ],
+      topFans: [
+        { name: "레전드팬001", level: 9, score: 9850, badge: "마스터" },
+        { name: "골드킹234", level: 8, score: 8420, badge: "다이아" },
+        { name: "VIP최고567", level: 8, score: 8210, badge: "다이아" },
+        { name: "플래티넘890", level: 7, score: 7890, badge: "플래티넘" },
+        { name: "충성팬123", level: 7, score: 7650, badge: "플래티넘" }
+      ],
+      recentActivity: [
+        { name: "신규팬456", action: "레벨업!", detail: "Lv.2 주니어 팬 달성", time: "3분 전" },
+        { name: "열정팬789", action: "배지 획득", detail: "댓글 마스터 배지", time: "15분 전" },
+        { name: "VIP팬012", action: "레벨업!", detail: "Lv.6 골드 팬 달성", time: "32분 전" }
+      ]
+    }
 
-      {/* 획득한 배지 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Award className="h-5 w-5 text-purple-500" />
-            내 배지 컬렉션
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {fanLevelSystem.badges.map((badge) => (
-              <div 
-                key={badge.id} 
-                className={`p-3 rounded-lg border ${
-                  badge.earned 
-                    ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200' 
-                    : 'bg-gray-50 border-gray-200 opacity-60'
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                    badge.earned ? 'bg-yellow-400' : 'bg-gray-300'
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Trophy className="h-5 w-5 text-yellow-600" />
+          <h3 className="text-lg font-bold">팬 커뮤니티 통계</h3>
+        </div>
+        
+        {/* 이달의 톱 팬들 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-yellow-500" />
+              이달의 톱 팬들
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {fanStats.topFans.map((fan, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
+                    index === 0 ? 'bg-yellow-500' : 
+                    index === 1 ? 'bg-gray-400' : 
+                    index === 2 ? 'bg-orange-400' : 'bg-blue-500'
                   }`}>
-                    <Star className="h-4 w-4 text-white" />
+                    {index + 1}
                   </div>
-                  <span className={`font-medium text-sm ${badge.earned ? 'text-yellow-700' : 'text-gray-500'}`}>
-                    {badge.name}
-                  </span>
+                  
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{fan.name}</span>
+                      <Badge variant="outline" className="text-xs">{fan.badge}</Badge>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Lv.{fan.level} • 활동점수 {fan.score.toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  {index === 0 && <Crown className="h-5 w-5 text-yellow-500" />}
                 </div>
-                <p className="text-xs text-gray-600">{badge.description}</p>
-                {badge.earned && badge.date && (
-                  <p className="text-xs text-yellow-600 mt-1">획득일: {badge.date}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 전체 팬 레벨 분포 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-blue-500" />
+              팬 레벨 분포
+              <span className="text-sm font-normal text-gray-500">
+                (총 {fanStats.totalFans.toLocaleString()}명)
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {fanStats.levelDistribution.filter(level => level.count > 0).map((level) => (
+                <div key={level.level} className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium">{level.name}</span>
+                    <span>{level.count}명 ({level.percentage}%)</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${level.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 최근 활동 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-purple-500" />
+              최근 팬 활동
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {fanStats.recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-sm">{activity.name}</span>
+                      <Badge variant="secondary" className="text-xs">{activity.action}</Badge>
+                    </div>
+                    <p className="text-xs text-gray-600">{activity.detail}</p>
+                  </div>
+                  <span className="text-xs text-gray-500">{activity.time}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   const renderPollsSection = () => (
     <div className="space-y-4">
@@ -493,6 +558,16 @@ export default function CommunityTab() {
       <div className="min-h-[400px]">
         {renderContent()}
       </div>
+
+      {/* 채팅 모달 */}
+      {selectedChatRoom && (
+        <ChatModal
+          isOpen={isChatModalOpen}
+          onOpenChange={setIsChatModalOpen}
+          roomData={selectedChatRoom}
+          isCreatorView={false}
+        />
+      )}
     </div>
   )
 }
