@@ -371,36 +371,7 @@ export default function XrFanmeetingTab() {
           ))}
         </div>
       </div>
-
-      {/* XR 디바이스 호환성 안내 */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="font-bold text-blue-800 mb-4 text-lg flex items-center">
-          <span className="mr-2">🥽</span>
-          XR 디바이스 호환성
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {xrDeviceCompatibility.map((category, index) => (
-            <div key={index} className="bg-white/50 rounded-lg p-4">
-              <h4 className="font-medium text-blue-800 mb-2">{category.category}</h4>
-              <div className="space-y-1 mb-3">
-                {category.devices.map((device, deviceIndex) => (
-                  <div key={deviceIndex} className="text-sm text-blue-700">
-                    • {device}
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-blue-600">{category.description}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 p-3 bg-amber-100 rounded-lg">
-          <p className="text-sm text-amber-800">
-            <strong>📱 디바이스가 없어도 괜찮아요!</strong> 
-            <br />
-            VR 헤드셋이 없어도 스마트폰이나 PC에서 360도 영상으로 팬미팅을 시청할 수 있습니다.
-          </p>
-        </div>
-      </div>
+  
     </div>
   )
 }
