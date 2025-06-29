@@ -120,7 +120,7 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
         timestamp: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
         type: "message"
       }
-      setMessages([...messages, message])
+      setMessages(prev => [...prev, message])
       setNewMessage("")
     }
   }

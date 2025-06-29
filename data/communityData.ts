@@ -7,6 +7,7 @@ export const chatRooms = [
       memberCount: 1247,
       isActive: true,
       accessLevel: "all", // all, premium, vip
+      unreadCount: 0,
       latestMessage: {
         user: "팬님1234",
         message: "오늘 콘텐츠 너무 좋았어요! 💕",
@@ -20,6 +21,7 @@ export const chatRooms = [
       memberCount: 89,
       isActive: true,
       accessLevel: "premium",
+      unreadCount: 3,
       latestMessage: {
         user: "VIP팬567",
         message: "다음 VROOK 언제 나오나요?",
@@ -33,6 +35,7 @@ export const chatRooms = [
       memberCount: 23,
       isActive: true,
       accessLevel: "gold",
+      unreadCount: 1,
       latestMessage: {
         user: "골드팬890",
         message: "팬미팅 정말 기대돼요!",

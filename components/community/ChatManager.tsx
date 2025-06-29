@@ -239,10 +239,10 @@ function ChatRoomCard({
         {/* 최근 메시지 */}
         <div className="bg-gray-50 rounded-lg p-3">
           <div className="flex items-center gap-2 text-sm mb-1">
-            <span className="font-medium text-blue-600">{room.latestMessage.user}</span>
-            <span className="text-gray-500">{room.latestMessage.timestamp}</span>
+            <span className="font-medium text-blue-600">{room.latestMessage?.user || "익명"}</span>
+            <span className="text-gray-500">{room.latestMessage?.timestamp || ""}</span>
           </div>
-          <p className="text-sm text-gray-700 truncate">{room.latestMessage.message}</p>
+          <p className="text-sm text-gray-700 truncate">{room.latestMessage?.message || "메시지가 없습니다."}</p>
         </div>
 
         {/* 크리에이터 관리 옵션 (데스크톱에서 항상 표시, 모바일에서 길게 눌렀을 때) */}
