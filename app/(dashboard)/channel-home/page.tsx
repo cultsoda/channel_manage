@@ -10,6 +10,8 @@ import PurchaseTab from "@/components/channel-home/PurchaseTab"
 import PackageTab from "@/components/channel-home/PackageTab"
 import VrookTab from "@/components/channel-home/VrookTab"
 import ChannelFooter from "@/components/channel-home/ChannelFooter"
+import XrFanmeetingTab from "@/components/channel-home/XrFanmeetingTab"
+
 
 export default function ChannelHomePage() {
   const [activeTab, setActiveTab] = useState("home")
@@ -95,11 +97,8 @@ export default function ChannelHomePage() {
               <VrookTab />
             </TabsContent>
 
-            <TabsContent value="xr-fanmeeting" className="p-4">
-              <div className="text-center py-20">
-                <h2 className="text-2xl font-bold mb-4">XR 팬미팅 탭</h2>
-                <p className="text-gray-600">XR 팬미팅 콘텐츠가 여기에 표시됩니다.</p>
-              </div>
+            <TabsContent value="xr-fanmeeting" className="mt-0 h-full">
+                <XrFanmeetingTab />
             </TabsContent>
 
             <TabsContent value="community" className="p-4">
