@@ -5,6 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ChevronDown, ChevronUp } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { 
   MessageCircle, 
   Trophy, 
@@ -49,17 +57,25 @@ export default function CommunityTab() {
   const [showAllPolls, setShowAllPolls] = useState(false)
   const [selectedChatRoom, setSelectedChatRoom] = useState<any>(null)
   const [isChatModalOpen, setIsChatModalOpen] = useState(false)
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<any>(null)
+  const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false)
 
   const handleChatRoomClick = (room: any) => {
     setSelectedChatRoom(room)
     setIsChatModalOpen(true)
   }
 
+  const handleAnnouncementClick = (announcement: any) => {
+    setSelectedAnnouncement(announcement)
+    setIsAnnouncementModalOpen(true)
+  }
+
   const sectionButtons = [
     { id: "announcements", label: "공지사항", icon: MessageCircle },
-    { id: "polls", label: "팬 투표", icon: Vote },
-    { id: "events", label: "이벤트", icon: Gift },
     { id: "chat", label: "팬톡", icon: MessageCircle },
+    { id: "events", label: "이벤트", icon: Gift },
+    { id: "polls", label: "팬 투표", icon: Vote },
+    { id: "fanmeetings", label: "팬미팅", icon: Calendar },
     { id: "stats", label: "팬 통계", icon: TrendingUp }
   ]
 
@@ -216,8 +232,8 @@ export default function CommunityTab() {
         </div>
         
         {displayedAnnouncements.map((announcement) => (
-          <Card key={announcement.id} className={announcement.isImportant ? "border-red-200 bg-red-50" : ""}>
-            <CardContent className="p-4">
+          <Card key={announcement.id} className={`cursor-pointer hover:shadow-md transition-shadow ${announcement.isImportant ? "border-red-200 bg-red-50" : ""}`}>
+            <CardContent className="p-4" onClick={() => handleAnnouncementClick(announcement)}>
               <div className="flex justify-between items-start mb-2">
                 <h4 className="font-semibold flex items-center gap-2">
                   {announcement.title}
@@ -227,7 +243,7 @@ export default function CommunityTab() {
                 </h4>
                 <span className="text-xs text-gray-500">{announcement.date}</span>
               </div>
-              <p className="text-gray-700 text-sm mb-2">{announcement.content}</p>
+              <p className="text-gray-700 text-sm mb-2 line-clamp-2">{announcement.content}</p>
               <div className="text-xs text-gray-500">조회수 {announcement.views.toLocaleString()}</div>
             </CardContent>
           </Card>
@@ -362,8 +378,9 @@ export default function CommunityTab() {
               </div>
               <div className="text-right">
                 <div className="text-sm font-medium">{room.memberCount}명</div>
-                <Badge variant={room.accessLevel === "public" ? "default" : "secondary"} className="text-xs">
-                  {room.accessLevel === "public" ? "공개" : "멤버십"}
+                <Badge variant={room.accessLevel === "all" ? "default" : "secondary"} className="text-xs">
+                  {room.accessLevel === "all" ? "전체" : 
+                   room.accessLevel === "premium" ? "프리미엄" : "골드"}
                 </Badge>
                 {room.isActive && (
                   <div className="text-xs text-green-600 mt-1">● 활성</div>
@@ -373,6 +390,76 @@ export default function CommunityTab() {
           </CardContent>
         </Card>
       ))}
+    </div>
+  )
+
+  const renderFanmeetings = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-bold">팬미팅</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <h4 className="font-semibold mb-1">7월 생일 기념 XR 팬미팅</h4>
+                <p className="text-sm text-gray-600">특별한 생일을 함께 축하해요!</p>
+              </div>
+              <Badge variant="default">신청중</Badge>
+            </div>
+            
+            <div className="space-y-2 text-sm mb-3">
+              <div className="flex justify-between">
+                <span>일시:</span>
+                <span>2024.07.15 20:00-22:00</span>
+              </div>
+              <div className="flex justify-between">
+                <span>신청자:</span>
+                <span>73/100명</span>
+              </div>
+              <div className="flex justify-between">
+                <span>신청 마감:</span>
+                <span>2024.07.13</span>
+              </div>
+            </div>
+            
+            <Button className="w-full" size="sm">
+              XR 팬미팅 신청
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <h4 className="font-semibold mb-1">오프라인 팬사인회</h4>
+                <p className="text-sm text-gray-600">서울에서 진행되는 소규모 팬사인회</p>
+              </div>
+              <Badge variant="secondary">신청완료</Badge>
+            </div>
+            
+            <div className="space-y-2 text-sm mb-3">
+              <div className="flex justify-between">
+                <span>일시:</span>
+                <span>2024.08.20 14:00-17:00</span>
+              </div>
+              <div className="flex justify-between">
+                <span>신청자:</span>
+                <span>127/50명</span>
+              </div>
+              <div className="flex justify-between">
+                <span>신청 마감:</span>
+                <span>2024.07.25</span>
+              </div>
+            </div>
+            
+            <Button variant="outline" className="w-full" size="sm" disabled>
+              이미 신청함
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 
@@ -392,75 +479,78 @@ export default function CommunityTab() {
         </CardContent>
       </Card>
       
-      {/* 멤버십 등급별 분포 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Crown className="h-5 w-5 text-purple-500" />
-            멤버십 등급별 분포
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {fanStats.membershipDistribution.map((tier, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <span style={{ color: tier.tier.color }}>{tier.tier.emoji}</span>
-                    <span className="font-medium">{tier.tier.name}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-bold">{tier.count}명 ({tier.percentage}%)</div>
-                    <div className="text-xs text-gray-500">
-                      총 {(tier.totalSpent / 10000).toFixed(0)}만원
+      {/* 멤버십 등급별 분포 & 팬 레벨 분포 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 멤버십 등급별 분포 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-purple-500" />
+              멤버십 등급별 분포
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {fanStats.membershipDistribution.map((tier, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <span style={{ color: tier.tier.color }}>{tier.tier.emoji}</span>
+                      <span className="font-medium">{tier.tier.name}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-bold">{tier.count}명 ({tier.percentage}%)</div>
+                      <div className="text-xs text-gray-500">
+                        총 {(tier.totalSpent / 10000).toFixed(0)}만원
+                      </div>
                     </div>
                   </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="h-2 rounded-full transition-all duration-300"
+                      style={{ 
+                        width: `${tier.percentage}%`,
+                        backgroundColor: tier.tier.color
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="h-2 rounded-full transition-all duration-300"
-                    style={{ 
-                      width: `${tier.percentage}%`,
-                      backgroundColor: tier.tier.color
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* 팬 레벨 분포 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Star className="h-5 w-5 text-yellow-500" />
-            팬 레벨 분포 (활동 기반)
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {fanStats.levelDistribution.filter(level => level.count > 0).map((level, index) => (
-              <div key={index} className="space-y-1">
-                <div className="flex justify-between text-sm">
-                  <span className="font-medium">Lv.{level.levelRange} {level.title}</span>
-                  <span>{level.count}명 ({level.percentage}%)</span>
+        {/* 팬 레벨 분포 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Star className="h-5 w-5 text-yellow-500" />
+              팬 레벨 분포 (활동 기반)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {fanStats.levelDistribution.filter(level => level.count > 0).map((level, index) => (
+                <div key={index} className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium">Lv.{level.levelRange} {level.title}</span>
+                    <span>{level.count}명 ({level.percentage}%)</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="h-2 rounded-full transition-all duration-300"
+                      style={{ 
+                        width: `${level.percentage}%`,
+                        backgroundColor: level.color
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="h-2 rounded-full transition-all duration-300"
-                    style={{ 
-                      width: `${level.percentage}%`,
-                      backgroundColor: level.color
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
       
       {/* 이달의 톱 팬들 */}
       <Card>
@@ -547,9 +637,10 @@ export default function CommunityTab() {
   const renderContent = () => {
     switch (activeSection) {
       case "announcements": return renderAnnouncements()
-      case "polls": return renderPolls()
-      case "events": return renderEvents()
       case "chat": return renderChat()
+      case "events": return renderEvents()
+      case "polls": return renderPolls()
+      case "fanmeetings": return renderFanmeetings()
       case "stats": return renderStats()
       default: return renderAnnouncements()
     }
@@ -621,6 +712,35 @@ export default function CommunityTab() {
           roomData={selectedChatRoom}
           isCreatorView={false}
         />
+      )}
+
+      {/* 공지사항 상세 모달 */}
+      {selectedAnnouncement && (
+        <Dialog open={isAnnouncementModalOpen} onOpenChange={setIsAnnouncementModalOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {selectedAnnouncement.title}
+                {selectedAnnouncement.isImportant && (
+                  <Badge variant="destructive" className="text-xs">중요</Badge>
+                )}
+              </DialogTitle>
+              <DialogDescription>
+                {selectedAnnouncement.date} • 조회수 {selectedAnnouncement.views.toLocaleString()}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              <div className="whitespace-pre-wrap text-gray-700">
+                {selectedAnnouncement.content}
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsAnnouncementModalOpen(false)}>
+                닫기
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   )
