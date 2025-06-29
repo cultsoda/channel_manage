@@ -530,91 +530,214 @@ export default function BusinessPage() {
         </Dialog>
       </TabsContent>
 
-        <TabsContent value="sponsorship" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>후원 시스템 설정</CardTitle>
-              <CardDescription>후원 금액 범위와 리워드를 설정하세요.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="min-amount">최소 후원 금액</Label>
-                  <Input id="min-amount" placeholder="1000" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="max-amount">최대 후원 금액</Label>
-                  <Input id="max-amount" placeholder="1000000" />
-                </div>
-              </div>
+      <TabsContent value="sponsorship" className="space-y-4">
+  {/* 후원 현황 요약 */}
+  <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">이번 달 후원</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">₩ 320,000</div>
+        <p className="text-xs text-muted-foreground">47명이 후원</p>
+      </CardContent>
+    </Card>
+    
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">목표 달성률</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">64%</div>
+        <p className="text-xs text-muted-foreground">₩ 180,000 남음</p>
+      </CardContent>
+    </Card>
+    
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">평균 후원액</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">₩ 6,809</div>
+        <p className="text-xs text-muted-foreground">전월 대비 +12%</p>
+      </CardContent>
+    </Card>
+    
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">신규 후원자</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">12명</div>
+        <p className="text-xs text-muted-foreground">이번 달 신규</p>
+      </CardContent>
+    </Card>
+  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="monthly-goal">월별 후원 목표</Label>
-                <Input id="monthly-goal" placeholder="500000" />
-              </div>
+  {/* 후원 관리 메뉴 */}
+  <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">후원 설정</CardTitle>
+        <CardDescription>후원 금액 범위와 리워드를 설정하세요</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid gap-4 grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="min-amount">최소 금액</Label>
+            <Input id="min-amount" placeholder="1,000" defaultValue="1000" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="max-amount">최대 금액</Label>
+            <Input id="max-amount" placeholder="1,000,000" defaultValue="1000000" />
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <Label>후원자 혜택</Label>
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <Checkbox id="community-priority" defaultChecked />
+              <Label htmlFor="community-priority" className="text-sm">커뮤니티 우선 참여</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="event-priority" defaultChecked />
+              <Label htmlFor="event-priority" className="text-sm">이벤트 우선 참여</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="anonymous-support" defaultChecked />
+              <Label htmlFor="anonymous-support" className="text-sm">익명 후원 허용</Label>
+            </div>
+          </div>
+        </div>
+        
+        <Button className="w-full">설정 저장</Button>
+      </CardContent>
+    </Card>
 
-              <div className="space-y-4">
-                <Label>후원자 리워드 설정</Label>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="community-priority" />
-                    <Label htmlFor="community-priority">커뮤니티 참여</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="event-priority" />
-                    <Label htmlFor="event-priority">이벤트 우선 참여</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="membership-discount" />
-                    <Label htmlFor="membership-discount">멤버십 할인</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="anonymous-support" />
-                    <Label htmlFor="anonymous-support">익명 후원 허용</Label>
-                  </div>
-                </div>
-              </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">후원 목표</CardTitle>
+        <CardDescription>이번 달 후원 목표 관리</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="monthly-goal">월 목표 금액</Label>
+          <Input id="monthly-goal" placeholder="500,000" defaultValue="500000" />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="goal-description">목표 설명</Label>
+          <Input id="goal-description" placeholder="새 장비 구입을 위한 후원" />
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span>현재 진행률</span>
+            <span className="font-medium">64%</span>
+          </div>
+          <Progress value={64} className="h-2" />
+          <div className="text-sm text-muted-foreground">₩ 320,000 / ₩ 500,000</div>
+        </div>
+        
+        <Button className="w-full">목표 수정</Button>
+      </CardContent>
+    </Card>
 
-              <Button>설정 저장</Button>
-            </CardContent>
-          </Card>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">감사 메시지</CardTitle>
+        <CardDescription>후원자에게 보낼 메시지 관리</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label>자동 감사 메시지</Label>
+          <div className="flex items-center space-x-2">
+            <Checkbox id="auto-thanks" defaultChecked />
+            <Label htmlFor="auto-thanks" className="text-sm">후원 시 자동 발송</Label>
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="thanks-message">메시지 내용</Label>
+          <textarea 
+            id="thanks-message" 
+            className="w-full p-2 text-sm border rounded-md min-h-[80px]"
+            placeholder="후원해주셔서 감사합니다..."
+            defaultValue="소중한 후원 감사드립니다! 더 좋은 콘텐츠로 보답하겠습니다."
+          />
+        </div>
+        
+        <Button className="w-full">메시지 설정</Button>
+      </CardContent>
+    </Card>
+  </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>후원 목표 진행률</CardTitle>
-              <CardDescription>이번 달 후원 목표 달성 현황</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between text-sm">
-                <span>현재 후원 금액</span>
-                <span className="font-medium">₩ 320,000 / ₩ 500,000</span>
-              </div>
-              <Progress value={64} className="h-2" />
-              <div className="text-sm text-muted-foreground">목표까지 ₩ 180,000 남음 (64% 달성)</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>후원자 목록</CardTitle>
-              <CardDescription>최근 후원 내역을 확인하세요.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <div className="font-medium">김후원</div>
-                    <div className="text-sm text-muted-foreground">2024.12.28</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-medium">₩ 50,000</div>
-                    <div className="text-xs bg-gray-100 px-2 py-1 rounded">공개</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+  {/* 후원자 목록 */}
+  <Card>
+    <CardHeader className="flex flex-row items-center justify-between">
+      <div>
+        <CardTitle>후원자 관리</CardTitle>
+        <CardDescription>최근 후원 내역 및 후원자 정보</CardDescription>
+      </div>
+      <Button variant="outline" size="sm">전체 보기</Button>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between p-4 border rounded-lg">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium">김</span>
+            </div>
+            <div>
+              <div className="font-medium">김후원</div>
+              <div className="text-sm text-muted-foreground">2024.12.28 • 3번째 후원</div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="font-medium">₩ 50,000</div>
+            <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">공개</div>
+          </div>
+          <Button variant="ghost" size="sm">메시지</Button>
+        </div>
+        
+        <div className="flex items-center justify-between p-4 border rounded-lg">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium">익</span>
+            </div>
+            <div>
+              <div className="font-medium">익명</div>
+              <div className="text-sm text-muted-foreground">2024.12.27 • 1번째 후원</div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="font-medium">₩ 10,000</div>
+            <div className="text-xs bg-gray-100 px-2 py-1 rounded">익명</div>
+          </div>
+          <Button variant="ghost" size="sm" disabled>메시지</Button>
+        </div>
+        
+        <div className="flex items-center justify-between p-4 border rounded-lg">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium">박</span>
+            </div>
+            <div>
+              <div className="font-medium">박팬</div>
+              <div className="text-sm text-muted-foreground">2024.12.26 • 7번째 후원</div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="font-medium">₩ 25,000</div>
+            <div className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">VIP</div>
+          </div>
+          <Button variant="ghost" size="sm">메시지</Button>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+</TabsContent>
 
         <TabsContent value="promotion" className="space-y-4">
           <Card>
