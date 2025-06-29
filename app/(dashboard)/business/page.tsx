@@ -29,6 +29,7 @@ export default function BusinessPage() {
   const [productModalType, setProductModalType] = useState<'single' | 'bundle' | 'vrook' | 'xr-fanmeeting' | null>(null)
   const [selectedContent, setSelectedContent] = useState<any[]>([])
   const [sponsorshipGradeModalOpen, setSponsorshipGradeModalOpen] = useState(false)
+  const [sponsorListModalOpen, setSponsorListModalOpen] = useState(false)
 
 
   const memberships = [
@@ -92,14 +93,14 @@ export default function BusinessPage() {
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">비즈니스 모델</h1>
-        <p className="text-muted-foreground">멤버십, 상품, 후원 시스템을 관리하세요.</p>
+        <p className="text-muted-foreground">멤버십, 상품, 후원을 관리하세요.</p>
       </div>
 
       <Tabs defaultValue="membership" className="space-y-4">
         <TabsList>
           <TabsTrigger value="membership">멤버십 관리</TabsTrigger>
           <TabsTrigger value="products">상품 관리</TabsTrigger>
-          <TabsTrigger value="sponsorship">후원 시스템</TabsTrigger>
+          <TabsTrigger value="sponsorship">후원</TabsTrigger>
           <TabsTrigger value="promotion">프로모션</TabsTrigger>
         </TabsList>
 
@@ -628,6 +629,60 @@ export default function BusinessPage() {
     </DialogFooter>
   </DialogContent>
 </Dialog>
+      {/* 전체 후원자 리스트 모달 */}
+<Dialog open={sponsorListModalOpen} onOpenChange={setSponsorListModalOpen}>
+  <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
+    <DialogHeader>
+      <DialogTitle>전체 후원자 목록</DialogTitle>
+      <DialogDescription>모든 후원 내역을 확인하고 관리하세요.</DialogDescription>
+    </DialogHeader>
+    <div className="space-y-4 py-4">
+      {/* 필터 및 검색 */}
+      <div className="flex space-x-2">
+        <Input placeholder="후원자 검색..." className="flex-1" />
+        <select className="px-3 py-2 border rounded-md">
+          <option>전체</option>
+          <option>플래티넘</option>
+          <option>골드</option>
+          <option>실버</option>
+          <option>브론즈</option>
+        </select>
+      </div>
+      
+      {/* 후원자 목록 */}
+      <div className="space-y-3 max-h-[400px] overflow-y-auto">
+        {Array.from({length: 20}, (_, i) => (
+          <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <span className="text-xs font-medium">김</span>
+              </div>
+              <div>
+                <div className="text-sm font-medium">김후원{i + 1}</div>
+                <div className="text-xs text-muted-foreground">2024.12.{String(28 - i).padStart(2, '0')} • {i + 1}번째 후원</div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="text-right">
+                <div className="text-sm font-medium">₩ {(50000 - i * 1000).toLocaleString()}</div>
+                <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded inline-block">
+                  {i % 3 === 0 ? '공개' : i % 3 === 1 ? '익명' : 'VIP'}
+                </div>
+              </div>
+              <Button variant="ghost" size="sm">메시지</Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <DialogFooter>
+      <Button variant="outline" onClick={() => setSponsorListModalOpen(false)}>
+        닫기
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
       </TabsContent>
        
       <TabsContent value="sponsorship" className="space-y-4">
@@ -839,7 +894,7 @@ export default function BusinessPage() {
         <CardTitle>후원자 관리</CardTitle>
         <CardDescription>최근 후원 내역 및 후원자 정보</CardDescription>
       </div>
-      <Button variant="outline" size="sm">전체 보기</Button>
+      <Button variant="outline" size="sm" onClick={() => setSponsorListModalOpen(true)}>전체 보기</Button>
     </CardHeader>
     <CardContent>
       <div className="space-y-4">
@@ -853,11 +908,13 @@ export default function BusinessPage() {
               <div className="text-sm text-muted-foreground">2024.12.28 • 3번째 후원</div>
             </div>
           </div>
+          <div className="flex items-center space-x-3">
           <div className="text-right">
             <div className="font-medium">₩ 50,000</div>
             <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">공개</div>
           </div>
           <Button variant="ghost" size="sm">메시지</Button>
+        </div>
         </div>
         
         <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -870,11 +927,13 @@ export default function BusinessPage() {
               <div className="text-sm text-muted-foreground">2024.12.27 • 1번째 후원</div>
             </div>
           </div>
+          <div className="flex items-center space-x-3">
           <div className="text-right">
             <div className="font-medium">₩ 10,000</div>
             <div className="text-xs bg-gray-100 px-2 py-1 rounded">익명</div>
           </div>
           <Button variant="ghost" size="sm" disabled>메시지</Button>
+        </div>
         </div>
         
         <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -887,11 +946,13 @@ export default function BusinessPage() {
               <div className="text-sm text-muted-foreground">2024.12.26 • 7번째 후원</div>
             </div>
           </div>
+          <div className="flex items-center space-x-3">
           <div className="text-right">
             <div className="font-medium">₩ 25,000</div>
             <div className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">VIP</div>
           </div>
           <Button variant="ghost" size="sm">메시지</Button>
+        </div>
         </div>
       </div>
     </CardContent>
