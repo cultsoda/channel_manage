@@ -532,156 +532,156 @@ export default function BusinessPage() {
           </DialogContent>
         </Dialog>
         {/* 후원 등급 설정 모달 */}
-<Dialog open={sponsorshipGradeModalOpen} onOpenChange={setSponsorshipGradeModalOpen}>
-  <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-    <DialogHeader>
-      <DialogTitle>후원 등급 설정</DialogTitle>
-      <DialogDescription>각 등급별 최소 후원 금액과 혜택을 설정하세요.</DialogDescription>
-    </DialogHeader>
-    <div className="grid gap-6 py-4">
-      {/* 플래티넘 */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-          <Label className="font-medium">플래티넘 등급</Label>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="platinum-amount">최소 후원 금액</Label>
-          <Input id="platinum-amount" type="number" placeholder="300000" defaultValue="300000" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="platinum-benefits">제공 혜택</Label>
-          <textarea 
-            id="platinum-benefits"
-            className="w-full p-2 text-sm border rounded-md min-h-[60px]"
-            defaultValue="서포터 전용 배지, 월간 소식지 구독, VIP 채팅방 입장권, 본기획 특별 콘텐츠, 연간 팬미팅 우선 초대, 개인 감사 영상 메시지"
-          />
-        </div>
-      </div>
-
-      {/* 골드 */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-          <Label className="font-medium">골드 등급</Label>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="gold-amount">최소 후원 금액</Label>
-          <Input id="gold-amount" type="number" placeholder="100000" defaultValue="100000" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="gold-benefits">제공 혜택</Label>
-          <textarea 
-            id="gold-benefits"
-            className="w-full p-2 text-sm border rounded-md min-h-[60px]"
-            defaultValue="서포터 전용 배지, 월간 소식지 구독, VIP 채팅방 입장권, 본기획 특별 콘텐츠, 연간 팬미팅 우선 초대"
-          />
-        </div>
-      </div>
-
-      {/* 실버 */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-          <Label className="font-medium">실버 등급</Label>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="silver-amount">최소 후원 금액</Label>
-          <Input id="silver-amount" type="number" placeholder="50000" defaultValue="50000" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="silver-benefits">제공 혜택</Label>
-          <textarea 
-            id="silver-benefits"
-            className="w-full p-2 text-sm border rounded-md min-h-[60px]"
-            defaultValue="서포터 전용 배지, 월간 소식지 구독, VIP 채팅방 입장권, 본기획 특별 콘텐츠"
-          />
-        </div>
-      </div>
-
-      {/* 브론즈 */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
-          <Label className="font-medium">브론즈 등급</Label>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="bronze-amount">최소 후원 금액</Label>
-          <Input id="bronze-amount" type="number" placeholder="10000" defaultValue="10000" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="bronze-benefits">제공 혜택</Label>
-          <textarea 
-            id="bronze-benefits"
-            className="w-full p-2 text-sm border rounded-md min-h-[60px]"
-            defaultValue="서포터 전용 배지, 월간 소식지 구독"
-          />
-        </div>
-      </div>
-    </div>
-    <DialogFooter>
-      <Button type="button" variant="outline" onClick={() => setSponsorshipGradeModalOpen(false)}>
-        취소
-      </Button>
-      <Button type="submit" onClick={() => setSponsorshipGradeModalOpen(false)}>
-        저장
-      </Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-      {/* 전체 후원자 리스트 모달 */}
-<Dialog open={sponsorListModalOpen} onOpenChange={setSponsorListModalOpen}>
-  <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
-    <DialogHeader>
-      <DialogTitle>전체 후원자 목록</DialogTitle>
-      <DialogDescription>모든 후원 내역을 확인하고 관리하세요.</DialogDescription>
-    </DialogHeader>
-    <div className="space-y-4 py-4">
-      {/* 필터 및 검색 */}
-      <div className="flex space-x-2">
-        <Input placeholder="후원자 검색..." className="flex-1" />
-        <select className="px-3 py-2 border rounded-md">
-          <option>전체</option>
-          <option>플래티넘</option>
-          <option>골드</option>
-          <option>실버</option>
-          <option>브론즈</option>
-        </select>
-      </div>
-      
-      {/* 후원자 목록 */}
-      <div className="space-y-3 max-h-[400px] overflow-y-auto">
-        {Array.from({length: 20}, (_, i) => (
-          <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="text-xs font-medium">김</span>
+      <Dialog open={sponsorshipGradeModalOpen} onOpenChange={setSponsorshipGradeModalOpen}>
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>후원 등급 설정</DialogTitle>
+            <DialogDescription>각 등급별 최소 후원 금액과 혜택을 설정하세요.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-6 py-4">
+            {/* 플래티넘 */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                <Label className="font-medium">플래티넘 등급</Label>
               </div>
-              <div>
-                <div className="text-sm font-medium">김후원{i + 1}</div>
-                <div className="text-xs text-muted-foreground">2024.12.{String(28 - i).padStart(2, '0')} • {i + 1}번째 후원</div>
+              <div className="space-y-2">
+                <Label htmlFor="platinum-amount">최소 후원 금액</Label>
+                <Input id="platinum-amount" type="number" placeholder="300000" defaultValue="300000" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="platinum-benefits">제공 혜택</Label>
+                <textarea 
+                  id="platinum-benefits"
+                  className="w-full p-2 text-sm border rounded-md min-h-[60px]"
+                  defaultValue="서포터 전용 배지, 월간 소식지 구독, VIP 채팅방 입장권, 본기획 특별 콘텐츠, 연간 팬미팅 우선 초대, 개인 감사 영상 메시지"
+                />
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="text-right">
-                <div className="text-sm font-medium">₩ {(50000 - i * 1000).toLocaleString()}</div>
-                <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded inline-block">
-                  {i % 3 === 0 ? '공개' : i % 3 === 1 ? '익명' : 'VIP'}
-                </div>
+
+            {/* 골드 */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                <Label className="font-medium">골드 등급</Label>
               </div>
-              <Button variant="ghost" size="sm">메시지</Button>
+              <div className="space-y-2">
+                <Label htmlFor="gold-amount">최소 후원 금액</Label>
+                <Input id="gold-amount" type="number" placeholder="100000" defaultValue="100000" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="gold-benefits">제공 혜택</Label>
+                <textarea 
+                  id="gold-benefits"
+                  className="w-full p-2 text-sm border rounded-md min-h-[60px]"
+                  defaultValue="서포터 전용 배지, 월간 소식지 구독, VIP 채팅방 입장권, 본기획 특별 콘텐츠, 연간 팬미팅 우선 초대"
+                />
+              </div>
+            </div>
+
+            {/* 실버 */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                <Label className="font-medium">실버 등급</Label>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="silver-amount">최소 후원 금액</Label>
+                <Input id="silver-amount" type="number" placeholder="50000" defaultValue="50000" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="silver-benefits">제공 혜택</Label>
+                <textarea 
+                  id="silver-benefits"
+                  className="w-full p-2 text-sm border rounded-md min-h-[60px]"
+                  defaultValue="서포터 전용 배지, 월간 소식지 구독, VIP 채팅방 입장권, 본기획 특별 콘텐츠"
+                />
+              </div>
+            </div>
+
+            {/* 브론즈 */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
+                <Label className="font-medium">브론즈 등급</Label>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bronze-amount">최소 후원 금액</Label>
+                <Input id="bronze-amount" type="number" placeholder="10000" defaultValue="10000" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bronze-benefits">제공 혜택</Label>
+                <textarea 
+                  id="bronze-benefits"
+                  className="w-full p-2 text-sm border rounded-md min-h-[60px]"
+                  defaultValue="서포터 전용 배지, 월간 소식지 구독"
+                />
+              </div>
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-    <DialogFooter>
-      <Button variant="outline" onClick={() => setSponsorListModalOpen(false)}>
-        닫기
-      </Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setSponsorshipGradeModalOpen(false)}>
+              취소
+            </Button>
+            <Button type="submit" onClick={() => setSponsorshipGradeModalOpen(false)}>
+              저장
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* 전체 후원자 리스트 모달 */}
+      <Dialog open={sponsorListModalOpen} onOpenChange={setSponsorListModalOpen}>
+        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>전체 후원자 목록</DialogTitle>
+            <DialogDescription>모든 후원 내역을 확인하고 관리하세요.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {/* 필터 및 검색 */}
+            <div className="flex space-x-2">
+              <Input placeholder="후원자 검색..." className="flex-1" />
+              <select className="px-3 py-2 border rounded-md">
+                <option>전체</option>
+                <option>플래티넘</option>
+                <option>골드</option>
+                <option>실버</option>
+                <option>브론즈</option>
+              </select>
+            </div>
+            
+            {/* 후원자 목록 */}
+            <div className="space-y-3 max-h-[400px] overflow-y-auto">
+              {Array.from({length: 20}, (_, i) => (
+                <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-medium">김</span>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium">김후원{i + 1}</div>
+                      <div className="text-xs text-muted-foreground">2024.12.{String(28 - i).padStart(2, '0')} • {i + 1}번째 후원</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="text-right">
+                      <div className="text-sm font-medium">₩ {(50000 - i * 1000).toLocaleString()}</div>
+                      <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded inline-block">
+                        {i % 3 === 0 ? '공개' : i % 3 === 1 ? '익명' : 'VIP'}
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm">메시지</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSponsorListModalOpen(false)}>
+              닫기
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       </TabsContent>
        
