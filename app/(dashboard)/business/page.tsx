@@ -675,7 +675,7 @@ export default function BusinessPage() {
   </div>
 
   {/* 후원 관리 메뉴 */}
-  <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+  <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
     <Card>
       <CardHeader>
         <CardTitle className="text-base">후원 설정</CardTitle>
