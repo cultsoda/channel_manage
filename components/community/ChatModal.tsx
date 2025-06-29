@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { 
   Send, 
   Users, 
@@ -94,6 +93,72 @@ const onlineUsers = [
   { name: "실버팬456", level: 7, badge: "실버" }
 ]
 
+// 메시지 아이템 컴포넌트 분리
+function MessageItem({ message, isCreatorView }: { message: ChatMessage, isCreatorView: boolean }) {
+  if (!message || !message.user) {
+    return null
+  }
+
+  if (message.type === "system" || message.type === "join" || message.type === "leave") {
+    return (
+      <div className="flex justify-center my-2">
+        <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+          {message.message}
+        </span>
+      </div>
+    )
+  }
+
+  const isMyMessage = message.user.name === (isCreatorView ? "케인" : "나")
+
+  return (
+    <div className={`flex gap-3 mb-4 ${isMyMessage ? 'flex-row-reverse' : ''}`}>
+      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
+        message.user?.isCreator ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
+        message.user?.badge === 'VIP' ? 'bg-blue-500 text-white' :
+        message.user?.badge === '골드' ? 'bg-yellow-500 text-white' :
+        'bg-gray-300 text-gray-700'
+      }`}>
+        {message.user?.name?.slice(0, 2) || "?"}
+      </div>
+      
+      <div className={`flex-1 max-w-[70%] ${isMyMessage ? 'text-right' : ''}`}>
+        <div className={`flex items-center gap-2 mb-1 ${isMyMessage ? 'justify-end' : ''}`}>
+          <span className="text-sm font-medium">
+            {message.user?.name || "익명"}
+          </span>
+          {message.user?.isCreator && (
+            <Badge variant="default" className="text-xs bg-purple-600">
+              크리에이터
+            </Badge>
+          )}
+          {message.user?.isModerator && (
+            <Badge variant="secondary" className="text-xs">
+              <Shield className="h-3 w-3 mr-1" />
+              관리자
+            </Badge>
+          )}
+          {message.user?.badge && !message.user?.isCreator && (
+            <Badge variant="outline" className="text-xs">
+              {message.user.badge}
+            </Badge>
+          )}
+          <span className="text-xs text-gray-500">Lv.{message.user?.level || 0}</span>
+          <span className="text-xs text-gray-400">{message.timestamp}</span>
+        </div>
+        
+        <div className={`p-3 rounded-lg ${
+          isMyMessage 
+            ? 'bg-blue-500 text-white' 
+            : 'bg-gray-100 text-gray-900'
+        }`}>
+          <p className="text-sm whitespace-pre-wrap">{message.message}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorView = false, mode = "modal" }: ChatModalProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [newMessage, setNewMessage] = useState("")
@@ -112,6 +177,9 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
       const scrollElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]')
       if (scrollElement) {
         scrollElement.scrollTop = scrollElement.scrollHeight
+      } else {
+        // fallback for regular div
+        scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
       }
     }
   }, [messages])
@@ -130,7 +198,7 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
         timestamp: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
         type: "message"
       }
-      setMessages(prev => [...prev, message])
+      setMessages((prev: ChatMessage[]) => [...prev, message])
       setNewMessage("")
     }
   }
@@ -142,9 +210,7 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
     }
   }
 
-  const renderMessage = (message: ChatMessage) => {
-    if (message.type === "system" || message.type === "join" || message.type === "leave") {
-      // 임베디드나 모바일 모드일 때는 Dialog 없이 직접 렌더링
+  // 임베디드나 모바일 모드일 때는 Dialog 없이 직접 렌더링
   if (mode === "embedded" || mode === "mobile") {
     if (!roomData) return null
 
@@ -156,7 +222,13 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
             {/* 메시지 리스트 */}
             <div className="flex-1 overflow-y-auto p-4" ref={scrollAreaRef}>
               <div className="space-y-1">
-                {messages.map(renderMessage)}
+                {messages.map((message: ChatMessage, index: number) => (
+                  <MessageItem 
+                    key={`${message.id}-${index}`} 
+                    message={message} 
+                    isCreatorView={isCreatorView}
+                  />
+                ))}
               </div>
             </div>
 
@@ -265,65 +337,6 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
   if (!isOpen || !roomData) return null
 
   return (
-        <div key={message.id} className="flex justify-center my-2">
-          <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-            {message.message}
-          </span>
-        </div>
-      )
-    }
-
-    const isMyMessage = message.user.name === (isCreatorView ? "케인" : "나")
-
-    return (
-      <div key={message.id} className={`flex gap-3 mb-4 ${isMyMessage ? 'flex-row-reverse' : ''}`}>
-        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-          message.user.isCreator ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
-          message.user.badge === 'VIP' ? 'bg-blue-500 text-white' :
-          message.user.badge === '골드' ? 'bg-yellow-500 text-white' :
-          'bg-gray-300 text-gray-700'
-        }`}>
-          {message.user.name.slice(0, 2)}
-        </div>
-        
-        <div className={`flex-1 max-w-[70%] ${isMyMessage ? 'text-right' : ''}`}>
-          <div className={`flex items-center gap-2 mb-1 ${isMyMessage ? 'justify-end' : ''}`}>
-            <span className="text-sm font-medium">
-              {message.user.name}
-            </span>
-            {message.user.isCreator && (
-              <Badge variant="default" className="text-xs bg-purple-600">
-                크리에이터
-              </Badge>
-            )}
-            {message.user.isModerator && (
-              <Badge variant="secondary" className="text-xs">
-                <Shield className="h-3 w-3 mr-1" />
-                관리자
-              </Badge>
-            )}
-            {message.user.badge && !message.user.isCreator && (
-              <Badge variant="outline" className="text-xs">
-                {message.user.badge}
-              </Badge>
-            )}
-            <span className="text-xs text-gray-500">Lv.{message.user.level}</span>
-            <span className="text-xs text-gray-400">{message.timestamp}</span>
-          </div>
-          
-          <div className={`p-3 rounded-lg ${
-            isMyMessage 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-gray-100 text-gray-900'
-          }`}>
-            <p className="text-sm whitespace-pre-wrap">{message.message}</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl h-[80vh] p-0">
         <DialogHeader className="p-4 border-b">
@@ -363,11 +376,17 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
           {/* 메인 채팅 영역 */}
           <div className="flex-1 flex flex-col">
             {/* 메시지 리스트 */}
-            <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+            <div className="flex-1 overflow-y-auto p-4" ref={scrollAreaRef}>
               <div className="space-y-1">
-                {messages.map(renderMessage)}
+                {messages.map((message: ChatMessage, index: number) => (
+                  <MessageItem 
+                    key={`${message.id}-${index}`} 
+                    message={message} 
+                    isCreatorView={isCreatorView}
+                  />
+                ))}
               </div>
-            </ScrollArea>
+            </div>
 
             {/* 메시지 입력 */}
             <div className="p-4 border-t bg-gray-50">
@@ -418,7 +437,7 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
                 </div>
               </div>
               
-              <ScrollArea className="flex-1">
+              <div className="flex-1 overflow-y-auto">
                 <div className="p-2 space-y-1">
                   {onlineUsers.map((user, index) => (
                     <div
@@ -463,7 +482,7 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
                     </div>
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           )}
         </div>
