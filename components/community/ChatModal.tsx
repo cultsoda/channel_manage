@@ -95,14 +95,24 @@ const onlineUsers = [
 ]
 
 export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorView = false, mode = "modal" }: ChatModalProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(mockMessages)
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const [newMessage, setNewMessage] = useState("")
   const [showUserList, setShowUserList] = useState(false)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
+  // 컴포넌트 마운트 후 메시지 초기화
+  useEffect(() => {
+    if (isOpen && roomData) {
+      setMessages(mockMessages)
+    }
+  }, [isOpen, roomData])
+
   useEffect(() => {
     if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+      const scrollElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]')
+      if (scrollElement) {
+        scrollElement.scrollTop = scrollElement.scrollHeight
+      }
     }
   }, [messages])
 
@@ -136,22 +146,22 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
     if (message.type === "system" || message.type === "join" || message.type === "leave") {
       // 임베디드나 모바일 모드일 때는 Dialog 없이 직접 렌더링
   if (mode === "embedded" || mode === "mobile") {
+    if (!roomData) return null
+
     return (
-      <div className="h-full flex flex-col">
-        {/* 임베디드/모바일 모드에서는 헤더 생략 (상위에서 처리) */}
-        
+      <div className="h-full flex flex-col bg-white">
         <div className="flex-1 flex overflow-hidden">
           {/* 메인 채팅 영역 */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-h-0">
             {/* 메시지 리스트 */}
-            <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+            <div className="flex-1 overflow-y-auto p-4" ref={scrollAreaRef}>
               <div className="space-y-1">
                 {messages.map(renderMessage)}
               </div>
-            </ScrollArea>
+            </div>
 
             {/* 메시지 입력 */}
-            <div className="p-4 border-t bg-gray-50">
+            <div className="p-4 border-t bg-gray-50 flex-shrink-0">
               <div className="flex gap-2">
                 <Input
                   value={newMessage}
@@ -199,7 +209,7 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
                 </div>
               </div>
               
-              <ScrollArea className="flex-1">
+              <div className="flex-1 overflow-y-auto">
                 <div className="p-2 space-y-1">
                   {onlineUsers.map((user, index) => (
                     <div
@@ -244,13 +254,15 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
                     </div>
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           )}
         </div>
       </div>
     )
   }
+
+  if (!isOpen || !roomData) return null
 
   return (
         <div key={message.id} className="flex justify-center my-2">
