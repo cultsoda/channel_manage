@@ -93,56 +93,7 @@ export default function AboutTab() {
         </CardContent>
       </Card>
 
-      {/* 크리에이터 소개 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-green-600" />
-            크리에이터 소개
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-              K
-            </div>
-            <div>
-              <h3 className="text-lg font-bold">{aboutData.creatorInfo.name}</h3>
-              <p className="text-gray-600 text-sm">경력 {aboutData.creatorInfo.experience}</p>
-              <p className="text-blue-600 font-medium text-sm">"{aboutData.creatorInfo.motto}"</p>
-            </div>
-          </div>
-
-          <p className="text-gray-700 leading-relaxed">
-            {aboutData.creatorInfo.bio}
-          </p>
-
-          <div>
-            <h4 className="font-medium mb-2">전문 분야</h4>
-            <div className="grid grid-cols-2 gap-2">
-              {aboutData.creatorInfo.specialties.map((specialty, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm">
-                  <Zap className="w-3 h-3 text-yellow-500" />
-                  <span>{specialty}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-medium mb-2">주요 성과</h4>
-            <div className="space-y-2">
-              {aboutData.creatorInfo.achievements.map((achievement, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm">
-                  <Award className="w-3 h-3 text-yellow-500" />
-                  <span>{achievement}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
+      
       {/* 콘텐츠 통계 */}
       <Card>
         <CardHeader>
@@ -243,34 +194,7 @@ export default function AboutTab() {
         </CardContent>
       </Card>
 
-      {/* 채널 연혁 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-green-600" />
-            채널 연혁
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {aboutData.milestones.map((milestone, index) => (
-              <div key={index} className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="w-3 h-3 bg-blue-600 rounded-full mt-2"></div>
-                  {index < aboutData.milestones.length - 1 && (
-                    <div className="w-0.5 h-12 bg-blue-200 ml-1 mt-1"></div>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm text-blue-600 font-medium">{milestone.date}</div>
-                  <h4 className="font-medium">{milestone.title}</h4>
-                  <p className="text-sm text-gray-600">{milestone.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      
 
       {/* FAQ */}
       <Card>
@@ -303,53 +227,9 @@ export default function AboutTab() {
         </CardContent>
       </Card>
 
-      {/* 협업 파트너 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>협업 파트너</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {aboutData.partnerships.map((partner, index) => (
-              <div key={index} className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-xs font-bold">{partner.name[0]}</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium">{partner.name}</h4>
-                    <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
-                      {partner.type}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600">{partner.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      
 
-      {/* 정책 및 약관 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>정책 및 약관</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h4 className="font-medium mb-2">커뮤니티 가이드라인</h4>
-            <p className="text-sm text-gray-600">{aboutData.policies.communityGuidelines}</p>
-          </div>
-          <div>
-            <h4 className="font-medium mb-2">콘텐츠 정책</h4>
-            <p className="text-sm text-gray-600">{aboutData.policies.contentPolicy}</p>
-          </div>
-          <div>
-            <h4 className="font-medium mb-2">개인정보 보호정책</h4>
-            <p className="text-sm text-gray-600">{aboutData.policies.privacyPolicy}</p>
-          </div>
-        </CardContent>
-      </Card>
+      
     </div>
   )
 }
