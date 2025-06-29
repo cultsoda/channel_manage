@@ -29,6 +29,16 @@ import {
   LineChart,
 } from "lucide-react"
 import { useSearchParams } from "next/navigation"
+import { 
+  FanTrendChart, 
+  MembershipPieChart, 
+  RegionChart, 
+  AccessTimeChart, 
+  ContentPerformanceChart, 
+  RevenuePieChart, 
+  RevenueMonthlyChart 
+} from "@/components/analytics-charts"
+
 
 export default function AnalyticsPage() {
   const searchParams = useSearchParams()
@@ -119,6 +129,15 @@ export default function AnalyticsPage() {
                   </div>
                 </CardContent>
               </Card>
+              // 팬 현황 4개 카드 다음에 추가
+              <Card className="col-span-full">
+                <CardHeader>
+                  <CardTitle>팬 수 추이</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <FanTrendChart />
+                </CardContent>
+              </Card>
             </div>
           </div>
 
@@ -126,60 +145,29 @@ export default function AnalyticsPage() {
           <div>
             <h2 className="text-xl font-semibold mb-4">팬 분포</h2>
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+              {/* 멤버십 등급별 분포 - 차트로 교체 */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">멤버십 등급별 분포</CardTitle>
                   <CreditCard className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>무료</span>
-                      <span>942명 (73%)</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>베이직</span>
-                      <span>234명 (18%)</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>프리미엄</span>
-                      <span>89명 (7%)</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>VIP</span>
-                      <span>19명 (2%)</span>
-                    </div>
-                  </div>
+                  <MembershipPieChart />
                 </CardContent>
               </Card>
 
+              {/* 지역별 팬 분포 - 차트로 교체 */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">지역별 팬 분포</CardTitle>
                   <Globe className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>한국</span>
-                      <span>856명 (67%)</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>일본</span>
-                      <span>192명 (15%)</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>미국</span>
-                      <span>128명 (10%)</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>기타</span>
-                      <span>108명 (8%)</span>
-                    </div>
-                  </div>
+                  <RegionChart />
                 </CardContent>
               </Card>
 
+              {/* 연령/성별 통계 - 기존 그대로 */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">연령/성별 통계</CardTitle>
@@ -207,6 +195,7 @@ export default function AnalyticsPage() {
                 </CardContent>
               </Card>
 
+              {/* 디바이스별 접속 현황 - 기존 그대로 */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">디바이스별 접속 현황</CardTitle>
