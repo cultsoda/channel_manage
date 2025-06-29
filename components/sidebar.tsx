@@ -113,12 +113,12 @@ export function Sidebar() {
 
 const navItems = [
   { name: "대시보드", href: "/dashboard", icon: LayoutDashboard },
-  { name: "분석", href: "/analytics", icon: BarChart3 },
   { name: "콘텐츠 관리", href: "/content", icon: FileText },
-  { name: "비즈니스 모델", href: "/business", icon: DollarSign },
-  { name: "커뮤니티", href: "/community", icon: Users },
+  { name: "상품 & 수익", href: "/business", icon: DollarSign },
+  { name: "커뮤니티 관리", href: "/community", icon: Users },
   { name: "채널 설정", href: "/channel-settings", icon: Settings },
   { name: "정산", href: "/settlement", icon: Calculator },
+  { name: "분석", href: "/analytics", icon: BarChart3 },
   { name: "알림", href: "/notifications", icon: Bell },
   { name: "고급 설정", href: "/advanced-settings", icon: Cog },
 ]
