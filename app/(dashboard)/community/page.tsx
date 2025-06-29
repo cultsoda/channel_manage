@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { MessageCircle, Calendar, Send, Shield, Archive, UserX, Plus, Edit, Trash2 } from "lucide-react"
+import ChatManager from "@/components/community/ChatManager"
+
 
 // 타입 정의
 interface Event {
@@ -333,16 +335,11 @@ export default function CommunityPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>실시간 활동</CardTitle>
-                <CardDescription>현재 진행 중인 채팅 활동을 확인하세요.</CardDescription>
+                <CardTitle>실시간 채팅 관리</CardTitle>
+                <CardDescription>채팅방별 실시간 대화를 확인하고 관리하세요.</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="text-center py-8 text-muted-foreground">
-                    <MessageCircle className="h-8 w-8 mx-auto mb-2" />
-                    <p>실시간 채팅 활동이 없습니다.</p>
-                  </div>
-                </div>
+              <CardContent className="p-0">
+                <ChatManager chatRooms={chatRooms} isCreatorView={true} />
               </CardContent>
             </Card>
           </div>

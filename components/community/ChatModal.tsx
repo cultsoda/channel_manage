@@ -43,6 +43,7 @@ interface ChatModalProps {
     isActive: boolean
   }
   isCreatorView?: boolean // 크리에이터 관리 페이지에서 사용할 때
+  mode?: "modal" | "embedded" | "mobile" // 표시 모드
 }
 
 // 임시 채팅 메시지 데이터
@@ -93,7 +94,7 @@ const onlineUsers = [
   { name: "실버팬456", level: 7, badge: "실버" }
 ]
 
-export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorView = false }: ChatModalProps) {
+export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorView = false, mode = "modal" }: ChatModalProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(mockMessages)
   const [newMessage, setNewMessage] = useState("")
   const [showUserList, setShowUserList] = useState(false)
@@ -133,7 +134,125 @@ export default function ChatModal({ isOpen, onOpenChange, roomData, isCreatorVie
 
   const renderMessage = (message: ChatMessage) => {
     if (message.type === "system" || message.type === "join" || message.type === "leave") {
-      return (
+      // 임베디드나 모바일 모드일 때는 Dialog 없이 직접 렌더링
+  if (mode === "embedded" || mode === "mobile") {
+    return (
+      <div className="h-full flex flex-col">
+        {/* 임베디드/모바일 모드에서는 헤더 생략 (상위에서 처리) */}
+        
+        <div className="flex-1 flex overflow-hidden">
+          {/* 메인 채팅 영역 */}
+          <div className="flex-1 flex flex-col">
+            {/* 메시지 리스트 */}
+            <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+              <div className="space-y-1">
+                {messages.map(renderMessage)}
+              </div>
+            </ScrollArea>
+
+            {/* 메시지 입력 */}
+            <div className="p-4 border-t bg-gray-50">
+              <div className="flex gap-2">
+                <Input
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="메시지를 입력하세요..."
+                  className="flex-1"
+                />
+                <Button size="sm" onClick={() => {/* 이모지 */}}>
+                  <Smile className="h-4 w-4" />
+                </Button>
+                <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                <span>Enter로 전송, Shift+Enter로 줄바꿈</span>
+                {isCreatorView && (
+                  <div className="flex items-center gap-4">
+                    <span>관리자 권한으로 참여 중</span>
+                    <Button variant="ghost" size="sm" className="text-xs">
+                      <MoreVertical className="h-3 w-3 mr-1" />
+                      관리
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 온라인 유저 사이드바 (데스크톱 임베디드 모드에서만) */}
+          {mode === "embedded" && showUserList && (
+            <div className="w-64 border-l bg-gray-50 flex flex-col">
+              <div className="p-4 border-b bg-white">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium">온라인 ({onlineUsers.length})</h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowUserList(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              
+              <ScrollArea className="flex-1">
+                <div className="p-2 space-y-1">
+                  {onlineUsers.map((user, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 p-2 rounded hover:bg-white transition-colors cursor-pointer"
+                    >
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                        user.isCreator ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
+                        user.badge === 'VIP' ? 'bg-blue-500 text-white' :
+                        user.badge === '골드' ? 'bg-yellow-500 text-white' :
+                        user.badge === '실버' ? 'bg-gray-400 text-white' :
+                        'bg-gray-300 text-gray-700'
+                      }`}>
+                        {user.name.slice(0, 2)}
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-medium truncate">{user.name}</span>
+                          {user.isCreator && (
+                            <Badge variant="default" className="text-xs bg-purple-600 px-1">
+                              👑
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                          <span>Lv.{user.level}</span>
+                          {user.badge && !user.isCreator && (
+                            <>
+                              <span>•</span>
+                              <span>{user.badge}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {isCreatorView && !user.isCreator && (
+                        <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100">
+                          <MoreVertical className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  return (
         <div key={message.id} className="flex justify-center my-2">
           <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
             {message.message}
