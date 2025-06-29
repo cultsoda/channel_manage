@@ -220,59 +220,51 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
           {/* 실시간 활동 */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>실시간 활동</CardTitle>
-              <CardDescription>최근 7일간의 주요 활동</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <UserPlus className="h-5 w-5 text-blue-500" />
-                  <div>
-                    <p className="font-medium">새로운 팬 가입</p>
-                    <p className="text-sm text-muted-foreground">김민수님이 채널을 구독했습니다</p>
-                  </div>
-                </div>
-                <span className="text-xs text-muted-foreground">2분 전</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Gift className="h-5 w-5 text-green-500" />
-                  <div>
-                    <p className="font-medium">후원 받음</p>
-                    <p className="text-sm text-muted-foreground">이지은님이 ₩50,000 후원</p>
-                  </div>
-                </div>
-                <span className="text-xs text-muted-foreground">15분 전</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Heart className="h-5 w-5 text-red-500" />
-                  <div>
-                    <p className="font-medium">새로운 댓글</p>
-                    <p className="text-sm text-muted-foreground">"정말 멋진 콘텐츠네요!"</p>
-                  </div>
-                </div>
-                <span className="text-xs text-muted-foreground">1시간 전</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <TrendingUp className="h-5 w-5 text-purple-500" />
-                  <div>
-                    <p className="font-medium">멤버십 업그레이드</p>
-                    <p className="text-sm text-muted-foreground">박성호님이 프리미엄으로 업그레이드</p>
-                  </div>
-                </div>
-                <span className="text-xs text-muted-foreground">3시간 전</span>
-              </div>
-            </CardContent>
-          </Card>
+          <div>
+            <h2 className="text-lg font-semibold mb-4">실시간 활동</h2>
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">새로운 팬 가입</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-lg font-bold">3명</div>
+                  <p className="text-xs text-muted-foreground">실시간으로 새로 가입한 팬 알림 표시(최근7일)</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">새로운 후원/구매</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-lg font-bold">₩ 45,000</div>
+                  <p className="text-xs text-muted-foreground">실시간 후원 및 콘텐츠 구매 알림(최근7일)</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">댓글 및 반응</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-lg font-bold">28개</div>
+                  <p className="text-xs text-muted-foreground">새로운 댓글, 좋아요 등의 반응 알림(최근7일)</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">멤버십 업그레이드</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-lg font-bold">5명</div>
+                  <p className="text-xs text-muted-foreground">팬이 멤버십 등급을 올린 경우 알림(최근7일)</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
 
           {/* 빠른 실행 */}
           <div>
