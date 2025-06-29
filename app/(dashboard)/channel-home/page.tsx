@@ -12,7 +12,7 @@ import VrookTab from "@/components/channel-home/VrookTab"
 import ChannelFooter from "@/components/channel-home/ChannelFooter"
 import XrFanmeetingTab from "@/components/channel-home/XrFanmeetingTab"
 import CommunityTab from "@/components/channel-home/CommunityTab"
-
+import SupportTab from "@/components/channel-home/SupportTab"
 
 
 export default function ChannelHomePage() {
@@ -107,11 +107,8 @@ export default function ChannelHomePage() {
                 <CommunityTab />
             </TabsContent>
 
-            <TabsContent value="support" className="p-4">
-              <div className="text-center py-20">
-                <h2 className="text-2xl font-bold mb-4">후원 탭</h2>
-                <p className="text-gray-600">후원 관련 기능이 여기에 표시됩니다.</p>
-              </div>
+            <TabsContent value="support" className="mt-0 h-full">
+                <SupportTab />
             </TabsContent>
 
             <TabsContent value="about" className="p-4">
