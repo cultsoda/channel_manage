@@ -129,16 +129,7 @@ export default function AnalyticsPage() {
                   </div>
                 </CardContent>
               </Card>
-              // 팬 현황 4개 카드 다음에 추가
-              <Card className="col-span-full">
-                <CardHeader>
-                  <CardTitle>팬 수 추이</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <FanTrendChart />
-                </CardContent>
-              </Card>
-            </div>
+             </div>
           </div>
 
           {/* 팬 분포 */}

@@ -17,11 +17,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Plus } from "lucide-react"
+import { allContent } from "@/data/contentData"
+
+
 
 export default function BusinessPage() {
   const [membershipModalOpen, setMembershipModalOpen] = useState(false)
   const [editingMembership, setEditingMembership] = useState<any>(null)
   const [isNewMembership, setIsNewMembership] = useState(false)
+  const [productModalOpen, setProductModalOpen] = useState(false)
+  const [productModalType, setProductModalType] = useState<'single' | 'bundle' | 'vrook' | 'xr-fanmeeting' | null>(null)
+  const [selectedContent, setSelectedContent] = useState<any[]>([])
 
   const memberships = [
     {
@@ -46,7 +52,23 @@ export default function BusinessPage() {
       features: ["모든 혜택 포함", "1:1 VR 미팅", "굿즈 할인", "우선 예약"],
     },
   ]
+  const availableContent = allContent.map(content => ({
+    id: content.id,
+    title: content.title,
+    type: content.type,
+    views: content.views,
+    price: content.membership.startsWith('₩') ? parseInt(content.membership.replace(/[₩,\s]/g, '')) : null,
+    thumbnail: content.thumbnail,
+    category: content.category
+  }))
 
+  const singleProducts = availableContent.filter(content => content.price !== null)
+
+  const handleProductModal = (type: 'single' | 'bundle' | 'vrook' | 'xr-fanmeeting') => {
+    setProductModalType(type)
+    setProductModalOpen(true)
+    setSelectedContent([])
+  }
   const handleEditMembership = (membership: any) => {
     setEditingMembership(membership)
     setIsNewMembership(false)
@@ -192,64 +214,321 @@ export default function BusinessPage() {
         </TabsContent>
 
         <TabsContent value="products" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>상품 관리</CardTitle>
-              <CardDescription>단건 상품, 번들 상품, XR 특화 상품을 관리하세요.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">단건 상품</CardTitle>
-                    <CardDescription className="text-sm">개별 콘텐츠 판매</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="outline" className="w-full bg-transparent">
-                      관리
-                    </Button>
-                  </CardContent>
-                </Card>
+  {/* 상품 현황 요약 */}
+  <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">단건 상품</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{singleProducts.length}개</div>
+        <p className="text-xs text-muted-foreground">판매 중인 단건 상품</p>
+      </CardContent>
+    </Card>
+    
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">번들 상품</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">3개</div>
+        <p className="text-xs text-muted-foreground">활성 번들 상품</p>
+      </CardContent>
+    </Card>
+    
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">VROOK</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">2개</div>
+        <p className="text-xs text-muted-foreground">제작 완료</p>
+      </CardContent>
+    </Card>
+    
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">XR 팬미팅</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">1개</div>
+        <p className="text-xs text-muted-foreground">예정된 팬미팅</p>
+      </CardContent>
+    </Card>
+  </div>
 
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">번들 상품</CardTitle>
-                    <CardDescription className="text-sm">패키지 상품 구성</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="outline" className="w-full bg-transparent">
-                      관리
-                    </Button>
-                  </CardContent>
-                </Card>
+  {/* 상품 관리 메뉴 */}
+  <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base">단건 상품</CardTitle>
+        <CardDescription className="text-sm">개별 콘텐츠 판매 설정</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <Button 
+          variant="outline" 
+          className="w-full bg-transparent"
+          onClick={() => handleProductModal('single')}
+        >
+          상품 설정
+        </Button>
+        <Button variant="ghost" size="sm" className="w-full">
+          판매 현황 보기
+        </Button>
+      </CardContent>
+    </Card>
 
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">VROOK</CardTitle>
-                    <CardDescription className="text-sm">VROOK 제작 및 판매</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="outline" className="w-full bg-transparent">
-                      신청
-                    </Button>
-                  </CardContent>
-                </Card>
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base">번들 상품</CardTitle>
+        <CardDescription className="text-sm">여러 콘텐츠 패키지 구성</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <Button 
+          variant="outline" 
+          className="w-full bg-transparent"
+          onClick={() => handleProductModal('bundle')}
+        >
+          번들 만들기
+        </Button>
+        <Button variant="ghost" size="sm" className="w-full">
+          번들 관리
+        </Button>
+      </CardContent>
+    </Card>
 
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">XR 팬미팅</CardTitle>
-                    <CardDescription className="text-sm">XR 팬미팅 제작 및 판매</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="outline" className="w-full bg-transparent">
-                      신청
-                    </Button>
-                  </CardContent>
-                </Card>
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base">VROOK</CardTitle>
+        <CardDescription className="text-sm">VROOK 제작 신청 및 관리</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <Button 
+          variant="outline" 
+          className="w-full bg-transparent"
+          onClick={() => handleProductModal('vrook')}
+        >
+          제작 신청
+        </Button>
+        <Button variant="ghost" size="sm" className="w-full">
+          진행 상황
+        </Button>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base">XR 팬미팅</CardTitle>
+        <CardDescription className="text-sm">XR 팬미팅 기획 및 제작</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <Button 
+          variant="outline" 
+          className="w-full bg-transparent"
+          onClick={() => handleProductModal('xr-fanmeeting')}
+        >
+          팬미팅 신청
+        </Button>
+        <Button variant="ghost" size="sm" className="w-full">
+          예약 현황
+        </Button>
+      </CardContent>
+    </Card>
+  </div>
+
+  {/* 상품 설정 모달 */}
+  <Dialog open={productModalOpen} onOpenChange={setProductModalOpen}>
+    <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+      <DialogHeader>
+        <DialogTitle>
+          {productModalType === 'single' && "단건 상품 설정"}
+          {productModalType === 'bundle' && "번들 상품 만들기"}
+          {productModalType === 'vrook' && "VROOK 제작 신청"}
+          {productModalType === 'xr-fanmeeting' && "XR 팬미팅 신청"}
+        </DialogTitle>
+        <DialogDescription>
+          {productModalType === 'single' && "판매할 콘텐츠를 선택하고 가격을 설정하세요."}
+          {productModalType === 'bundle' && "패키지로 묶을 콘텐츠들을 선택하세요."}
+          {productModalType === 'vrook' && "VROOK으로 제작할 콘텐츠와 설정을 입력하세요."}
+          {productModalType === 'xr-fanmeeting' && "XR 팬미팅 기획안을 작성하세요."}
+        </DialogDescription>
+      </DialogHeader>
+      
+      <div className="grid gap-4 py-4">
+        {productModalType === 'single' && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>콘텐츠 선택</Label>
+              <div className="max-h-[300px] overflow-y-auto space-y-2 border rounded-lg p-4">
+                {availableContent.map((content) => (
+                  <div key={content.id} className="flex items-center space-x-3 p-2 hover:bg-muted rounded">
+                    <Checkbox 
+                      checked={selectedContent.some(item => item.id === content.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedContent([...selectedContent, content])
+                        } else {
+                          setSelectedContent(selectedContent.filter(item => item.id !== content.id))
+                        }
+                      }}
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium">{content.title}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {content.type} • {content.views.toLocaleString()} 조회
+                        {content.price && <span> • 현재 가격: ₩{content.price.toLocaleString()}</span>}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+            
+            {selectedContent.length > 0 && (
+              <div className="space-y-3">
+                <Label>선택된 콘텐츠 가격 설정</Label>
+                {selectedContent.map((content) => (
+                  <div key={content.id} className="flex items-center space-x-3 p-2 border rounded">
+                    <div className="flex-1">
+                      <div className="font-medium">{content.title}</div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Label htmlFor={`price-${content.id}`}>₩</Label>
+                      <Input 
+                        id={`price-${content.id}`}
+                        type="number" 
+                        placeholder="가격"
+                        defaultValue={content.price || ""}
+                        className="w-32"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {productModalType === 'bundle' && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="bundle-name">번들 이름</Label>
+              <Input id="bundle-name" placeholder="번들 상품 이름을 입력하세요" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>포함할 콘텐츠 선택</Label>
+              <div className="max-h-[200px] overflow-y-auto space-y-2 border rounded-lg p-4">
+                {availableContent.map((content) => (
+                  <div key={content.id} className="flex items-center space-x-3 p-2 hover:bg-muted rounded">
+                    <Checkbox 
+                      checked={selectedContent.some(item => item.id === content.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedContent([...selectedContent, content])
+                        } else {
+                          setSelectedContent(selectedContent.filter(item => item.id !== content.id))
+                        }
+                      }}
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium">{content.title}</div>
+                      <div className="text-sm text-muted-foreground">{content.type}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="bundle-price">번들 가격</Label>
+              <Input id="bundle-price" type="number" placeholder="번들 판매 가격" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="bundle-discount">할인율</Label>
+              <Input id="bundle-discount" type="number" placeholder="개별 구매 대비 할인율 (%)" />
+            </div>
+          </div>
+        )}
+
+        {productModalType === 'vrook' && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="vrook-title">VROOK 제목</Label>
+              <Input id="vrook-title" placeholder="VROOK 제목을 입력하세요" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>기반 콘텐츠 선택</Label>
+              <div className="max-h-[200px] overflow-y-auto space-y-2 border rounded-lg p-4">
+                {availableContent.filter(content => content.type === 'VR 영상' || content.type === '360도 영상').map((content) => (
+                  <div key={content.id} className="flex items-center space-x-3 p-2 hover:bg-muted rounded">
+                    <Checkbox 
+                      checked={selectedContent.some(item => item.id === content.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedContent([content])
+                        } else {
+                          setSelectedContent([])
+                        }
+                      }}
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium">{content.title}</div>
+                      <div className="text-sm text-muted-foreground">{content.type}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="vrook-price">VROOK 판매가격</Label>
+              <Input id="vrook-price" type="number" placeholder="VROOK 판매 가격" />
+            </div>
+          </div>
+        )}
+
+        {productModalType === 'xr-fanmeeting' && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="fanmeeting-title">팬미팅 제목</Label>
+              <Input id="fanmeeting-title" placeholder="XR 팬미팅 제목을 입력하세요" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="fanmeeting-date">예정 일시</Label>
+              <Input id="fanmeeting-date" type="datetime-local" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="fanmeeting-capacity">최대 참여 인원</Label>
+              <Input id="fanmeeting-capacity" type="number" placeholder="최대 참여 가능 인원" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="fanmeeting-price">참여 가격</Label>
+              <Input id="fanmeeting-price" type="number" placeholder="XR 팬미팅 참여 가격" />
+            </div>
+          </div>
+        )}
+      </div>
+      
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setProductModalOpen(false)}>
+                취소
+              </Button>
+              <Button type="submit" onClick={() => setProductModalOpen(false)}>
+                {productModalType === 'single' && "상품 등록"}
+                {productModalType === 'bundle' && "번들 생성"}
+                {productModalType === 'vrook' && "제작 신청"}
+                {productModalType === 'xr-fanmeeting' && "팬미팅 신청"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </TabsContent>
 
         <TabsContent value="sponsorship" className="space-y-4">
           <Card>
