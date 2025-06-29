@@ -293,8 +293,8 @@ export default function SupportTab() {
         </CardContent>
       </Card>
 
-      {/* 후원 활용 내역 */}
-      <Card>
+      {/* 후원 활용 내역 주석처리 */}
+      {/* <Card>
         <CardHeader>
           <CardTitle>후원금 활용 내역</CardTitle>
         </CardHeader>
@@ -325,6 +325,7 @@ export default function SupportTab() {
           </div>
         </CardContent>
       </Card>
+      */}
 
       {/* 후원 리워드 시스템 */}
       <Card>

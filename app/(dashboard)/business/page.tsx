@@ -616,6 +616,50 @@ export default function BusinessPage() {
     </Card>
 
     <Card>
+    <CardHeader>
+      <CardTitle className="text-base">후원 등급 시스템</CardTitle>
+      <CardDescription>후원 금액별 등급과 혜택을 설정하세요</CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <div className="space-y-3">
+        <div className="p-3 border rounded-lg">
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+              <span className="font-medium">VIP</span>
+            </div>
+            <span className="text-sm text-muted-foreground">₩100,000 이상</span>
+          </div>
+          <div className="text-xs text-muted-foreground">특별 배지, 1:1 메시지, 독점 콘텐츠</div>
+        </div>
+        
+        <div className="p-3 border rounded-lg">
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+              <span className="font-medium">골드</span>
+            </div>
+            <span className="text-sm text-muted-foreground">₩50,000 이상</span>
+          </div>
+          <div className="text-xs text-muted-foreground">골드 배지, 우선 이벤트 참여</div>
+        </div>
+        
+        <div className="p-3 border rounded-lg">
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
+              <span className="font-medium">실버</span>
+            </div>
+            <span className="text-sm text-muted-foreground">₩10,000 이상</span>
+          </div>
+          <div className="text-xs text-muted-foreground">실버 배지, 감사 메시지</div>
+        </div>
+      </div>
+      
+      <Button className="w-full">등급 설정 수정</Button>
+    </CardContent>
+  </Card>
+    <Card>
       <CardHeader>
         <CardTitle className="text-base">후원 목표</CardTitle>
         <CardDescription>이번 달 후원 목표 관리</CardDescription>
