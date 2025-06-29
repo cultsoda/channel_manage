@@ -11,6 +11,8 @@ import PackageTab from "@/components/channel-home/PackageTab"
 import VrookTab from "@/components/channel-home/VrookTab"
 import ChannelFooter from "@/components/channel-home/ChannelFooter"
 import XrFanmeetingTab from "@/components/channel-home/XrFanmeetingTab"
+import CommunityTab from "@/components/channel-home/CommunityTab"
+
 
 
 export default function ChannelHomePage() {
@@ -30,9 +32,9 @@ export default function ChannelHomePage() {
               <div className="w-16 h-16 bg-white/30 rounded-full" />
             </div>
             <h1 className="text-2xl font-bold">케인의 채널</h1>
-            <p className="text-blue-100">케인캐인캐인</p>
+            <p className="text-blue-100">케인과 함께하는 우당탕탕 일상</p>
             <div className="flex items-center justify-center gap-4 mt-2 text-sm">
-              <span>희원 7 • 콘텐츠 9 • 채널 소개 2</span>
+              <span>희원 1,024 • 콘텐츠 97 </span>
             </div>
           </div>
         </div>
@@ -101,11 +103,8 @@ export default function ChannelHomePage() {
                 <XrFanmeetingTab />
             </TabsContent>
 
-            <TabsContent value="community" className="p-4">
-              <div className="text-center py-20">
-                <h2 className="text-2xl font-bold mb-4">커뮤니티 탭</h2>
-                <p className="text-gray-600">팬톡, 게시판, 이벤트가 여기에 표시됩니다.</p>
-              </div>
+            <TabsContent value="community" className="mt-0 h-full">
+                <CommunityTab />
             </TabsContent>
 
             <TabsContent value="support" className="p-4">
