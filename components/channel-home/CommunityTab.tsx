@@ -333,15 +333,15 @@ export default function CommunityTab() {
               </Badge>
             </div>
             
-            <div className="grid grid-cols-2 gap-4 text-sm mb-3">
-              <div>
-                <span className="text-gray-500">기간: </span>
-                <span>{event.startDate} - {event.endDate}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">참여자: </span>
-                <span>{event.participants}명</span>
-              </div>
+            <div className="space-y-2 text-sm mb-3">
+                <div className="flex justify-between">
+                    <span className="text-gray-500">기간:</span>
+                    <span>{event.startDate} - {event.endDate}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="text-gray-500">참여자:</span>
+                    <span>{event.participants}명</span>
+                </div>
             </div>
             
             <div className="mb-3">
@@ -470,14 +470,32 @@ export default function CommunityTab() {
         <h3 className="text-lg font-bold">팬 커뮤니티 통계</h3>
       </div>
       
-      {/* 전체 팬 수 요약 */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50">
-        <CardContent className="p-6 text-center">
-          <Users className="w-12 h-12 mx-auto mb-4 text-blue-500" />
-          <div className="text-3xl font-bold text-blue-600 mb-2">{fanStats.totalFans.toLocaleString()}</div>
-          <div className="text-gray-600">총 팬 수</div>
-        </CardContent>
-      </Card>
+      {/* 전체 요약 통계 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card className="bg-gradient-to-r from-blue-50 to-purple-50">
+            <CardContent className="p-6 text-center">
+            <Users className="w-8 h-8 mx-auto mb-3 text-blue-500" />
+            <div className="text-2xl font-bold text-blue-600 mb-1">{fanStats.totalFans.toLocaleString()}</div>
+            <div className="text-sm text-gray-600">총 팬 수</div>
+            </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-r from-green-50 to-emerald-50">
+            <CardContent className="p-6 text-center">
+            <TrendingUp className="w-8 h-8 mx-auto mb-3 text-green-500" />
+            <div className="text-2xl font-bold text-green-600 mb-1">+127</div>
+            <div className="text-sm text-gray-600">이번 달 신규 팬</div>
+            </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-r from-purple-50 to-pink-50">
+            <CardContent className="p-6 text-center">
+            <Crown className="w-8 h-8 mx-auto mb-3 text-purple-500" />
+            <div className="text-2xl font-bold text-purple-600 mb-1">624</div>
+            <div className="text-sm text-gray-600">멤버십 팬</div>
+            </CardContent>
+        </Card>
+        </div>
       
       {/* 멤버십 등급별 분포 & 팬 레벨 분포 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
