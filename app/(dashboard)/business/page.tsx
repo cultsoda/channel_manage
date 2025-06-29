@@ -228,11 +228,11 @@ export default function BusinessPage() {
     
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium">번들 상품</CardTitle>
+        <CardTitle className="text-sm font-medium">패키지</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">3개</div>
-        <p className="text-xs text-muted-foreground">활성 번들 상품</p>
+        <p className="text-xs text-muted-foreground">활성 패키지</p>
       </CardContent>
     </Card>
     
@@ -280,7 +280,7 @@ export default function BusinessPage() {
 
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">번들 상품</CardTitle>
+        <CardTitle className="text-base">패키지</CardTitle>
         <CardDescription className="text-sm">여러 콘텐츠 패키지 구성</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -289,10 +289,10 @@ export default function BusinessPage() {
           className="w-full bg-transparent"
           onClick={() => handleProductModal('bundle')}
         >
-          번들 만들기
+          패키지만들기
         </Button>
         <Button variant="ghost" size="sm" className="w-full">
-          번들 관리
+          패키지관리
         </Button>
       </CardContent>
     </Card>
@@ -342,7 +342,7 @@ export default function BusinessPage() {
       <DialogHeader>
         <DialogTitle>
           {productModalType === 'single' && "단건 상품 설정"}
-          {productModalType === 'bundle' && "번들 상품 만들기"}
+          {productModalType === 'bundle' && "패키지 만들기"}
           {productModalType === 'vrook' && "VROOK 제작 신청"}
           {productModalType === 'xr-fanmeeting' && "XR 팬미팅 신청"}
         </DialogTitle>
@@ -412,8 +412,8 @@ export default function BusinessPage() {
         {productModalType === 'bundle' && (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="bundle-name">번들 이름</Label>
-              <Input id="bundle-name" placeholder="번들 상품 이름을 입력하세요" />
+              <Label htmlFor="bundle-name">패키지이름</Label>
+              <Input id="bundle-name" placeholder="패키지 이름을 입력하세요" />
             </div>
             
             <div className="space-y-2">
@@ -441,8 +441,8 @@ export default function BusinessPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="bundle-price">번들 가격</Label>
-              <Input id="bundle-price" type="number" placeholder="번들 판매 가격" />
+              <Label htmlFor="bundle-price">패키지가격</Label>
+              <Input id="bundle-price" type="number" placeholder="패키지판매 가격" />
             </div>
             
             <div className="space-y-2">
@@ -521,7 +521,7 @@ export default function BusinessPage() {
               </Button>
               <Button type="submit" onClick={() => setProductModalOpen(false)}>
                 {productModalType === 'single' && "상품 등록"}
-                {productModalType === 'bundle' && "번들 생성"}
+                {productModalType === 'bundle' && "패키지생성"}
                 {productModalType === 'vrook' && "제작 신청"}
                 {productModalType === 'xr-fanmeeting' && "팬미팅 신청"}
               </Button>
