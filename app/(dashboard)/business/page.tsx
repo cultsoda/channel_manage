@@ -10,7 +10,7 @@ export default function BusinessPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">비즈니스 모델</h1>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">상품 & 수익</h1>
         <p className="text-muted-foreground">멤버십, 상품, 후원을 관리하세요.</p>
       </div>
 

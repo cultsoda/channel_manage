@@ -18,7 +18,8 @@ import {
   XCircle,
   Star,
   Copy,
-  Download
+  Download,
+  X
 } from 'lucide-react';
 
 interface Event {
@@ -133,12 +134,24 @@ const mockTemplates: EventTemplate[] = [
 ];
 
 const EventsTab: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'list' | 'participants' | 'templates' | 'stats'>('list');
+  const [activeTab, setActiveTab] = useState<'list' | 'templates' | 'stats'>('list');
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showEventModal, setShowEventModal] = useState(false);
+  const [showParticipantsModal, setShowParticipantsModal] = useState(false);
   const [showWinnerModal, setShowWinnerModal] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    description: '',
+    type: 'quiz' as 'quiz' | 'photo' | 'comment' | 'vote' | 'lottery',
+    startDate: '',
+    endDate: '',
+    prize: '',
+    maxParticipants: '',
+    hasParticipantLimit: false,
+    participantGrades: [] as ('VIP' | 'PREMIUM' | 'BASIC')[]
+  });
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -189,6 +202,44 @@ const EventsTab: React.FC = () => {
       case 'BASIC': return 'bg-blue-100 text-blue-800 border-blue-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
+  };
+
+  const handleCreateEvent = () => {
+    const eventData: Event = {
+      id: (mockEvents.length + 1).toString(),
+      title: newEvent.title,
+      description: newEvent.description,
+      type: newEvent.type,
+      status: 'scheduled',
+      startDate: newEvent.startDate,
+      endDate: newEvent.endDate,
+      participants: 0,
+      maxParticipants: newEvent.hasParticipantLimit ? parseInt(newEvent.maxParticipants) : undefined,
+      prize: newEvent.prize,
+      winners: 1,
+      participantGrades: newEvent.participantGrades.length > 0 ? newEvent.participantGrades : ['VIP', 'PREMIUM', 'BASIC'],
+      thumbnail: '/api/placeholder/300/200',
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+    
+    // 실제로는 mockEvents에 추가하는 로직이 필요
+    setShowEventModal(false);
+    setNewEvent({
+      title: '',
+      description: '',
+      type: 'quiz',
+      startDate: '',
+      endDate: '',
+      prize: '',
+      maxParticipants: '',
+      hasParticipantLimit: false,
+      participantGrades: []
+    });
+  };
+
+  const handleShowParticipants = (event: Event) => {
+    setSelectedEvent(event);
+    setShowParticipantsModal(true);
   };
 
   const filteredEvents = mockEvents.filter(event => {
@@ -274,7 +325,7 @@ const EventsTab: React.FC = () => {
                   
                   <div className="flex gap-2">
                     <button
-                      onClick={() => setSelectedEvent(event)}
+                      onClick={() => handleShowParticipants(event)}
                       className="px-3 py-1 text-blue-600 border border-blue-200 rounded hover:bg-blue-50"
                     >
                       참여자 보기
@@ -317,140 +368,132 @@ const EventsTab: React.FC = () => {
   );
 
   const renderParticipants = () => {
-    if (!selectedEvent) {
-      return (
-        <div className="text-center py-12">
-          <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">이벤트를 선택하여 참여자를 확인하세요.</p>
-        </div>
-      );
-    }
+    if (!selectedEvent) return null;
 
     return (
-      <div className="space-y-6">
-        {/* 이벤트 정보 헤더 */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <div className="flex items-center justify-between mb-4">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+          {/* 모달 헤더 */}
+          <div className="flex items-center justify-between p-6 border-b">
             <div>
               <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
               <p className="text-gray-600">참여자 관리</p>
             </div>
             <button
-              onClick={() => setSelectedEvent(null)}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+              onClick={() => setShowParticipantsModal(false)}
+              className="p-2 hover:bg-gray-100 rounded-lg"
             >
-              목록으로
+              <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">{selectedEvent.participants}</p>
-              <p className="text-sm text-gray-600">총 참여자</p>
+          {/* 모달 내용 */}
+          <div className="p-6 overflow-y-auto" style={{maxHeight: 'calc(90vh - 140px)'}}>
+            {/* 이벤트 정보 요약 */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <p className="text-2xl font-bold text-blue-600">{selectedEvent.participants}</p>
+                <p className="text-sm text-gray-600">총 참여자</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <p className="text-2xl font-bold text-green-600">
+                  {selectedEvent.maxParticipants ? 
+                    Math.round((selectedEvent.participants / selectedEvent.maxParticipants) * 100) : 
+                    100}%
+                </p>
+                <p className="text-sm text-gray-600">참여율</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <p className="text-2xl font-bold text-purple-600">{selectedEvent.winners || 0}</p>
+                <p className="text-sm text-gray-600">당첨자</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <p className="text-2xl font-bold text-orange-600">
+                  {Math.ceil((new Date(selectedEvent.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
+                </p>
+                <p className="text-sm text-gray-600">남은 일수</p>
+              </div>
             </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">
-                {selectedEvent.maxParticipants ? 
-                  Math.round((selectedEvent.participants / selectedEvent.maxParticipants) * 100) : 
-                  100}%
-              </p>
-              <p className="text-sm text-gray-600">참여율</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-purple-600">{selectedEvent.winners || 0}</p>
-              <p className="text-sm text-gray-600">당첨자</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-orange-600">
-                {Math.ceil((new Date(selectedEvent.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
-              </p>
-              <p className="text-sm text-gray-600">남은 일수</p>
-            </div>
-          </div>
-        </div>
 
-        {/* 참여자 관리 액션 */}
-        <div className="flex justify-between items-center">
-          <div className="flex gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="참여자 검색..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              />
+            {/* 참여자 관리 액션 */}
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="참여자 검색..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                  <option>모든 등급</option>
+                  <option>VIP</option>
+                  <option>PREMIUM</option>
+                  <option>BASIC</option>
+                </select>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowWinnerModal(true)}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+                >
+                  <Trophy className="w-4 h-4" />
+                  당첨자 선정
+                </button>
+                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
+                  <Download className="w-4 h-4" />
+                  내보내기
+                </button>
+              </div>
             </div>
-            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-              <option>모든 등급</option>
-              <option>VIP</option>
-              <option>PREMIUM</option>
-              <option>BASIC</option>
-            </select>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setShowWinnerModal(true)}
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
-            >
-              <Trophy className="w-4 h-4" />
-              당첨자 선정
-            </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-              <Download className="w-4 h-4" />
-              참여자 내보내기
-            </button>
-          </div>
-        </div>
 
-        {/* 참여자 목록 */}
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="p-6 border-b">
-            <h4 className="font-semibold">참여자 목록</h4>
-          </div>
-          <div className="divide-y">
-            {mockParticipants.map((participant) => (
-              <div key={participant.id} className="p-6 hover:bg-gray-50">
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <img
-                      src={participant.avatar}
-                      alt={participant.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    {participant.isWinner && (
-                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                        <Trophy className="w-3 h-3 text-white" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h5 className="font-semibold">{participant.name}</h5>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getGradeBadgeColor(participant.grade)}`}>
-                        {participant.grade}
-                      </span>
+            {/* 참여자 목록 */}
+            <div className="space-y-3">
+              {mockParticipants.map((participant) => (
+                <div key={participant.id} className="p-4 border rounded-lg hover:bg-gray-50">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <img
+                        src={participant.avatar}
+                        alt={participant.name}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
                       {participant.isWinner && (
-                        <span className="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
-                          당첨자
-                        </span>
+                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                          <Trophy className="w-3 h-3 text-white" />
+                        </div>
                       )}
                     </div>
-                    <p className="text-gray-600 text-sm">{participant.username}</p>
-                    <p className="text-gray-500 text-xs">참여일: {participant.joinedAt}</p>
-                  </div>
 
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 text-blue-600 border border-blue-200 rounded hover:bg-blue-50">
-                      제출물 보기
-                    </button>
-                    <button className="px-3 py-1 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
-                      메시지
-                    </button>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h5 className="font-semibold">{participant.name}</h5>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getGradeBadgeColor(participant.grade)}`}>
+                          {participant.grade}
+                        </span>
+                        {participant.isWinner && (
+                          <span className="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                            당첨자
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-gray-600 text-sm">{participant.username}</p>
+                      <p className="text-gray-500 text-xs">참여일: {participant.joinedAt}</p>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button className="px-3 py-1 text-blue-600 border border-blue-200 rounded hover:bg-blue-50">
+                        제출물 보기
+                      </button>
+                      <button className="px-3 py-1 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                        메시지
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -578,7 +621,6 @@ const EventsTab: React.FC = () => {
         <nav className="flex space-x-8">
           {[
             { id: 'list', label: '이벤트 목록', icon: Calendar },
-            { id: 'participants', label: '참여자 관리', icon: Users },
             { id: 'templates', label: '템플릿', icon: Copy },
             { id: 'stats', label: '통계', icon: TrendingUp }
           ].map((tab) => (
@@ -600,9 +642,173 @@ const EventsTab: React.FC = () => {
 
       {/* 탭 콘텐츠 */}
       {activeTab === 'list' && renderEventList()}
-      {activeTab === 'participants' && renderParticipants()}
       {activeTab === 'templates' && renderTemplates()}
       {activeTab === 'stats' && renderStats()}
+
+      {/* 참여자 모달 */}
+      {showParticipantsModal && renderParticipants()}
+
+      {/* 이벤트 생성 모달 */}
+      {showEventModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-xl font-bold">새 이벤트 생성</h3>
+              <button
+                onClick={() => setShowEventModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto" style={{maxHeight: 'calc(90vh - 140px)'}}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">이벤트 제목</label>
+                  <input
+                    type="text"
+                    value={newEvent.title}
+                    onChange={(e) => setNewEvent(prev => ({...prev, title: e.target.value}))}
+                    placeholder="이벤트 제목을 입력하세요"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">이벤트 설명</label>
+                  <textarea
+                    value={newEvent.description}
+                    onChange={(e) => setNewEvent(prev => ({...prev, description: e.target.value}))}
+                    placeholder="이벤트에 대한 자세한 설명을 입력하세요"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">이벤트 유형</label>
+                  <select
+                    value={newEvent.type}
+                    onChange={(e) => setNewEvent(prev => ({...prev, type: e.target.value as any}))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="quiz">퀴즈</option>
+                    <option value="photo">사진/영상</option>
+                    <option value="comment">댓글</option>
+                    <option value="vote">투표</option>
+                    <option value="lottery">추첨</option>
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">시작일</label>
+                    <input
+                      type="date"
+                      value={newEvent.startDate}
+                      onChange={(e) => setNewEvent(prev => ({...prev, startDate: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">종료일</label>
+                    <input
+                      type="date"
+                      value={newEvent.endDate}
+                      onChange={(e) => setNewEvent(prev => ({...prev, endDate: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">상품</label>
+                  <input
+                    type="text"
+                    value={newEvent.prize}
+                    onChange={(e) => setNewEvent(prev => ({...prev, prize: e.target.value}))}
+                    placeholder="이벤트 상품을 입력하세요"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="participant-limit"
+                      checked={newEvent.hasParticipantLimit}
+                      onChange={(e) => setNewEvent(prev => ({...prev, hasParticipantLimit: e.target.checked}))}
+                      className="rounded"
+                    />
+                    <label htmlFor="participant-limit" className="text-sm font-medium text-gray-700">
+                      참여자 제한 설정
+                    </label>
+                  </div>
+                  
+                  {newEvent.hasParticipantLimit && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">최대 참여자 수</label>
+                      <input
+                        type="number"
+                        value={newEvent.maxParticipants}
+                        onChange={(e) => setNewEvent(prev => ({...prev, maxParticipants: e.target.value}))}
+                        placeholder="최대 참여자 수를 입력하세요"
+                        min="1"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">참여 가능 등급</label>
+                  <div className="flex gap-4">
+                    {['VIP', 'PREMIUM', 'BASIC'].map((grade) => (
+                      <label key={grade} className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={newEvent.participantGrades.includes(grade as any)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNewEvent(prev => ({
+                                ...prev, 
+                                participantGrades: [...prev.participantGrades, grade as any]
+                              }));
+                            } else {
+                              setNewEvent(prev => ({
+                                ...prev, 
+                                participantGrades: prev.participantGrades.filter(g => g !== grade)
+                              }));
+                            }
+                          }}
+                          className="rounded"
+                        />
+                        <span className="text-sm">{grade}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 p-6 border-t">
+              <button
+                onClick={() => setShowEventModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleCreateEvent}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                생성하기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

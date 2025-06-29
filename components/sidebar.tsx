@@ -116,7 +116,7 @@ const navItems = [
   { name: "분석", href: "/analytics", icon: BarChart3 },
   { name: "콘텐츠 관리", href: "/content", icon: FileText },
   { name: "상품 & 수익", href: "/business", icon: DollarSign },
-  { name: "커뮤니티 관리", href: "/community", icon: Users },
+  { name: "커뮤니티", href: "/community", icon: Users },
   { name: "정산", href: "/settlement", icon: Calculator },
   { name: "알림", href: "/notifications", icon: Bell },
   { name: "채널 설정", href: "/channel-settings", icon: Settings },
