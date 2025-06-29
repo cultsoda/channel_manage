@@ -34,7 +34,7 @@ interface Event {
   maxParticipants?: number;
   prize: string;
   winners?: number;
-  participantGrades: ('VIP' | 'PREMIUM' | 'BASIC')[];
+  participantGrades: ('gold' | 'silver' | 'bronze')[];
   thumbnail: string;
   createdAt: string;
 }
@@ -44,7 +44,7 @@ interface Participant {
   name: string;
   username: string;
   avatar: string;
-  grade: 'VIP' | 'PREMIUM' | 'BASIC';
+  grade: 'gold' | 'silver' | 'bronze';
   joinedAt: string;
   submissionData?: any;
   isWinner?: boolean;
@@ -72,7 +72,7 @@ const mockEvents: Event[] = [
     maxParticipants: 100,
     prize: '아이패드 Pro + 애플펜슬',
     winners: 3,
-    participantGrades: ['VIP', 'PREMIUM', 'BASIC'],
+    participantGrades: ['gold', 'silver', 'bronze'],
     thumbnail: '/api/placeholder/300/200',
     createdAt: '2024-05-25'
   },
@@ -87,7 +87,7 @@ const mockEvents: Event[] = [
     participants: 234,
     prize: '스타벅스 기프티콘',
     winners: 10,
-    participantGrades: ['VIP', 'PREMIUM'],
+    participantGrades: ['gold', 'silver'],
     thumbnail: '/api/placeholder/300/200',
     createdAt: '2024-05-10'
   }
@@ -99,7 +99,7 @@ const mockParticipants: Participant[] = [
     name: '김팬님',
     username: '@kimfan',
     avatar: '/api/placeholder/40/40',
-    grade: 'VIP',
+    grade: 'gold',
     joinedAt: '2024-06-15 14:30',
     isWinner: true
   },
@@ -108,7 +108,7 @@ const mockParticipants: Participant[] = [
     name: '이후원',
     username: '@supporter2',
     avatar: '/api/placeholder/40/40',
-    grade: 'PREMIUM',
+    grade: 'silver',
     joinedAt: '2024-06-16 09:15',
     isWinner: false
   }
@@ -150,7 +150,7 @@ const EventsTab: React.FC = () => {
     prize: '',
     maxParticipants: '',
     hasParticipantLimit: false,
-    participantGrades: [] as ('VIP' | 'PREMIUM' | 'BASIC')[]
+    participantGrades: [] as ('gold' | 'silver' | 'bronze')[]
   });
 
   const getStatusColor = (status: string) => {
@@ -197,9 +197,9 @@ const EventsTab: React.FC = () => {
 
   const getGradeBadgeColor = (grade: string) => {
     switch (grade) {
-      case 'VIP': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'PREMIUM': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'BASIC': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'gold': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'silver': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'bronze': return 'bg-blue-100 text-blue-800 border-blue-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -217,7 +217,7 @@ const EventsTab: React.FC = () => {
       maxParticipants: newEvent.hasParticipantLimit ? parseInt(newEvent.maxParticipants) : undefined,
       prize: newEvent.prize,
       winners: 1,
-      participantGrades: newEvent.participantGrades.length > 0 ? newEvent.participantGrades : ['VIP', 'PREMIUM', 'BASIC'],
+      participantGrades: newEvent.participantGrades.length > 0 ? newEvent.participantGrades : ['gold', 'silver', 'bronze'],
       thumbnail: '/api/placeholder/300/200',
       createdAt: new Date().toISOString().split('T')[0]
     };
@@ -428,9 +428,9 @@ const EventsTab: React.FC = () => {
                 </div>
                 <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                   <option>모든 등급</option>
-                  <option>VIP</option>
-                  <option>PREMIUM</option>
-                  <option>BASIC</option>
+                  <option>gold</option>
+                  <option>silver</option>
+                  <option>bronze</option>
                 </select>
               </div>
               <div className="flex gap-2">
@@ -764,7 +764,7 @@ const EventsTab: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">참여 가능 등급</label>
                   <div className="flex gap-4">
-                    {['VIP', 'PREMIUM', 'BASIC'].map((grade) => (
+                    {['gold', 'silver', 'bronze'].map((grade) => (
                       <label key={grade} className="flex items-center gap-2">
                         <input
                           type="checkbox"

@@ -6,7 +6,7 @@ interface Fan {
   name: string;
   username: string;
   avatar: string;
-  membershipGrade: 'VIP' | 'PREMIUM' | 'BASIC';
+  membershipGrade: 'GOLD' | 'SILVER' | 'BRONZE';
   fanLevel: number; // 1-90
   joinDate: string;
   lastActive: string;
@@ -23,7 +23,7 @@ const mockFans: Fan[] = [
     name: '김팬님',
     username: '@kimfan',
     avatar: '/api/placeholder/40/40',
-    membershipGrade: 'VIP',
+    membershipGrade: 'GOLD',
     fanLevel: 78,
     joinDate: '2024-01-15',
     lastActive: '방금 전',
@@ -38,7 +38,7 @@ const mockFans: Fan[] = [
     name: '이후원',
     username: '@supporter2',
     avatar: '/api/placeholder/40/40',
-    membershipGrade: 'PREMIUM',
+    membershipGrade: 'SILVER',
     fanLevel: 45,
     joinDate: '2024-02-20',
     lastActive: '5분 전',
@@ -53,7 +53,7 @@ const mockFans: Fan[] = [
     name: '박구독',
     username: '@subscriber3',
     avatar: '/api/placeholder/40/40',
-    membershipGrade: 'BASIC',
+    membershipGrade: 'BRONZE',
     fanLevel: 23,
     joinDate: '2024-03-10',
     lastActive: '1시간 전',
@@ -73,9 +73,9 @@ const MembersTab: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   const membershipStats = {
-    VIP: { count: 45, percentage: 15 },
-    PREMIUM: { count: 120, percentage: 40 },
-    BASIC: { count: 135, percentage: 45 }
+    GOLD: { count: 45, percentage: 15 },
+    SILVER: { count: 120, percentage: 40 },
+    BRONZE: { count: 135, percentage: 45 }
   };
 
   const fanLevelStats = {
@@ -118,18 +118,18 @@ const MembersTab: React.FC = () => {
 
   const getMembershipGradeColor = (grade: string) => {
     switch (grade) {
-      case 'VIP': return 'bg-gradient-to-r from-yellow-400 to-orange-500';
-      case 'PREMIUM': return 'bg-gradient-to-r from-purple-500 to-pink-500';
-      case 'BASIC': return 'bg-gradient-to-r from-blue-500 to-cyan-500';
+      case 'GOLD': return 'bg-gradient-to-r from-yellow-400 to-orange-500';
+      case 'SILVER': return 'bg-gradient-to-r from-gray-400 to-gray-600';
+      case 'BRONZE': return 'bg-gradient-to-r from-orange-400 to-orange-600';
       default: return 'bg-gray-500';
     }
   };
 
   const getMembershipGradeBadgeColor = (grade: string) => {
     switch (grade) {
-      case 'VIP': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'PREMIUM': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'BASIC': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'GOLD': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'SILVER': return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'BRONZE': return 'bg-orange-100 text-orange-800 border-orange-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -287,8 +287,8 @@ const MembersTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 멤버십 등급별 + 팬 레벨별 현황 대시보드 */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      {/* 멤버십 등급별 현황 대시보드 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow-sm border p-6">
           <div className="flex items-center gap-3">
             <Users className="w-8 h-8 text-gray-600" />
@@ -307,7 +307,7 @@ const MembersTab: React.FC = () => {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.count}</p>
-                <p className="text-sm text-gray-600">{grade} ({stats.percentage}%)</p>
+                <p className="text-sm text-gray-600 uppercase">{grade} ({stats.percentage}%)</p>
               </div>
             </div>
           </div>
@@ -316,24 +316,28 @@ const MembersTab: React.FC = () => {
 
       {/* 팬 레벨 분포 차트 */}
       <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h3 className="text-lg font-semibold mb-4">팬 레벨 분포 (활동 기반)</h3>
-        <div className="space-y-3">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold">팬 레벨 분포</h3>
+          <span className="text-sm text-gray-500">활동 기반</span>
+        </div>
+        <div className="space-y-4">
           {Object.entries(fanLevelStats).map(([level, stats]) => (
             <div key={level} className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-purple-500 rounded"></div>
-                <span className="text-sm font-medium">{level}</span>
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex-shrink-0"></div>
+                <span className="text-sm font-medium text-gray-700">{level}</span>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="w-32 bg-gray-200 rounded-full h-2">
+              <div className="flex items-center gap-4 ml-4">
+                <div className="w-24 bg-gray-200 rounded-full h-2 overflow-hidden">
                   <div 
-                    className="bg-gradient-to-r from-blue-400 to-purple-500 h-2 rounded-full" 
-                    style={{width: `${stats.percentage}%`}}
+                    className="bg-gradient-to-r from-blue-400 to-purple-500 h-2 rounded-full transition-all duration-300" 
+                    style={{width: `${Math.min(stats.percentage, 100)}%`}}
                   ></div>
                 </div>
-                <span className="text-sm text-gray-600 w-16 text-right">
-                  {stats.count}명 ({stats.percentage}%)
-                </span>
+                <div className="text-right min-w-[80px]">
+                  <span className="text-sm font-semibold text-gray-900">{stats.count}명</span>
+                  <span className="text-xs text-gray-500 ml-1">({stats.percentage}%)</span>
+                </div>
               </div>
             </div>
           ))}
@@ -361,9 +365,9 @@ const MembersTab: React.FC = () => {
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
               <option value="ALL">모든 멤버십</option>
-              <option value="VIP">VIP</option>
-              <option value="PREMIUM">PREMIUM</option>
-              <option value="BASIC">BASIC</option>
+              <option value="GOLD">GOLD</option>
+              <option value="SILVER">SILVER</option>
+              <option value="BRONZE">BRONZE</option>
             </select>
 
             <select
@@ -422,9 +426,9 @@ const MembersTab: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">멤버십 등급</label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
                   <option>전체</option>
-                  <option>VIP</option>
-                  <option>PREMIUM</option>
-                  <option>BASIC</option>
+                  <option>GOLD</option>
+                  <option>SILVER</option>
+                  <option>BRONZE</option>
                 </select>
               </div>
               <div>
