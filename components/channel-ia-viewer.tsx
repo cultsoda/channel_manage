@@ -7,6 +7,15 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ChevronDown, ChevronRight, Search, List, GitBranch, Filter, ArrowUpDown, RefreshCw } from 'lucide-react';
 
+// window.fs 타입 선언
+declare global {
+  interface Window {
+    fs?: {
+      readFile: (path: string, options?: { encoding?: string }) => Promise<string>;
+    };
+  }
+}
+
 // 데이터 타입 정의
 interface IAItem {
   대분류: string;
@@ -170,33 +179,65 @@ const ChannelIAViewer: React.FC = () => {
     }
   ];
 
-  // 프로젝트 내 CSV 파일 로드
-  const loadFromProjectFile = async () => {
+  // GitHub raw URL에서 CSV 파일 로드
+  const loadCSVData = async () => {
     setIsLoading(true);
     setError('');
     try {
-      // 프로젝트 내 파일 경로
-      const response = await fetch('/data/ia-data.csv');
-      if (!response.ok) {
-        throw new Error('CSV 파일을 찾을 수 없습니다');
+      // GitHub raw URL에서 직접 로드
+      const githubRawUrl = 'https://raw.githubusercontent.com/cultsoda/channel_manage/refs/heads/main/data/ia-data.csv';
+      
+      try {
+        console.log('GitHub에서 CSV 파일 로드 시도:', githubRawUrl);
+        const response = await fetch(githubRawUrl);
+        
+        if (response.ok) {
+          const csvText = await response.text();
+          console.log('CSV 파일 로드 성공, 길이:', csvText.length);
+          console.log('첫 200자:', csvText.slice(0, 200));
+          
+          const parsedData = parseCSV(csvText);
+          console.log('파싱된 데이터 개수:', parsedData.length);
+          
+          if (parsedData.length > 0) {
+            setIaData(parsedData);
+            console.log(`GitHub에서 총 ${parsedData.length}개의 데이터를 로드했습니다.`);
+            return;
+          }
+        } else {
+          console.log('GitHub 파일 응답 실패:', response.status, response.statusText);
+        }
+      } catch (githubError) {
+        console.log('GitHub 파일 로드 에러:', githubError);
+      }
+
+      // 업로드된 파일 시도 (fallback)
+      try {
+        if (window.fs) {
+          const csvContent = await window.fs.readFile('iadata.csv', { encoding: 'utf8' });
+          const parsedData = parseCSV(csvContent);
+          setIaData(parsedData);
+          console.log(`업로드된 파일에서 총 ${parsedData.length}개의 데이터를 로드했습니다.`);
+          return;
+        }
+      } catch (uploadError) {
+        console.log('업로드된 파일 에러:', uploadError);
       }
       
-      const csvText = await response.text();
-      const parsedData = parseCSV(csvText);
-      setIaData(parsedData);
-      console.log(`총 ${parsedData.length}개의 데이터를 로드했습니다.`);
+      throw new Error('모든 파일 로드 실패');
+      
     } catch (err) {
-      console.warn('프로젝트 파일 로드 실패, 샘플 데이터 사용:', err);
+      console.warn('모든 파일 로드 실패, 샘플 데이터 사용:', err);
       setIaData(getSampleData());
-      setError('CSV 파일을 불러오지 못해 샘플 데이터를 표시합니다.');
+      setError('GitHub에서 CSV 파일을 불러오지 못해 샘플 데이터를 표시합니다. 네트워크 상태를 확인해주세요.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 컴포넌트 마운트시 프로젝트 파일에서 로드
+  // 컴포넌트 마운트시 CSV 데이터 로드
   useEffect(() => {
-    loadFromProjectFile();
+    loadCSVData();
   }, []);
 
   // 필터링된 데이터
@@ -292,11 +333,11 @@ const ChannelIAViewer: React.FC = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={loadFromProjectFile}
+                onClick={loadCSVData}
                 disabled={isLoading}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                CSV 파일 새로고침
+                데이터 새로고침
               </Button>
               <Button
                 variant="default"
