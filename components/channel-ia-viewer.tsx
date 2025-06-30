@@ -364,69 +364,45 @@ const ChannelIAViewer: React.FC = () => {
     const channelHomeStats = moduleStats['채널 홈'] || { total: 0, implemented: 0, high: 0, description: '모든 데이터가 모이는 중심' };
     
     return (
-      <div className="flex flex-col items-center justify-center min-h-[600px] p-8 bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="p-8 bg-white">
         {/* 제목 */}
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">채널 생태계 구조</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">채널 생태계 구조</h2>
         
-        {/* 생태계 다이어그램 */}
-        <div className="relative w-full max-w-4xl h-96">
-          {/* 중앙 - 채널 홈 */}
+        {/* 중앙 채널 홈 */}
+        <div className="flex justify-center mb-8">
           <div 
-            className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                       w-40 h-40 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 
+            className={`w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 
                        flex flex-col items-center justify-center text-white shadow-lg cursor-pointer
-                       transition-all duration-300 hover:scale-110 z-10
+                       transition-all duration-300 hover:scale-105
                        ${selectedModule === '채널 홈' ? 'ring-4 ring-yellow-400' : ''}`}
             onClick={() => setSelectedModule(selectedModule === '채널 홈' ? '' : '채널 홈')}
           >
             <div className="text-lg font-bold">채널 홈</div>
             <div className="text-xs mt-1">중심 허브</div>
-            <div className="text-xs">
-              {channelHomeStats.implemented}/{channelHomeStats.total}
-            </div>
+            <div className="text-xs">{channelHomeStats.total}개 기능</div>
           </div>
+        </div>
 
-          {/* 주변 모듈들 */}
+        {/* 모듈 그리드 */}
+        <div className="grid grid-cols-3 gap-6 max-w-4xl mx-auto">
           {modules
             .filter(module => module !== '채널 홈')
-            .map((module, index) => {
-              const angle = (index * 360) / (modules.length - 1);
-              const radian = (angle * Math.PI) / 180;
-              const radius = 180;
-              const x = Math.cos(radian) * radius;
-              const y = Math.sin(radian) * radius;
-              
+            .map((module) => {
               const stats = moduleStats[module];
-
+              
               return (
-                <div key={module}>
-                  {/* 연결선 */}
-                  <div 
-                    className="absolute top-1/2 left-1/2 w-0.5 bg-blue-300 origin-left transform -translate-y-0.5"
-                    style={{
-                      width: `${radius - 50}px`,
-                      transform: `translate(-1px, -1px) rotate(${angle}deg)`,
-                    }}
-                  />
-                  
-                  {/* 모듈 카드 */}
-                  <div
-                    className={`absolute transform -translate-x-1/2 -translate-y-1/2 
-                               w-28 h-28 rounded-lg bg-gradient-to-br from-indigo-400 to-indigo-600
-                               flex flex-col items-center justify-center text-white shadow-md cursor-pointer
-                               transition-all duration-300 hover:scale-105
-                               ${selectedModule === module ? 'ring-4 ring-yellow-400 scale-110' : ''}`}
-                    style={{
-                      left: `calc(50% + ${x}px)`,
-                      top: `calc(50% + ${y}px)`,
-                    }}
-                    onClick={() => setSelectedModule(selectedModule === module ? '' : module)}
-                  >
-                    <div className="text-sm font-bold text-center px-1">{module}</div>
-                    <div className="text-xs mt-1">
-                      {stats.total}개 기능
-                    </div>
-                    <div className="text-xs">
+                <div
+                  key={module}
+                  className={`p-4 rounded-lg bg-gradient-to-br from-indigo-400 to-indigo-600
+                             text-white shadow-md cursor-pointer
+                             transition-all duration-300 hover:scale-105 hover:shadow-lg
+                             ${selectedModule === module ? 'ring-4 ring-yellow-400 scale-105' : ''}`}
+                  onClick={() => setSelectedModule(selectedModule === module ? '' : module)}
+                >
+                  <div className="text-center">
+                    <div className="text-lg font-bold mb-2">{module}</div>
+                    <div className="text-sm opacity-90">{stats.total}개 기능</div>
+                    <div className="text-xs opacity-75 mt-1">
                       {stats.implemented}/{stats.total} 완료
                     </div>
                   </div>
@@ -437,7 +413,7 @@ const ChannelIAViewer: React.FC = () => {
 
         {/* 선택된 모듈 정보 */}
         {selectedModule && (
-          <div className="mt-8 p-6 bg-white rounded-lg shadow-lg max-w-2xl w-full">
+          <div className="mt-8 p-6 bg-gray-50 rounded-lg max-w-3xl mx-auto">
             <h3 className="text-xl font-bold text-gray-800 mb-2">{selectedModule}</h3>
             <p className="text-gray-600 mb-4">
               {selectedModule === '채널 홈' 
@@ -445,19 +421,19 @@ const ChannelIAViewer: React.FC = () => {
                 : moduleStats[selectedModule]?.description}
             </p>
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="p-3 bg-blue-50 rounded">
+              <div className="p-3 bg-white rounded shadow">
                 <div className="text-2xl font-bold text-blue-600">
                   {selectedModule === '채널 홈' ? channelHomeStats.total : moduleStats[selectedModule]?.total}
                 </div>
                 <div className="text-sm text-gray-600">총 기능</div>
               </div>
-              <div className="p-3 bg-green-50 rounded">
+              <div className="p-3 bg-white rounded shadow">
                 <div className="text-2xl font-bold text-green-600">
                   {selectedModule === '채널 홈' ? channelHomeStats.implemented : moduleStats[selectedModule]?.implemented}
                 </div>
                 <div className="text-sm text-gray-600">구현완료</div>
               </div>
-              <div className="p-3 bg-red-50 rounded">
+              <div className="p-3 bg-white rounded shadow">
                 <div className="text-2xl font-bold text-red-600">
                   {selectedModule === '채널 홈' ? channelHomeStats.high : moduleStats[selectedModule]?.high}
                 </div>
@@ -467,7 +443,31 @@ const ChannelIAViewer: React.FC = () => {
           </div>
         )}
 
-        {/* 범례 제거 */}
+        {/* 전체 통계 요약 */}
+        <div className="mt-8 grid grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <div className="text-center p-4 bg-blue-50 rounded">
+            <div className="text-2xl font-bold text-blue-600">{iaData.length}</div>
+            <div className="text-sm text-gray-600">전체 기능</div>
+          </div>
+          <div className="text-center p-4 bg-green-50 rounded">
+            <div className="text-2xl font-bold text-green-600">
+              {iaData.filter(item => item['현재 구현 여부'] === 'O').length}
+            </div>
+            <div className="text-sm text-gray-600">구현완료</div>
+          </div>
+          <div className="text-center p-4 bg-red-50 rounded">
+            <div className="text-2xl font-bold text-red-600">
+              {iaData.filter(item => item.우선순위 === 'High').length}
+            </div>
+            <div className="text-sm text-gray-600">High 우선순위</div>
+          </div>
+          <div className="text-center p-4 bg-purple-50 rounded">
+            <div className="text-2xl font-bold text-purple-600">
+              {Object.keys(moduleStats).length}
+            </div>
+            <div className="text-sm text-gray-600">주요 모듈</div>
+          </div>
+        </div>
       </div>
     );
   };
