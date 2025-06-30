@@ -18,53 +18,15 @@ interface IAItem {
   "현재 구현 여부": 'O' | 'X';
 }
 
-// 마인드맵 노드 타입
-interface MindMapNode {
-  id: string;
-  name: string;
-  children?: MindMapNode[];
-  level: number;
-  priority?: 'High' | 'Medium' | 'Low';
-  implemented?: boolean;
-  count?: number;
-}
-
 const ChannelIAViewer: React.FC = () => {
-  const [viewMode, setViewMode] = useState<'list' | 'mindmap'>('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [implementedFilter, setImplementedFilter] = useState<string>('all');
-  const [selectedCategory1, setSelectedCategory1] = useState<string>('');
-  const [selectedCategory2, setSelectedCategory2] = useState<string>('');
   const [iaData, setIaData] = useState<IAItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [sortColumn, setSortColumn] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-
-  // 프로젝트 내 CSV 파일 로드
-  const loadFromProjectFile = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      // 프로젝트 내 파일 경로
-      const response = await fetch('/data/ia-data.csv');
-      if (!response.ok) {
-        throw new Error('CSV 파일을 찾을 수 없습니다');
-      }
-      
-      const csvText = await response.text();
-      const parsedData = parseCSV(csvText);
-      setIaData(parsedData);
-      console.log(`총 ${parsedData.length}개의 데이터를 로드했습니다.`);
-    } catch (err) {
-      console.warn('프로젝트 파일 로드 실패, 샘플 데이터 사용:', err);
-      setIaData(getSampleData());
-      setError('CSV 파일을 불러오지 못해 샘플 데이터를 표시합니다.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // CSV 파싱 - 개선된 버전
   const parseCSV = (csvText: string): IAItem[] => {
@@ -208,9 +170,33 @@ const ChannelIAViewer: React.FC = () => {
     }
   ];
 
-  // 컴포넌트 마운트시 파일에서 직접 로드
+  // 프로젝트 내 CSV 파일 로드
+  const loadFromProjectFile = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      // 프로젝트 내 파일 경로
+      const response = await fetch('/data/ia-data.csv');
+      if (!response.ok) {
+        throw new Error('CSV 파일을 찾을 수 없습니다');
+      }
+      
+      const csvText = await response.text();
+      const parsedData = parseCSV(csvText);
+      setIaData(parsedData);
+      console.log(`총 ${parsedData.length}개의 데이터를 로드했습니다.`);
+    } catch (err) {
+      console.warn('프로젝트 파일 로드 실패, 샘플 데이터 사용:', err);
+      setIaData(getSampleData());
+      setError('CSV 파일을 불러오지 못해 샘플 데이터를 표시합니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 컴포넌트 마운트시 프로젝트 파일에서 로드
   useEffect(() => {
-    handleFileLoad();
+    loadFromProjectFile();
   }, []);
 
   // 필터링된 데이터
@@ -274,79 +260,6 @@ const ChannelIAViewer: React.FC = () => {
     });
   }, [filteredData, sortColumn, sortDirection]);
 
-  // 마인드맵 대분류 데이터
-  const category1Data = useMemo(() => {
-    const categories = new Map<string, { count: number; implemented: number }>();
-    
-    filteredData.forEach(item => {
-      const existing = categories.get(item.대분류) || { count: 0, implemented: 0 };
-      existing.count++;
-      if (item["현재 구현 여부"] === 'O') existing.implemented++;
-      categories.set(item.대분류, existing);
-    });
-
-    return Array.from(categories.entries()).map(([name, stats]) => ({
-      id: name,
-      name,
-      level: 1,
-      count: stats.count,
-      implemented: stats.implemented === stats.count
-    }));
-  }, [filteredData]);
-
-  // 마인드맵 중분류 데이터
-  const category2Data = useMemo(() => {
-    if (!selectedCategory1) return [];
-    
-    const categories = new Map<string, { count: number; implemented: number }>();
-    
-    filteredData
-      .filter(item => item.대분류 === selectedCategory1)
-      .forEach(item => {
-        const existing = categories.get(item.중분류) || { count: 0, implemented: 0 };
-        existing.count++;
-        if (item["현재 구현 여부"] === 'O') existing.implemented++;
-        categories.set(item.중분류, existing);
-      });
-
-    return Array.from(categories.entries()).map(([name, stats]) => ({
-      id: `${selectedCategory1}-${name}`,
-      name,
-      level: 2,
-      count: stats.count,
-      implemented: stats.implemented === stats.count
-    }));
-  }, [filteredData, selectedCategory1]);
-
-  // 마인드맵 소분류 데이터
-  const category3Data = useMemo(() => {
-    if (!selectedCategory1 || !selectedCategory2) return [];
-    
-    const categories = new Map<string, { count: number; implemented: number }>();
-    
-    filteredData
-      .filter(item => 
-        item.대분류 === selectedCategory1 && 
-        item.중분류 === selectedCategory2
-      )
-      .forEach(item => {
-        if (item.소분류 && item.소분류 !== '-') {
-          const existing = categories.get(item.소분류) || { count: 0, implemented: 0 };
-          existing.count++;
-          if (item["현재 구현 여부"] === 'O') existing.implemented++;
-          categories.set(item.소분류, existing);
-        }
-      });
-
-    return Array.from(categories.entries()).map(([name, stats]) => ({
-      id: `${selectedCategory1}-${selectedCategory2}-${name}`,
-      name,
-      level: 3,
-      count: stats.count,
-      implemented: stats.implemented === stats.count
-    }));
-  }, [filteredData, selectedCategory1, selectedCategory2]);
-
   const handleSort = (column: string) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -369,98 +282,6 @@ const ChannelIAViewer: React.FC = () => {
     }
   };
 
-  const renderMindMapCard = (node: MindMapNode, onClick?: () => void) => {
-    const isSelected = 
-      (node.level === 1 && selectedCategory1 === node.name) ||
-      (node.level === 2 && selectedCategory2 === node.name);
-
-    return (
-      <div
-        key={node.id}
-        className={`
-          relative p-6 rounded-lg border-2 cursor-pointer transition-all duration-200 
-          min-w-[200px] max-w-[250px] text-center shadow-md hover:shadow-lg
-          ${isSelected 
-            ? 'border-blue-500 bg-blue-50 transform scale-105' 
-            : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
-          }
-        `}
-        onClick={onClick}
-      >
-        <h3 className={`font-bold mb-2 ${
-          node.level === 1 ? 'text-lg text-blue-700' :
-          node.level === 2 ? 'text-base text-green-700' :
-          'text-sm text-purple-700'
-        }`}>
-          {node.name}
-        </h3>
-        
-        <div className="flex justify-center gap-2 mb-2">
-          <Badge variant="outline" className="text-xs">
-            {node.count}개
-          </Badge>
-          {node.implemented !== undefined && (
-            <Badge variant={node.implemented ? 'default' : 'secondary'} className="text-xs">
-              {node.implemented ? '완료' : '진행중'}
-            </Badge>
-          )}
-        </div>
-
-        {onClick && (
-          <div className="absolute bottom-2 right-2">
-            <ChevronRight size={16} className="text-gray-400" />
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const renderBreadcrumb = () => {
-    const items = [];
-    if (selectedCategory1) {
-      items.push(
-        <button
-          key="cat1"
-          onClick={() => {
-            setSelectedCategory1('');
-            setSelectedCategory2('');
-          }}
-          className="text-blue-600 hover:text-blue-800 underline"
-        >
-          {selectedCategory1}
-        </button>
-      );
-    }
-    if (selectedCategory2) {
-      items.push(
-        <span key="sep1" className="mx-2 text-gray-400">{'>'}</span>,
-        <button
-          key="cat2"
-          onClick={() => setSelectedCategory2('')}
-          className="text-green-600 hover:text-green-800 underline"
-        >
-          {selectedCategory2}
-        </button>
-      );
-    }
-
-    return items.length > 0 ? (
-      <div className="mb-4 text-sm">
-        <button
-          onClick={() => {
-            setSelectedCategory1('');
-            setSelectedCategory2('');
-          }}
-          className="text-gray-600 hover:text-gray-800 underline mr-2"
-        >
-          전체
-        </button>
-        {selectedCategory1 && <span className="mx-2 text-gray-400">{'>'}</span>}
-        {items}
-      </div>
-    ) : null;
-  };
-
   return (
     <div className="space-y-6">
       <Card>
@@ -478,23 +299,12 @@ const ChannelIAViewer: React.FC = () => {
                 CSV 파일 새로고침
               </Button>
               <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
+                variant="default"
                 size="sm"
-                onClick={() => setViewMode('list')}
               >
                 <List className="h-4 w-4 mr-2" />
                 목록
               </Button>
-              {/* 마인드맵 기능 임시 비활성화
-              <Button
-                variant={viewMode === 'mindmap' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('mindmap')}
-              >
-                <GitBranch className="h-4 w-4 mr-2" />
-                마인드맵
-              </Button>
-              */}
             </div>
           </div>
         </CardHeader>
@@ -509,6 +319,13 @@ const ChannelIAViewer: React.FC = () => {
 
           {!isLoading && (
             <>
+              {/* 에러 메시지 */}
+              {error && (
+                <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <p className="text-yellow-800">{error}</p>
+                </div>
+              )}
+
               {/* 검색 및 필터 */}
               <div className="flex gap-4 mb-6">
                 <div className="flex-1">
@@ -549,7 +366,7 @@ const ChannelIAViewer: React.FC = () => {
                 총 {filteredData.length}개의 기능이 있습니다.
               </div>
 
-              {/* 테이블 뷰만 표시 */}
+              {/* 테이블 뷰 */}
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse border border-gray-300">
                   <thead>
