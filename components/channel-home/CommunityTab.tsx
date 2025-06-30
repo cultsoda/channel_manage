@@ -28,7 +28,7 @@ import {
 } from "lucide-react"
 import { MEMBERSHIP_TIERS, FanSystemUtils } from "@/constants/fanSystem"
 import ChatModal from "@/components/community/ChatModal"
-import { chatRooms, announcements, polls, fanEvents as events } from "@/data/communityData"
+import { chatRooms, announcements, polls, posts, fanEvents as events } from "@/data/communityData"
 
 // 타입 정의
 interface Event {
@@ -59,6 +59,9 @@ export default function CommunityTab() {
   const [isChatModalOpen, setIsChatModalOpen] = useState(false)
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<any>(null)
   const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false)
+  const [showAllPosts, setShowAllPosts] = useState(false)
+  const [selectedPost, setSelectedPost] = useState<any>(null)
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false)
 
   const handleChatRoomClick = (room: any) => {
     setSelectedChatRoom(room)
@@ -70,8 +73,14 @@ export default function CommunityTab() {
     setIsAnnouncementModalOpen(true)
   }
 
+  const handlePostClick = (post: any) => {
+  setSelectedPost(post)
+  setIsPostModalOpen(true)
+  } 
+
   const sectionButtons = [
     { id: "announcements", label: "공지사항", icon: MessageCircle },
+    { id: "posts", label: "게시글", icon: MessageCircle }, 
     { id: "chat", label: "팬톡", icon: MessageCircle },
     { id: "events", label: "이벤트", icon: Gift },
     { id: "polls", label: "팬 투표", icon: Vote },
@@ -245,6 +254,51 @@ export default function CommunityTab() {
               </div>
               <p className="text-gray-700 text-sm mb-2 line-clamp-2">{announcement.content}</p>
               <div className="text-xs text-gray-500">조회수 {announcement.views.toLocaleString()}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    )
+  }
+
+  const renderPosts = () => {
+    const displayedPosts = showAllPosts ? posts : posts.slice(0, 3)
+    
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-bold">크리에이터 게시글</h3>
+          {posts.length > 3 && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowAllPosts(!showAllPosts)}
+              className="flex items-center gap-1"
+            >
+              {showAllPosts ? (
+                <>접기 <ChevronUp className="h-4 w-4" /></>
+              ) : (
+                <>더보기 <ChevronDown className="h-4 w-4" /></>
+              )}
+            </Button>
+          )}
+        </div>
+        
+        {displayedPosts.map((post) => (
+          <Card key={post.id} className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="p-4" onClick={() => handlePostClick(post)}>
+              <div className="flex justify-between items-start mb-2">
+                <h4 className="font-semibold">{post.title}</h4>
+                <span className="text-xs text-gray-500">{post.date}</span>
+              </div>
+              <p className="text-gray-700 text-sm mb-3 line-clamp-2">{post.content}</p>
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <span>by {post.author}</span>
+                <div className="flex items-center gap-3">
+                  <span>❤️ {post.likes.toLocaleString()}</span>
+                  <span>💬 {post.comments}</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -655,6 +709,7 @@ export default function CommunityTab() {
   const renderContent = () => {
     switch (activeSection) {
       case "announcements": return renderAnnouncements()
+      case "posts": return renderPosts() 
       case "chat": return renderChat()
       case "events": return renderEvents()
       case "polls": return renderPolls()
@@ -737,15 +792,17 @@ export default function CommunityTab() {
         <Dialog open={isAnnouncementModalOpen} onOpenChange={setIsAnnouncementModalOpen}>
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                {selectedAnnouncement.title}
-                {selectedAnnouncement.isImportant && (
-                  <Badge variant="destructive" className="text-xs">중요</Badge>
-                )}
-              </DialogTitle>
-              <DialogDescription>
-                {selectedAnnouncement.date} • 조회수 {selectedAnnouncement.views.toLocaleString()}
-              </DialogDescription>
+              <div className="space-y-2">
+                <h2 className="text-lg font-semibold flex items-center gap-2">
+                  {selectedAnnouncement.title}
+                  {selectedAnnouncement.isImportant && (
+                    <Badge variant="destructive" className="text-xs">중요</Badge>
+                  )}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {selectedAnnouncement.date} • 조회수 {selectedAnnouncement.views.toLocaleString()}
+                </p>
+              </div>
             </DialogHeader>
             <div className="py-4">
               <div className="whitespace-pre-wrap text-gray-700">
@@ -760,6 +817,43 @@ export default function CommunityTab() {
           </DialogContent>
         </Dialog>
       )}
+
+      {/* 게시글 상세 모달 */}
+      {selectedPost && (
+        <Dialog open={isPostModalOpen} onOpenChange={setIsPostModalOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <div className="space-y-2">
+                <h2 className="text-lg font-semibold">{selectedPost.title}</h2>
+                <p className="text-sm text-muted-foreground">
+                  {selectedPost.author} • {selectedPost.date}
+                </p>
+              </div>
+            </DialogHeader>
+            <div className="py-4">
+              <div className="whitespace-pre-wrap text-gray-700 mb-4">
+                {selectedPost.content}
+              </div>
+              <div className="flex items-center gap-4 pt-4 border-t">
+                <Button 
+                  variant={selectedPost.isLiked ? "default" : "outline"} 
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  ❤️ {selectedPost.likes.toLocaleString()}
+                </Button>
+                <span className="text-sm text-gray-500">💬 {selectedPost.comments}개 댓글</span>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsPostModalOpen(false)}>
+                닫기
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
     </div>
   )
 }

@@ -137,6 +137,22 @@ export const chatRooms = [
       hasVoted: true
     }
   ]
+  // 기존 announcements, polls 데이터 아래에 추가
+  export const posts = [
+    {
+      id: "post-1",
+      title: "오늘 촬영 후기 ✨",
+      content: "오늘 새로운 VROOK 콘텐츠 촬영했어요! ...",
+      date: "2024.06.29",
+      type: "general",
+      author: "케인",
+      likes: 892,
+      comments: 45,
+      isLiked: false,
+      images: []
+    },
+    // ... 추가 게시글들
+  ]
   
   // 팬미팅 신청 데이터
   export const fanmeetings = [
