@@ -16,6 +16,7 @@ import {
   Cog,
   Menu,
   Upload,
+  GitBranch,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -127,4 +128,5 @@ const navItems = [
   { name: "알림", href: "/notifications", icon: Bell },
   { name: "채널 설정", href: "/channel-settings", icon: Settings },
   { name: "고급 설정", href: "/advanced-settings", icon: Cog },
+  { name: "IA", href: "/channel-ia", icon: GitBranch, description: "채널 IA 구조" },
 ]
