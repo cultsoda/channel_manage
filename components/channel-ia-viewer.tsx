@@ -42,41 +42,43 @@ const ChannelIAViewer: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  // GitHub에서 CSV 파일 로드
-  const loadFromGitHub = async () => {
+  // 프로젝트 내 CSV 파일 로드
+  const loadFromProjectFile = async () => {
     setIsLoading(true);
     setError('');
     try {
-      // GitHub raw URL (실제 사용시 올바른 URL로 변경 필요)
-      const githubUrl = 'https://github.com/cultsoda/channel_manage/blob/a8c706870daafe024d18c6e1a86073b1de909e49/data/ia-data.csv';
-      
-      const response = await fetch(githubUrl);
+      // 프로젝트 내 파일 경로
+      const response = await fetch('/data/ia-data.csv');
       if (!response.ok) {
-        throw new Error('GitHub에서 파일을 불러올 수 없습니다');
+        throw new Error('CSV 파일을 찾을 수 없습니다');
       }
       
       const csvText = await response.text();
       const parsedData = parseCSV(csvText);
       setIaData(parsedData);
+      console.log(`총 ${parsedData.length}개의 데이터를 로드했습니다.`);
     } catch (err) {
-      // GitHub에서 실패하면 로컬 샘플 데이터 사용
-      console.warn('GitHub 로드 실패, 샘플 데이터 사용:', err);
+      console.warn('프로젝트 파일 로드 실패, 샘플 데이터 사용:', err);
       setIaData(getSampleData());
+      setError('CSV 파일을 불러오지 못해 샘플 데이터를 표시합니다.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // CSV 파싱
+  // CSV 파싱 - 개선된 버전
   const parseCSV = (csvText: string): IAItem[] => {
-    const lines = csvText.trim().split('\n');
+    // Windows 줄바꿈(\r\n)과 Unix 줄바꿈(\n) 모두 처리
+    const lines = csvText.trim().split(/\r?\n/);
     const data: IAItem[] = [];
     
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue;
       
-      const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+      // CSV 파싱 개선 - 따옴표로 감싸진 값 처리
+      const values = parseCSVLine(line);
+      
       if (values.length >= 7) {
         data.push({
           대분류: values[0] || '',
@@ -91,6 +93,43 @@ const ChannelIAViewer: React.FC = () => {
     }
     
     return data;
+  };
+
+  // CSV 라인 파싱 함수 - 따옴표 처리
+  const parseCSVLine = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    let i = 0;
+
+    while (i < line.length) {
+      const char = line[i];
+      
+      if (char === '"') {
+        // 따옴표 시작/끝 처리
+        if (inQuotes && line[i + 1] === '"') {
+          // 연속된 두 따옴표는 하나의 따옴표로 처리
+          current += '"';
+          i += 2;
+        } else {
+          inQuotes = !inQuotes;
+          i++;
+        }
+      } else if (char === ',' && !inQuotes) {
+        // 따옴표 밖의 쉼표는 구분자
+        result.push(current.trim());
+        current = '';
+        i++;
+      } else {
+        current += char;
+        i++;
+      }
+    }
+    
+    // 마지막 값 추가
+    result.push(current.trim());
+    
+    return result;
   };
 
   // 샘플 데이터
@@ -169,9 +208,9 @@ const ChannelIAViewer: React.FC = () => {
     }
   ];
 
-  // 컴포넌트 마운트시 데이터 로드
+  // 컴포넌트 마운트시 파일에서 직접 로드
   useEffect(() => {
-    loadFromGitHub();
+    handleFileLoad();
   }, []);
 
   // 필터링된 데이터
@@ -432,11 +471,11 @@ const ChannelIAViewer: React.FC = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={loadFromGitHub}
+                onClick={loadFromProjectFile}
                 disabled={isLoading}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                새로고침
+                CSV 파일 새로고침
               </Button>
               <Button
                 variant={viewMode === 'list' ? 'default' : 'outline'}
@@ -446,6 +485,7 @@ const ChannelIAViewer: React.FC = () => {
                 <List className="h-4 w-4 mr-2" />
                 목록
               </Button>
+              {/* 마인드맵 기능 임시 비활성화
               <Button
                 variant={viewMode === 'mindmap' ? 'default' : 'outline'}
                 size="sm"
@@ -454,6 +494,7 @@ const ChannelIAViewer: React.FC = () => {
                 <GitBranch className="h-4 w-4 mr-2" />
                 마인드맵
               </Button>
+              */}
             </div>
           </div>
         </CardHeader>
@@ -462,7 +503,7 @@ const ChannelIAViewer: React.FC = () => {
           {isLoading && (
             <div className="text-center py-8">
               <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-2 text-gray-400" />
-              <p className="text-gray-600">GitHub에서 데이터를 로드하는 중...</p>
+              <p className="text-gray-600">CSV 파일에서 데이터를 로드하는 중...</p>
             </div>
           )}
 
@@ -508,168 +549,91 @@ const ChannelIAViewer: React.FC = () => {
                 총 {filteredData.length}개의 기능이 있습니다.
               </div>
 
-              {/* 컨텐츠 */}
-              {viewMode === 'list' ? (
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-300">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th 
-                          className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSort('대분류')}
-                        >
-                          <div className="flex items-center gap-1">
-                            대분류
-                            <ArrowUpDown size={12} />
-                          </div>
-                        </th>
-                        <th 
-                          className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSort('중분류')}
-                        >
-                          <div className="flex items-center gap-1">
-                            중분류
-                            <ArrowUpDown size={12} />
-                          </div>
-                        </th>
-                        <th 
-                          className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSort('소분류')}
-                        >
-                          <div className="flex items-center gap-1">
-                            소분류
-                            <ArrowUpDown size={12} />
-                          </div>
-                        </th>
-                        <th 
-                          className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSort('세부기능')}
-                        >
-                          <div className="flex items-center gap-1">
-                            세부기능
-                            <ArrowUpDown size={12} />
-                          </div>
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">기능 설명</th>
-                        <th 
-                          className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSort('우선순위')}
-                        >
-                          <div className="flex items-center gap-1">
-                            우선순위
-                            <ArrowUpDown size={12} />
-                          </div>
-                        </th>
-                        <th 
-                          className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSort('구현여부')}
-                        >
-                          <div className="flex items-center gap-1">
-                            구현여부
-                            <ArrowUpDown size={12} />
-                          </div>
-                        </th>
+              {/* 테이블 뷰만 표시 */}
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-50">
+                      <th 
+                        className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleSort('대분류')}
+                      >
+                        <div className="flex items-center gap-1">
+                          대분류
+                          <ArrowUpDown size={12} />
+                        </div>
+                      </th>
+                      <th 
+                        className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleSort('중분류')}
+                      >
+                        <div className="flex items-center gap-1">
+                          중분류
+                          <ArrowUpDown size={12} />
+                        </div>
+                      </th>
+                      <th 
+                        className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleSort('소분류')}
+                      >
+                        <div className="flex items-center gap-1">
+                          소분류
+                          <ArrowUpDown size={12} />
+                        </div>
+                      </th>
+                      <th 
+                        className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleSort('세부기능')}
+                      >
+                        <div className="flex items-center gap-1">
+                          세부기능
+                          <ArrowUpDown size={12} />
+                        </div>
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2 text-left">기능 설명</th>
+                      <th 
+                        className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleSort('우선순위')}
+                      >
+                        <div className="flex items-center gap-1">
+                          우선순위
+                          <ArrowUpDown size={12} />
+                        </div>
+                      </th>
+                      <th 
+                        className="border border-gray-300 px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleSort('구현여부')}
+                      >
+                        <div className="flex items-center gap-1">
+                          구현여부
+                          <ArrowUpDown size={12} />
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedData.map((item, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-2">{item.대분류}</td>
+                        <td className="border border-gray-300 px-4 py-2">{item.중분류}</td>
+                        <td className="border border-gray-300 px-4 py-2">{item.소분류}</td>
+                        <td className="border border-gray-300 px-4 py-2 font-medium">{item.세부기능}</td>
+                        <td className="border border-gray-300 px-4 py-2 text-sm">{item["기능 설명"]}</td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          <Badge className={getPriorityColor(item.우선순위)}>
+                            {item.우선순위}
+                          </Badge>
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          <Badge variant={item["현재 구현 여부"] === 'O' ? 'default' : 'secondary'}>
+                            {item["현재 구현 여부"] === 'O' ? '구현완료' : '미구현'}
+                          </Badge>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {sortedData.map((item, index) => (
-                        <tr key={index} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-4 py-2">{item.대분류}</td>
-                          <td className="border border-gray-300 px-4 py-2">{item.중분류}</td>
-                          <td className="border border-gray-300 px-4 py-2">{item.소분류}</td>
-                          <td className="border border-gray-300 px-4 py-2 font-medium">{item.세부기능}</td>
-                          <td className="border border-gray-300 px-4 py-2 text-sm">{item["기능 설명"]}</td>
-                          <td className="border border-gray-300 px-4 py-2">
-                            <Badge className={getPriorityColor(item.우선순위)}>
-                              {item.우선순위}
-                            </Badge>
-                          </td>
-                          <td className="border border-gray-300 px-4 py-2">
-                            <Badge variant={item["현재 구현 여부"] === 'O' ? 'default' : 'secondary'}>
-                              {item["현재 구현 여부"] === 'O' ? '구현완료' : '미구현'}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="space-y-8">
-                  {renderBreadcrumb()}
-                  
-                  {!selectedCategory1 && (
-                    <div>
-                      <h3 className="text-lg font-bold mb-4 text-center">대분류를 선택하세요</h3>
-                      <div className="flex flex-wrap gap-6 justify-center">
-                        {category1Data.map(node => 
-                          renderMindMapCard(node, () => setSelectedCategory1(node.name))
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedCategory1 && !selectedCategory2 && (
-                    <div>
-                      <h3 className="text-lg font-bold mb-4 text-center">중분류를 선택하세요</h3>
-                      <div className="flex flex-wrap gap-6 justify-center">
-                        {category2Data.map(node => 
-                          renderMindMapCard(node, () => setSelectedCategory2(node.name))
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedCategory1 && selectedCategory2 && (
-                    <div>
-                      <h3 className="text-lg font-bold mb-4 text-center">소분류</h3>
-                      {category3Data.length > 0 ? (
-                        <div className="flex flex-wrap gap-6 justify-center">
-                          {category3Data.map(node => renderMindMapCard(node))}
-                        </div>
-                      ) : (
-                        <div className="text-center text-gray-600">
-                          해당 중분류에 소분류가 없습니다.
-                        </div>
-                      )}
-                      
-                      {/* 세부 기능 목록 */}
-                      <div className="mt-8">
-                        <h4 className="text-md font-bold mb-4">세부 기능</h4>
-                        <div className="grid gap-4">
-                          {filteredData
-                            .filter(item => 
-                              item.대분류 === selectedCategory1 && 
-                              item.중분류 === selectedCategory2
-                            )
-                            .map((item, index) => (
-                              <div key={index} className="border rounded-lg p-4 bg-white">
-                                <div className="flex justify-between items-start">
-                                  <div>
-                                    <h5 className="font-medium">{item.세부기능}</h5>
-                                    <p className="text-sm text-gray-600 mt-1">{item["기능 설명"]}</p>
-                                    {item.소분류 && item.소분류 !== '-' && (
-                                      <p className="text-xs text-gray-500 mt-1">소분류: {item.소분류}</p>
-                                    )}
-                                  </div>
-                                  <div className="flex gap-2">
-                                    <Badge className={getPriorityColor(item.우선순위)}>
-                                      {item.우선순위}
-                                    </Badge>
-                                    <Badge variant={item["현재 구현 여부"] === 'O' ? 'default' : 'secondary'}>
-                                      {item["현재 구현 여부"] === 'O' ? '구현완료' : '미구현'}
-                                    </Badge>
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </>
           )}
         </CardContent>
