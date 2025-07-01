@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Target, Users, Heart, MessageCircle, Share2, Clock, Package, CheckCircle, TrendingUp } from 'lucide-react';
-import { FundingProject, FundingReward, FundingSupporter } from '../../data/fundingData';
+import { FundingProject, FundingReward, FundingSupporter } from '@/data/fundingData';
 
 interface Props {
   project: FundingProject;
@@ -178,7 +178,7 @@ const FundingSection: React.FC<Props> = ({
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="w-full">
       {/* 프로젝트 헤더 */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
         {/* 대표 이미지/영상 */}

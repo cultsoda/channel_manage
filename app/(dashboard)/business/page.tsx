@@ -16,7 +16,7 @@ export default function BusinessPage() {
 
       <Tabs defaultValue="membership" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="membership">멤버십 관리</TabsTrigger>
+          <     value="membership">멤버십 관리</TabsTrigger>
           <TabsTrigger value="products">상품 관리</TabsTrigger>
           <TabsTrigger value="funding">펀딩</TabsTrigger>
           <TabsTrigger value="promotion">프로모션</TabsTrigger>

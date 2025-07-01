@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, X, Upload, Calendar, Target, Package, FileText } from 'lucide-react';
-import { FundingProjectForm, FundingReward, FundingCategory } from '../../data/fundingData';
+import { FundingProjectForm, FundingReward, FundingCategory } from '@/data/fundingData';
 
 interface Props {
   onSubmit: (data: FundingProjectForm) => void;

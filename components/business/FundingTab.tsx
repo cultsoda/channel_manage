@@ -1,8 +1,7 @@
-"use client"
-
 import React, { useState, useEffect } from 'react';
 import { Plus, Eye, Edit, Trash2, Calendar, Target, Users, TrendingUp } from 'lucide-react';
-import { FundingProject, FundingStatus, FundingStats } from '../../../../data/fundingData';
+import { FundingProject, FundingStatus, FundingStats } from '@/data/fundingData';
+import FundingCreationForm from '@/components/business/FundingCreationForm';
 
 // 임시 데이터
 const mockFundingProjects: (FundingProject & { stats: FundingStats })[] = [
@@ -69,6 +68,7 @@ const mockFundingProjects: (FundingProject & { stats: FundingStats })[] = [
 const FundingManagementPage: React.FC = () => {
   const [projects, setProjects] = useState(mockFundingProjects);
   const [selectedTab, setSelectedTab] = useState<'all' | 'active' | 'completed'>('all');
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const filteredProjects = projects.filter(project => {
     if (selectedTab === 'all') return true;
@@ -76,6 +76,26 @@ const FundingManagementPage: React.FC = () => {
     if (selectedTab === 'completed') return project.status === 'success' || project.status === 'completed';
     return true;
   });
+
+  const handleCreateProject = (formData: any) => {
+    console.log('Creating project:', formData);
+    // 실제로는 API 호출
+    setShowCreateForm(false);
+  };
+
+  const handleCancelCreate = () => {
+    setShowCreateForm(false);
+  };
+
+  // 생성 폼이 활성화되면 폼 컴포넌트를 렌더링
+  if (showCreateForm) {
+    return (
+      <FundingCreationForm 
+        onSubmit={handleCreateProject}
+        onCancel={handleCancelCreate}
+      />
+    );
+  }
 
   const getStatusBadge = (status: FundingStatus) => {
     const statusConfig = {
@@ -103,14 +123,17 @@ const FundingManagementPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="space-y-6">
       {/* 헤더 */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">펀딩 관리</h1>
           <p className="text-gray-600 mt-1">크라우드펀딩 프로젝트를 생성하고 관리하세요</p>
         </div>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+        <button 
+          onClick={() => setShowCreateForm(true)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+        >
           <Plus className="w-4 h-4" />
           새 프로젝트 생성
         </button>
@@ -270,7 +293,10 @@ const FundingManagementPage: React.FC = () => {
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">아직 펀딩 프로젝트가 없습니다</h3>
           <p className="text-gray-500 mb-6">첫 번째 크라우드펀딩 프로젝트를 시작해보세요!</p>
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2 mx-auto">
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2 mx-auto"
+          >
             <Plus className="w-4 h-4" />
             새 프로젝트 생성
           </button>
