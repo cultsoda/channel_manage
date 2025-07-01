@@ -6,6 +6,10 @@ import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { 
   User, 
   Shield, 
@@ -21,10 +25,33 @@ import {
   Key,
   Smartphone,
   Download,
-  Receipt
+  Receipt,
+  FileText,
+  Upload,
+  AlertCircle,
+  CheckCircle,
+  Globe
 } from "lucide-react"
+import { useState } from "react"
 
 export default function AccountManagementPage() {
+  const [profileImage, setProfileImage] = useState<File | null>(null)
+  const [verificationRegion, setVerificationRegion] = useState<'domestic' | 'overseas'>('domestic')
+  const [accountType] = useState<'creator' | 'user'>('creator') // 실제로는 로그인 정보에서 가져옴
+  
+  // 모달 상태들
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false)
+  const [verificationOpen, setVerificationOpen] = useState(false)
+  const [twoFactorOpen, setTwoFactorOpen] = useState(false)
+  const [paymentMethodOpen, setPaymentMethodOpen] = useState(false)
+  
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setProfileImage(file)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -76,10 +103,17 @@ export default function AccountManagementPage() {
                   <AvatarFallback>사용자</AvatarFallback>
                 </Avatar>
                 <div className="space-y-2">
-                  <Button variant="outline" className="flex items-center gap-2">
+                  <Button variant="outline" className="flex items-center gap-2" onClick={() => document.getElementById('profileImageInput')?.click()}>
                     <Camera className="h-4 w-4" />
                     이미지 변경
                   </Button>
+                  <input
+                    id="profileImageInput"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
                   <p className="text-sm text-muted-foreground">JPG, PNG 파일 (최대 5MB)</p>
                 </div>
               </div>
@@ -186,40 +220,172 @@ export default function AccountManagementPage() {
                 <Label htmlFor="confirmPassword">비밀번호 확인</Label>
                 <Input id="confirmPassword" type="password" />
               </div>
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2" onClick={() => setChangePasswordOpen(true)}>
                 <Key className="h-4 w-4" />
                 비밀번호 변경
               </Button>
+              
+              {/* 비밀번호 변경 모달 */}
+              <Dialog open={changePasswordOpen} onOpenChange={setChangePasswordOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>비밀번호 변경</DialogTitle>
+                    <DialogDescription>새로운 비밀번호를 설정해주세요.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="modal-currentPassword">현재 비밀번호</Label>
+                      <Input id="modal-currentPassword" type="password" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="modal-newPassword">새 비밀번호</Label>
+                      <Input id="modal-newPassword" type="password" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="modal-confirmPassword">비밀번호 확인</Label>
+                      <Input id="modal-confirmPassword" type="password" />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setChangePasswordOpen(false)}>취소</Button>
+                      <Button onClick={() => setChangePasswordOpen(false)}>변경 완료</Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
 
           {/* 본인 인증 */}
           <Card>
             <CardHeader>
-              <CardTitle>본인 인증</CardTitle>
-              <CardDescription>휴대폰과 이메일 인증을 관리하세요.</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                본인 인증
+                {accountType === 'creator' && <Badge variant="destructive">필수</Badge>}
+              </CardTitle>
+              <CardDescription>
+                {accountType === 'creator' 
+                  ? '정산을 위한 본인인증이 필요합니다.' 
+                  : '성인 콘텐츠 이용을 위한 본인인증을 완료하세요.'
+                }
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Smartphone className="h-5 w-5" />
-                  <div>
-                    <p className="font-medium">휴대폰 인증</p>
-                    <p className="text-sm text-muted-foreground">010-1234-5678</p>
-                  </div>
+              {/* 현재 인증 상태 */}
+              <div className="p-4 border rounded-lg bg-yellow-50 border-yellow-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <AlertCircle className="h-5 w-5 text-yellow-600" />
+                  <span className="font-medium text-yellow-800">본인 인증이 필요합니다</span>
                 </div>
-                <Badge variant="secondary">인증완료</Badge>
+                <p className="text-sm text-yellow-700">
+                  {accountType === 'creator' 
+                    ? '크리에이터로서 수익 정산을 받기 위해 본인 인증이 필요합니다.'
+                    : '성인 콘텐츠를 시청하려면 본인 인증을 완료해주세요.'
+                  }
+                </p>
               </div>
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5" />
-                  <div>
-                    <p className="font-medium">이메일 인증</p>
-                    <p className="text-sm text-muted-foreground">user@example.com</p>
+
+              {/* 거주지역 선택 */}
+              <div className="space-y-3">
+                <Label>거주 지역</Label>
+                <RadioGroup 
+                  value={verificationRegion} 
+                  onValueChange={(value) => setVerificationRegion(value as 'domestic' | 'overseas')}
+                  className="flex gap-6"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="domestic" id="domestic" />
+                    <Label htmlFor="domestic">국내 거주</Label>
                   </div>
-                </div>
-                <Badge variant="secondary">인증완료</Badge>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="overseas" id="overseas" />
+                    <Label htmlFor="overseas">해외 거주</Label>
+                  </div>
+                </RadioGroup>
               </div>
+
+              {/* 인증 방법 안내 */}
+              <div className="p-4 border rounded-lg">
+                {verificationRegion === 'domestic' ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="h-4 w-4 text-blue-600" />
+                      <span className="font-medium">PASS 앱 인증</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      PASS 인증서를 통한 본인인증을 진행합니다. 스마트폰에 PASS 앱이 설치되어 있어야 합니다.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-4 w-4 text-green-600" />
+                      <span className="font-medium">여권 인증</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      여권 사진과 여권을 들고 있는 본인 사진을 업로드하여 인증을 진행합니다.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <Dialog open={verificationOpen} onOpenChange={setVerificationOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full">본인 인증 시작</Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>본인 인증</DialogTitle>
+                    <DialogDescription>
+                      {verificationRegion === 'domestic' ? 'PASS 앱을 통한 본인인증' : '여권을 통한 본인인증'}
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  {verificationRegion === 'domestic' ? (
+                    <div className="space-y-4">
+                      <div className="text-center p-6 border-2 border-dashed rounded-lg">
+                        <Smartphone className="h-12 w-12 mx-auto mb-4 text-blue-600" />
+                        <p className="font-medium mb-2">PASS 앱 인증</p>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          PASS 앱에서 QR코드를 스캔하거나<br/>
+                          인증번호를 입력해주세요.
+                        </p>
+                        <div className="w-24 h-24 bg-gray-200 mx-auto mb-4 rounded">
+                          <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">
+                            QR 코드
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          인증번호: 1234-5678
+                        </p>
+                      </div>
+                      <Button className="w-full">인증 완료 확인</Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="space-y-3">
+                        <Label>여권 사진 업로드</Label>
+                        <div className="border-2 border-dashed rounded-lg p-6 text-center">
+                          <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm text-muted-foreground mb-2">여권 사진을 업로드해주세요</p>
+                          <Button variant="outline" size="sm">파일 선택</Button>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Label>본인 확인 사진 업로드</Label>
+                        <div className="border-2 border-dashed rounded-lg p-6 text-center">
+                          <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm text-muted-foreground mb-2">여권과 함께 촬영한 본인 사진</p>
+                          <Button variant="outline" size="sm">파일 선택</Button>
+                        </div>
+                      </div>
+                      
+                      <Button className="w-full">인증 요청</Button>
+                    </div>
+                  )}
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
 
@@ -235,8 +401,49 @@ export default function AccountManagementPage() {
                   <p className="font-medium">2단계 인증 활성화</p>
                   <p className="text-sm text-muted-foreground">로그인 시 추가 인증 단계를 거칩니다</p>
                 </div>
-                <Button variant="outline">설정하기</Button>
+                <Button variant="outline" onClick={() => setTwoFactorOpen(true)}>설정하기</Button>
               </div>
+              
+              {/* 2단계 인증 설정 모달 */}
+              <Dialog open={twoFactorOpen} onOpenChange={setTwoFactorOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>2단계 인증 설정</DialogTitle>
+                    <DialogDescription>계정 보안을 더욱 강화하세요.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-3">
+                      <Label>인증 방법 선택</Label>
+                      <RadioGroup defaultValue="sms">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="sms" id="sms" />
+                          <Label htmlFor="sms">SMS 인증</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="app" id="app" />
+                          <Label htmlFor="app">인증 앱 (Google Authenticator)</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="phone-2fa">휴대폰 번호</Label>
+                      <Input id="phone-2fa" placeholder="010-0000-0000" defaultValue="010-1234-5678" />
+                    </div>
+                    
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <p className="text-sm text-blue-800">
+                        2단계 인증을 활성화하면 로그인 시 추가 인증 코드가 필요합니다.
+                      </p>
+                    </div>
+                    
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setTwoFactorOpen(false)}>취소</Button>
+                      <Button onClick={() => setTwoFactorOpen(false)}>활성화</Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
 
@@ -318,7 +525,71 @@ export default function AccountManagementPage() {
                   <Button variant="ghost" size="sm">해제</Button>
                 </div>
               </div>
-              <Button variant="outline" className="w-full">새 결제 수단 추가</Button>
+              <Button variant="outline" className="w-full" onClick={() => setPaymentMethodOpen(true)}>새 결제 수단 추가</Button>
+              
+              {/* 결제 수단 추가 모달 */}
+              <Dialog open={paymentMethodOpen} onOpenChange={setPaymentMethodOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>결제 수단 추가</DialogTitle>
+                    <DialogDescription>새로운 결제 수단을 등록하세요.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-3">
+                      <Label>결제 수단 선택</Label>
+                      <RadioGroup defaultValue="card">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="card" id="card" />
+                          <Label htmlFor="card">신용/체크카드</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="kakao" id="kakao" />
+                          <Label htmlFor="kakao">카카오페이</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="naver" id="naver" />
+                          <Label htmlFor="naver">네이버페이</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="paypal" id="paypal" />
+                          <Label htmlFor="paypal">PayPal</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="card-number">카드 번호</Label>
+                        <Input id="card-number" placeholder="0000-0000-0000-0000" />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="expiry">유효기간</Label>
+                          <Input id="expiry" placeholder="MM/YY" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="cvc">CVC</Label>
+                          <Input id="cvc" placeholder="000" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="card-name">카드 소유자명</Label>
+                        <Input id="card-name" placeholder="홍길동" />
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="set-default" className="rounded" />
+                      <Label htmlFor="set-default">기본 결제 수단으로 설정</Label>
+                    </div>
+                    
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setPaymentMethodOpen(false)}>취소</Button>
+                      <Button onClick={() => setPaymentMethodOpen(false)}>등록</Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
 
