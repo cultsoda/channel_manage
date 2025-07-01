@@ -130,7 +130,6 @@ export default function AccountManagementPage() {
                   <div className="flex items-center gap-2">
                     <Mail className="h-4 w-4 text-muted-foreground" />
                     <Input id="email" type="email" defaultValue="user@example.com" />
-                    <Badge variant="secondary">인증됨</Badge>
                   </div>
                 </div>
               </div>
@@ -141,8 +140,7 @@ export default function AccountManagementPage() {
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
                     <Input id="phone" placeholder="010-0000-0000" defaultValue="010-1234-5678" />
-                    <Badge variant="secondary">인증됨</Badge>
-                  </div>
+                    </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="region">지역</Label>
