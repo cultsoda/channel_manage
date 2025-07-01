@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import { Calendar, Target, Users, Heart, MessageCircle, Share2, Clock, Package, CheckCircle, TrendingUp } from 'lucide-react';
 import { FundingProject, FundingReward, FundingSupporter } from '@/data/fundingData';
