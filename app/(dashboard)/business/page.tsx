@@ -3,8 +3,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import MembershipTab from "@/components/business/MembershipTab"
 import ProductsTab from "@/components/business/ProductsTab"
-import SponsorshipTab from "@/components/business/SponsorshipTab"
 import PromotionTab from "@/components/business/PromotionTab"
+import FundingTab from "@/components/business/FundingTab"
 
 export default function BusinessPage() {
   return (
@@ -18,7 +18,7 @@ export default function BusinessPage() {
         <TabsList>
           <TabsTrigger value="membership">멤버십 관리</TabsTrigger>
           <TabsTrigger value="products">상품 관리</TabsTrigger>
-          <TabsTrigger value="sponsorship">후원</TabsTrigger>
+          <TabsTrigger value="funding">펀딩</TabsTrigger>
           <TabsTrigger value="promotion">프로모션</TabsTrigger>
         </TabsList>
 
@@ -30,8 +30,8 @@ export default function BusinessPage() {
           <ProductsTab />
         </TabsContent>
 
-        <TabsContent value="sponsorship" className="space-y-4">
-          <SponsorshipTab />
+        <TabsContent value="funding" className="space-y-4">
+          <FundingTab />
         </TabsContent>
 
         <TabsContent value="promotion" className="space-y-4">

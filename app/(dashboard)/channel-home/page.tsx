@@ -13,6 +13,7 @@ import CommunityTab from "@/components/channel-home/CommunityTab"
 import SupportTab from "@/components/channel-home/SupportTab"
 import AboutTab from "@/components/channel-home/AboutTab"
 import ActivityTab from "@/components/channel-home/ActivityTab"
+import FundingTab from "@/components/channel-home/FundingTab"
 
 export default function ChannelHomePage() {
   const [activeTab, setActiveTab] = useState("home")
@@ -101,8 +102,8 @@ export default function ChannelHomePage() {
               <CommunityTab />
             </TabsContent>
 
-            <TabsContent value="support" className="mt-0 h-full">
-              <SupportTab />
+            <TabsContent value="funding" className="mt-0 h-full">
+              <FundingTab />
             </TabsContent>
 
             <TabsContent value="about" className="mt-0 h-full">
