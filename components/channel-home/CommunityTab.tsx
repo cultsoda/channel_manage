@@ -662,7 +662,7 @@ export default function CommunityTab() {
                     Lv.{fan.level} {fan.levelTitle} • 활동점수 {fan.activityScore.toLocaleString()}
                   </div>
                   <div className="text-xs text-gray-500">
-                    총 후원 {(fan.totalSpent / 10000).toFixed(0)}만원
+                    총 펀딩 {(fan.totalSpent / 10000).toFixed(0)}만원
                   </div>
                 </div>
                 

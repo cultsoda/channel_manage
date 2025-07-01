@@ -214,7 +214,7 @@ const MembersTab: React.FC = () => {
               <DollarSign className="w-8 h-8 text-green-500" />
               <div>
                 <p className="text-2xl font-bold">{formatCurrency(selectedFan.totalSupport)}</p>
-                <p className="text-sm text-gray-600">총 후원</p>
+                <p className="text-sm text-gray-600">총 펀딩</p>
               </div>
             </div>
           </div>
@@ -414,7 +414,7 @@ const MembersTab: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">후원 금액</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">펀딩 금액</label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
                   <option>전체</option>
                   <option>10만원 이상</option>
@@ -498,7 +498,7 @@ const MembersTab: React.FC = () => {
                 <div className="flex items-center gap-6 text-sm text-gray-600">
                   <div className="text-center">
                     <p className="font-semibold text-gray-900">{formatCurrency(fan.totalSupport)}</p>
-                    <p>후원</p>
+                    <p>펀딩</p>
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-gray-900">{fan.chatMessages}</p>
@@ -563,7 +563,7 @@ const MembersTab: React.FC = () => {
               <div className="grid grid-cols-4 gap-3 text-sm text-center">
                 <div>
                   <p className="font-semibold text-gray-900 text-xs">{formatCurrency(fan.totalSupport)}</p>
-                  <p className="text-gray-600 text-xs">후원</p>
+                  <p className="text-gray-600 text-xs">펀딩</p>
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900 text-xs">{fan.chatMessages}</p>

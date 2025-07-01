@@ -148,7 +148,7 @@ export function RevenuePieChart() {
   const data = [
     { name: '멤버십', value: 68.6, color: '#3b82f6' },
     { name: '단건구매', value: 22.9, color: '#10b981' },
-    { name: '후원', value: 8.5, color: '#f59e0b' },
+    { name: '펀딩', value: 8.5, color: '#f59e0b' },
   ]
 
   return (

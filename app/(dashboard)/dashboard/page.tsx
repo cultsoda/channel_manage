@@ -236,11 +236,11 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">새로운 후원/구매</CardTitle>
+                  <CardTitle className="text-sm font-medium">새로운 펀딩 참여</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-lg font-bold">₩ 45,000</div>
-                  <p className="text-xs text-muted-foreground">실시간 후원 및 콘텐츠 구매 알림(최근7일)</p>
+                  <p className="text-xs text-muted-foreground">실시간 펀딩 참여 알림(최근7일)</p>
                 </CardContent>
               </Card>
 
@@ -681,11 +681,11 @@ export default function DashboardPage() {
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">새로운 후원/구매</CardTitle>
+                  <CardTitle className="text-sm font-medium">새로운 펀딩</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-lg font-bold">₩ 45,000</div>
-                  <p className="text-xs text-muted-foreground">실시간 후원 및 콘텐츠 구매 알림(최근7일)</p>
+                  <p className="text-xs text-muted-foreground">실시간 펀딩 알림(최근7일)</p>
                 </CardContent>
               </Card>
               <Card>
@@ -1125,11 +1125,11 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">새로운 후원/구매</CardTitle>
+                  <CardTitle className="text-sm font-medium">새로운 펀딩</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-lg font-bold">₩ 45,000</div>
-                  <p className="text-xs text-muted-foreground">실시간 후원 및 콘텐츠 구매 알림(최근7일)</p>
+                  <p className="text-xs text-muted-foreground">실시간 펀딩 알림(최근7일)</p>
                 </CardContent>
               </Card>
 
@@ -1608,11 +1608,11 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">새로운 후원/구매</CardTitle>
+                  <CardTitle className="text-sm font-medium">새로운 펀딩</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-lg font-bold">₩ 45,000</div>
-                  <p className="text-xs text-muted-foreground">실시간 후원 및 콘텐츠 구매 알림(최근7일)</p>
+                  <p className="text-xs text-muted-foreground">실시간 펀딩 알림(최근7일)</p>
                 </CardContent>
               </Card>
 

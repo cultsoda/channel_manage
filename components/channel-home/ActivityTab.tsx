@@ -65,7 +65,7 @@ export default function ActivityTab() {
     { id: "comments", label: "내 댓글", icon: MessageCircle },
     { id: "favorites", label: "관심 콘텐츠", icon: Heart },
     { id: "purchases", label: "구매 내역", icon: ShoppingCart },
-    { id: "support", label: "후원 내역", icon: Gift },
+    { id: "support", label: "펀딩 참여 내역", icon: Gift },
     { id: "events", label: "이벤트 참여", icon: Calendar },
     { id: "ranking", label: "팬 랭킹", icon: Trophy }
   ]
@@ -169,7 +169,7 @@ export default function ActivityTab() {
             <div className="text-center p-4 bg-yellow-50 rounded-lg">
               <Gift className="w-6 h-6 mx-auto mb-2 text-yellow-600" />
               <div className="text-lg font-bold text-yellow-600">{formatAmount(activityData.activitySummary.thisMonth.supportAmount)}</div>
-              <div className="text-sm text-gray-600">후원 금액</div>
+              <div className="text-sm text-gray-600">펀딩 참여 금액</div>
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <Calendar className="w-6 h-6 mx-auto mb-2 text-green-600" />
@@ -209,7 +209,7 @@ export default function ActivityTab() {
             </div>
             <div className="text-center p-3 border rounded-lg">
               <div className="font-bold text-lg">{formatAmount(activityData.activitySummary.allTime.totalSupport)}</div>
-              <div className="text-gray-600">총 후원</div>
+              <div className="text-gray-600">총 펀딩</div>
             </div>
           </div>
         </CardContent>
@@ -328,7 +328,7 @@ export default function ActivityTab() {
 
   const renderSupport = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold">후원 내역</h3>
+      <h3 className="text-lg font-bold">펀딩 내역</h3>
       
       {activityData.supportHistory.map((support) => (
         <Card key={support.id}>
@@ -469,7 +469,7 @@ export default function ActivityTab() {
           <div className="bg-white/20 backdrop-blur rounded-lg p-3 text-center">
             <Crown className="h-5 w-5 mx-auto mb-1" />
             <h3 className="font-bold mb-1">멤버십 등급</h3>
-            <p className="text-xs">후원으로 등급업</p>
+            <p className="text-xs">펀딩 참여로 등급업</p>
           </div>
           <div className="bg-white/20 backdrop-blur rounded-lg p-3 text-center">
             <Award className="h-5 w-5 mx-auto mb-1" />

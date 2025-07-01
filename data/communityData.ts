@@ -96,7 +96,7 @@ export const chatRooms = [
     badges: [
       { id: "early-bird", name: "얼리버드", description: "채널 초기 가입자", earned: true, date: "2024.03.15" },
       { id: "commentor", name: "댓글 마스터", description: "댓글 100개 작성", earned: true, date: "2024.05.20" },
-      { id: "supporter", name: "든든한 후원자", description: "총 후원 10만원 달성", earned: false, date: null },
+      { id: "supporter", name: "든든한 펀딩 참여자", description: "총 펀딩 금액 10만원 달성", earned: false, date: null },
       { id: "vrook-lover", name: "VROOK 러버", description: "VROOK 콘텐츠 5개 구매", earned: true, date: "2024.06.10" },
       { id: "chatting-king", name: "수다쟁이", description: "팬톡 메시지 1000개 작성", earned: false, date: null }
     ]

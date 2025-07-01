@@ -79,7 +79,7 @@ export default function NotificationsPage() {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>수익 발생 알림</Label>
-                  <p className="text-sm text-muted-foreground">구매, 후원 발생 시 알림</p>
+                  <p className="text-sm text-muted-foreground">구매, 펀딩 발생 시 알림</p>
                 </div>
                 <Switch checked={revenueNotification} onCheckedChange={setRevenueNotification} />
               </div>

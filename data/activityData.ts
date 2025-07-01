@@ -4,7 +4,7 @@ import { MEMBERSHIP_TIERS, FanSystemUtils } from "@/constants/fanSystem"
 // 사용자의 현재 포인트로 레벨 정보 계산
 const currentPoints = 8450
 const levelInfo = FanSystemUtils.getLevelProgress(currentPoints)
-const membershipTier = FanSystemUtils.getMembershipTierByAmount(127000) // 총 후원 금액
+const membershipTier = FanSystemUtils.getMembershipTierByAmount(127000) // 총 펀딩 금액
 
 export const activityData = {
     // 사용자 정보
@@ -24,7 +24,7 @@ export const activityData = {
       membershipTier: membershipTier.name,
       membershipLevel: membershipTier.level,
       membershipEmoji: membershipTier.emoji,
-      totalSpentAmount: 127000, // 총 후원/구매 금액
+      totalSpentAmount: 127000, // 총 펀딩/구매 금액
       
       avatar: "/api/placeholder/80/80",
       bio: "VR 게임을 사랑하는 케인님의 열렬한 팬입니다! 🥽✨"
@@ -81,7 +81,7 @@ export const activityData = {
       {
         id: "golden-supporter",
         name: "골든 서포터",
-        description: "누적 후원 10만원 이상",
+        description: "누적 펀딩 10만원 이상",
         icon: "👑",
         rarity: "epic",
         earnedDate: "2024.04.20"
@@ -223,7 +223,7 @@ export const activityData = {
       }
     ],
   
-    // 후원 내역
+    // 펀딩 내역
     supportHistory: [
       {
         id: "support-1",
@@ -244,7 +244,7 @@ export const activityData = {
       {
         id: "support-3",
         amount: 20000,
-        message: "", // 익명 후원
+        message: "", // 익명 펀딩
         date: "2024.06.01",
         isPublic: false,
         earnedPoints: 100
@@ -294,7 +294,7 @@ export const activityData = {
       rankingCategories: [
         { category: "활동 포인트", rank: 23, total: 1247 },
         { category: "댓글 활동", rank: 15, total: 1247 },
-        { category: "후원 금액", rank: 45, total: 1247 },
+        { category: "펀딩 금액", rank: 45, total: 1247 },
         { category: "시청 시간", rank: 12, total: 1247 }
       ]
     }

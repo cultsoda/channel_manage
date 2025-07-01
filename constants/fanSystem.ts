@@ -1,6 +1,6 @@
 // 팬 레벨/멤버십 등급 시스템 상수
 
-// 멤버십 등급 시스템 (결제/후원 기반)
+// 멤버십 등급 시스템 (결제/펀딩 기반)
 export const MEMBERSHIP_TIERS = [
     { 
       level: 1, 
@@ -30,7 +30,7 @@ export const MEMBERSHIP_TIERS = [
       bgColor: "#FFFBF0",
       textColor: "#FF8C00",
       minAmount: 150000,
-      description: "특별한 애정으로 채널을 후원하는 팬"
+      description: "특별한 애정으로 채널을 펀딩하는 팬"
     },
     { 
       level: 4, 
@@ -95,7 +95,7 @@ export const MEMBERSHIP_TIERS = [
   
   // 유틸리티 함수들
   export const FanSystemUtils = {
-    // 후원 금액으로 멤버십 등급 계산
+    // 펀딩 금액으로 멤버십 등급 계산
     getMembershipTierByAmount: (totalAmount: number) => {
       return MEMBERSHIP_TIERS
         .slice()
