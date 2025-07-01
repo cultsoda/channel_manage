@@ -53,7 +53,7 @@ export default function ChannelHomePage() {
                 { id: "vrook", name: "VROOK" },
                 { id: "xr-fanmeeting", name: "XR팬미팅" },
                 { id: "community", name: "커뮤니티" },
-                { id: "support", name: "후원" },
+                { id: "funding", name: "펀딩" },
                 { id: "about", name: "소개" },
                 { id: "activity", name: "내 활동" }
               ].map((tab) => (
